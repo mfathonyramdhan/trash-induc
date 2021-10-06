@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "156335360947",
+    "project_id": "bank-sampah-app",
+    "storage_bucket": "bank-sampah-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156335360947:android:c67760f7e331bcd7d119c6",
+        "android_client_info": {
+          "package_name": "com.example.kiloin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156335360947-19gqh3j75j000advq4nfm3b1cm3qva5g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQK3azYwo4MroxVtfPDODi0fn8_e5fjMU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156335360947-19gqh3j75j000advq4nfm3b1cm3qva5g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
