@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onLogoutPressed(context);
 
                     // Navigator.pushNamed(
-                    //   context, 
+                    //   context,
                     //   MenuScreen.routeName,
                     // );
                   },
@@ -179,7 +179,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 interval: 25,
                                 reservedSize: 10,
                                 getTitles: (value) => value.toInt().toString(),
-                                getTextStyles: (_) => regularRobotoFont.copyWith(
+                                getTextStyles: (_) =>
+                                    regularRobotoFont.copyWith(
                                   color: whitePure,
                                   fontSize: 12.sp,
                                 ),
@@ -198,15 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "${
-                        getDateTime().dayName
-                      }, ${
-                        getDateTime().day
-                      } ${
-                        getDateTime().monthName
-                      } ${
-                        getDateTime().year
-                      }",
+                      "${getDateTime().dayName}, ${getDateTime().day} ${getDateTime().monthName} ${getDateTime().year}",
                       style: mediumRobotoFont,
                     ),
                   ],
@@ -238,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 16.h,
                 ),
                 GarbageCard(
-                  title: "Harga Jual",
+                  title: "Harga Beli",
                   textColor: blueSky,
                 ),
               ],

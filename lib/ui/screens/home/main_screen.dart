@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/ui/screens/profile/edit_screen.dart';
 
 import '../../screens/home/home_screen.dart';
 import '../../../shared/color.dart';
@@ -22,8 +23,8 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
 
-    bottomNavBarIndex = 0;
-    pageController = PageController(initialPage: bottomNavBarIndex ?? 0);
+    bottomNavBarIndex = 1;
+    pageController = PageController(initialPage: bottomNavBarIndex ?? 1);
   }
 
   @override
@@ -31,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: lightGreen,
     ));
-    
+
     return Scaffold(
       body: Stack(
         children: [
@@ -59,6 +60,7 @@ class _MainScreenState extends State<MainScreen> {
               });
             },
             children: [
+              EditScreen(),
               HomeScreen(),
             ],
           ),
