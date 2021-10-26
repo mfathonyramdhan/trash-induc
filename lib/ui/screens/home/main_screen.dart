@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiloin/ui/screens/profile/edit_screen.dart';
 
 import '../../screens/home/home_screen.dart';
 import '../../../shared/color.dart';
 import '../../../shared/font.dart';
 import '../../../shared/size.dart';
+import '../transaction/transaction_screen.dart';
+import '../profile/edit_screen.dart';
 
 class MainScreen extends StatefulWidget {
   static String routeName = "/main_screen";
@@ -23,8 +24,8 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
 
-    bottomNavBarIndex = 1;
-    pageController = PageController(initialPage: bottomNavBarIndex ?? 1);
+    bottomNavBarIndex = 0;
+    pageController = PageController(initialPage: bottomNavBarIndex ?? 0);
   }
 
   @override
@@ -60,8 +61,9 @@ class _MainScreenState extends State<MainScreen> {
               });
             },
             children: [
-              EditScreen(),
               HomeScreen(),
+              EditScreen(),
+              TransactionScreen(),
             ],
           ),
 
@@ -89,28 +91,28 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           /// WIDGET: HALF CIRCLE BOTTOM BAR
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: 70.r,
-              height: 70.r,
-              margin: EdgeInsets.only(
-                bottom: 20.r,
-              ),
-              decoration: BoxDecoration(
-                color: whitePure,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0xFFCCCCCC),
-                    blurRadius: 20,
-                    offset: Offset(6, 0),
-                    spreadRadius: -5,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: Container(
+          //     width: 70.r,
+          //     height: 70.r,
+          //     margin: EdgeInsets.only(
+          //       bottom: 20.r,
+          //     ),
+          //     decoration: BoxDecoration(
+          //       color: whitePure,
+          //       shape: BoxShape.circle,
+          //       boxShadow: [
+          //         BoxShadow(
+          //           color: Color(0xFFCCCCCC),
+          //           blurRadius: 20,
+          //           offset: Offset(6, 0),
+          //           spreadRadius: -5,
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
 
           /// WIDGET: BOTTOM NAVIGATION BAR
           generateBottomNavbar(),
@@ -132,6 +134,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           elevation: 0,
           backgroundColor: Colors.transparent,
           currentIndex: bottomNavBarIndex ?? 0,
@@ -148,6 +151,16 @@ class _MainScreenState extends State<MainScreen> {
             });
           },
           items: [
+            BottomNavigationBarItem(
+              label: "Home",
+              icon: Container(
+                margin: EdgeInsets.only(bottom: 6.r),
+                height: 34.h,
+                child: Image.asset(
+                  "assets/image/icon_profil.png",
+                ),
+              ),
+            ),
             BottomNavigationBarItem(
               label: "Profil",
               icon: Container(
