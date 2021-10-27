@@ -13,7 +13,7 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  bool isEmpty = true;
+  bool isEmpty = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +76,7 @@ Widget buildItem() {
   return Card(
       elevation: 5,
       child: ExpansionTile(
+        collapsedIconColor: lightGreen,
         leading: Text(
           "27/10/2021",
           style: regularRobotoFont.copyWith(
@@ -107,7 +108,10 @@ Widget buildItem() {
             DataColumn(
                 label: Text(
               "Kategori Sampah",
-              style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w700,
+              ),
             )),
             DataColumn(
                 numeric: true,

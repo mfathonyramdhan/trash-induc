@@ -14,21 +14,32 @@ class EmptyTransactionScreen extends StatefulWidget {
 class EmptyTransactionScreenState extends State<EmptyTransactionScreen> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(
+    return ListView(children: [
+      Image.asset(
+        "assets/image/no_transaction.png",
+        width: 200,
+      ),
+      Align(
+        alignment: Alignment.center,
+        child: Text(
           "Transaksi tidak ditemukan",
-          style: boldRobotoFont.copyWith(fontSize: 18.sp, color: blackPure),
+          style: boldRobotoFont.copyWith(
+            fontSize: 18.sp,
+            color: blackPure,
+          ),
         ),
-        SizedBox(
-          height: 10.h,
+      ),
+      SizedBox(
+        height: 10.h,
+      ),
+      Text(
+        "Anda belum memiliki transaksi\nSegera tukarkan sampahmu\nke kantor terdekat!",
+        textAlign: TextAlign.center,
+        style: regularRobotoFont.copyWith(
+          fontSize: 14.sp,
+          color: blackPure,
         ),
-        Text(
-          "Anda belum memiliki transaksi\nSegera tukarkan sampahmu ke kantor terdekat!",
-          textAlign: TextAlign.center,
-          style: regularRobotoFont.copyWith(fontSize: 14.sp, color: blackPure),
-        )
-      ]),
-    );
+      )
+    ]);
   }
 }

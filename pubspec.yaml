@@ -37,6 +37,7 @@ dependencies:
   get_storage: ^2.0.2
   google_sign_in: ^5.0.4
   provider: ^5.0.0
+  roundcheckbox: ^2.0.3
 
 dev_dependencies:
   flutter_test:

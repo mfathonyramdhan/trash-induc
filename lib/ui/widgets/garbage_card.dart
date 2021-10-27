@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../shared/color.dart';
 import '../../../shared/font.dart';
-import '../../../shared/size.dart';
 
 class GarbageCard extends StatelessWidget {
   final String title;
