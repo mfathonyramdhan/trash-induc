@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/ui/screens/chat/chat_screen.dart';
+import 'package:kiloin/ui/screens/profile/profile_screen.dart';
 
 import '../../screens/home/home_screen.dart';
 import '../../../shared/color.dart';
@@ -28,6 +30,12 @@ class _MainScreenState extends State<MainScreen> {
     pageController = PageController(initialPage: bottomNavBarIndex ?? 0);
   }
 
+  List<Widget> pages = [
+    ProfileScreen(),
+    TransactionScreen(),
+    ChatScreen(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -53,19 +61,21 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           /// VIEW: PAGE TAB VIEW
-          PageView(
-            controller: pageController,
-            onPageChanged: (index) {
-              setState(() {
-                bottomNavBarIndex = index;
-              });
-            },
-            children: [
-              HomeScreen(),
-              EditScreen(),
-              TransactionScreen(),
-            ],
-          ),
+          // PageView(
+          //   controller: pageController,
+          //   onPageChanged: (index) {
+          //     setState(() {
+          //       bottomNavBarIndex = index;
+          //     });
+          //   },
+          //   children: [
+          //     HomeScreen(),
+          //     ProfileScreen(),
+          //     TransactionScreen(),
+          //   ],
+          // ),
+
+          HomeScreen(),
 
           /// WIDGET: BACK LAYER BOTTOM NAVBAR
           Align(
@@ -91,28 +101,28 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           /// WIDGET: HALF CIRCLE BOTTOM BAR
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: Container(
-          //     width: 70.r,
-          //     height: 70.r,
-          //     margin: EdgeInsets.only(
-          //       bottom: 20.r,
-          //     ),
-          //     decoration: BoxDecoration(
-          //       color: whitePure,
-          //       shape: BoxShape.circle,
-          //       boxShadow: [
-          //         BoxShadow(
-          //           color: Color(0xFFCCCCCC),
-          //           blurRadius: 20,
-          //           offset: Offset(6, 0),
-          //           spreadRadius: -5,
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: 70.r,
+              height: 70.r,
+              margin: EdgeInsets.only(
+                bottom: 20.r,
+              ),
+              decoration: BoxDecoration(
+                color: whitePure,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xFFCCCCCC),
+                    blurRadius: 20,
+                    offset: Offset(6, 0),
+                    spreadRadius: -5,
+                  ),
+                ],
+              ),
+            ),
+          ),
 
           /// WIDGET: BOTTOM NAVIGATION BAR
           generateBottomNavbar(),
@@ -134,10 +144,8 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
           elevation: 0,
           backgroundColor: Colors.transparent,
-          currentIndex: bottomNavBarIndex ?? 0,
           selectedFontSize: 12.sp,
           unselectedFontSize: 12.sp,
           selectedItemColor: blackPure,
@@ -145,22 +153,11 @@ class _MainScreenState extends State<MainScreen> {
           selectedLabelStyle: boldRobotoFont,
           unselectedLabelStyle: mediumRobotoFont,
           onTap: (index) {
-            setState(() {
-              bottomNavBarIndex = index;
-              pageController!.jumpToPage(index);
-            });
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => pages[index],
+            ));
           },
           items: [
-            BottomNavigationBarItem(
-              label: "Home",
-              icon: Container(
-                margin: EdgeInsets.only(bottom: 6.r),
-                height: 34.h,
-                child: Image.asset(
-                  "assets/image/icon_profil.png",
-                ),
-              ),
-            ),
             BottomNavigationBarItem(
               label: "Profil",
               icon: Container(

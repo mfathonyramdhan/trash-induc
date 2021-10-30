@@ -23,6 +23,7 @@ environment:
 dependencies:
   another_flushbar: ^1.10.22
   cloud_firestore: ^2.2.0
+  cool_stepper: ^1.2.1
   cupertino_icons: ^1.0.2
   equatable: ^2.0.2
   firebase_auth: ^1.2.0
@@ -36,6 +37,7 @@ dependencies:
   flutter_screenutil: ^5.0.0+2
   get_storage: ^2.0.2
   google_sign_in: ^5.0.4
+  image_picker: ^0.8.4+4
   provider: ^5.0.0
   roundcheckbox: ^2.0.3
 

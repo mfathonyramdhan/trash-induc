@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(
               defaultMargin,
-              ScreenUtil().statusBarHeight + 8.r,
+              18.r,
               defaultMargin,
               18.r,
             ),

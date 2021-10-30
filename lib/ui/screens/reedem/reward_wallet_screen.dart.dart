@@ -1,0 +1,129 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/shared/color.dart';
+import 'package:kiloin/shared/font.dart';
+
+class RewardWallet extends StatefulWidget {
+  const RewardWallet({Key? key}) : super(key: key);
+
+  @override
+  RewardWalletState createState() => RewardWalletState();
+}
+
+class RewardWalletState extends State<RewardWallet> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.w,
+      ),
+      itemCount: 5,
+      itemBuilder: (context, index) => buildCard(),
+    );
+  }
+
+  Widget buildCard() {
+    return Stack(children: [
+      Card(
+          elevation: 5,
+          child: Stack(children: [
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 16,
+              ),
+              height: 105.h,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                5.r,
+              )),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 95,
+                    width: 95,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        5.r,
+                      ),
+                      color: blackPure,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 14.w,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hadiah 1",
+                        style: boldRobotoFont.copyWith(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w900,
+                          color: blackPure,
+                        ),
+                      ),
+                      Text(
+                        "Exp : 27/10/2021",
+                        style: regularRobotoFont.copyWith(
+                          fontSize: 11.sp,
+                          color: blackPure,
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: 13.w,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            side: MaterialStateProperty.all(BorderSide(
+                              color: Colors.blue,
+                            )),
+                            backgroundColor:
+                                MaterialStateProperty.all(whitePure)),
+                        onPressed: () {},
+                        child: Text(
+                          "Reedem 2500",
+                          style: boldRobotoFont.copyWith(
+                            fontSize: 13.sp,
+                            color: Colors.blue,
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Container(
+                width: 40.w,
+                height: 20.h,
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(
+                          5.r,
+                        ),
+                        bottomLeft: Radius.circular(
+                          5.r,
+                        ))),
+                child: Center(
+                    child: Text(
+                  "New",
+                  style: boldRobotoFont.copyWith(
+                    fontSize: 14.sp,
+                    color: whitePure,
+                  ),
+                )),
+              ),
+            )
+          ])),
+    ]);
+  }
+}

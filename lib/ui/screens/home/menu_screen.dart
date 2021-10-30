@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/screens/reedem/reedem_screen.dart';
+import 'package:kiloin/ui/widgets/menu_screen_card.dart';
+import 'package:kiloin/ui/widgets/menu_screen_list_tile.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import '../../../shared/color.dart';
 
@@ -38,25 +41,24 @@ class _MenuScreenState extends State<MenuScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                width: 10.sp,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Icon(
+              TextButton.icon(
+                icon: Icon(
                   Icons.arrow_back_ios,
                   color: darkGreen,
                 ),
-              ),
-              Text(
-                "Home",
-                style: regularRobotoFont.copyWith(
-                    fontSize: 14.sp, color: darkGreen),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                label: Text(
+                  "Home",
+                  style: regularRobotoFont.copyWith(
+                    fontSize: 14.sp,
+                    color: darkGreen,
+                  ),
+                ),
               ),
               SizedBox(
-                width: 80.w,
+                width: 70.w,
               ),
               Center(
                 child: Text(
@@ -80,6 +82,7 @@ class _MenuScreenState extends State<MenuScreen> {
             bottom: 30.h,
           ),
           children: [
+            // PROFILE SECTION
             SizedBox(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -147,57 +150,17 @@ class _MenuScreenState extends State<MenuScreen> {
             SizedBox(
               height: 18.h,
             ),
+            // 2 CARD SECTION
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  height: 82.h,
-                  color: Colors.transparent,
-                  child: Stack(children: [
-                    Container(
-                      width: 156.w,
-                      height: 72.h,
-                      decoration: BoxDecoration(
-                          color: whitePure,
-                          borderRadius: BorderRadius.circular(
-                            15.r,
-                          )),
-                      child: Stack(
-                        children: [
-                          Image(
-                              image: AssetImage(
-                            "assets/image/medal_backdrop.png",
-                          )),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: 17.h,
-                            ),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Your Experience",
-                                    style: regularRobotoFont.copyWith(
-                                      fontSize: 9.sp,
-                                      color: darkGreen,
-                                    ),
-                                  ),
-                                  Text(
-                                    500.toString(),
-                                    style: boldRobotoFont.copyWith(
-                                      fontSize: 30.sp,
-                                      color: darkGreen,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ]),
+                // EXP CARD
+                MenuScreenCard(
+                  assetPath: "assets/image/medal_backdrop.png",
+                  type: "Experience",
+                  point: 1200,
                 ),
+                // BALANCE CARD
                 Container(
                   height: 82.h,
                   color: Colors.transparent,
@@ -249,7 +212,11 @@ class _MenuScreenState extends State<MenuScreen> {
                         bottom: 0,
                         right: 8,
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => ReedemScreen(),
+                            ));
+                          },
                           child: Container(
                             width: 78.w,
                             height: 20.h,
@@ -283,11 +250,18 @@ class _MenuScreenState extends State<MenuScreen> {
                 )
               ],
             ),
+            SizedBox(
+              height: 19.h,
+            ),
+            // MISSION SECTION
             Text(
               "Daftar Misi",
               style: boldRobotoFont.copyWith(
                 fontSize: 18.sp,
               ),
+            ),
+            SizedBox(
+              height: 10.h,
             ),
             Container(
               padding: EdgeInsets.symmetric(
@@ -301,132 +275,46 @@ class _MenuScreenState extends State<MenuScreen> {
                   )),
               child: ListView(
                 children: [
-                  buildMission(),
-                  buildMission(),
+                  buildMission(
+                    "Mengentot sampah masyarakat",
+                  ),
+                  buildMission(
+                    "Mengentok",
+                  ),
                 ],
               ),
             ),
             SizedBox(
               height: 25.h,
             ),
-            Container(
-              margin: EdgeInsets.only(
-                top: 5.w,
-              ),
-              height: 45.w,
-              decoration: BoxDecoration(
-                  color: whitePure,
-                  borderRadius: BorderRadius.circular(
-                    10.r,
-                  )),
-              child: ListTile(
-                dense: true,
-                leading: Image(
-                  image: AssetImage(
-                    "assets/image/problem.png",
-                  ),
-                ),
-                title: Text(
-                  "Ulasan dan Saran",
-                  style: boldRobotoFont.copyWith(
-                    fontSize: 16.sp,
-                    color: blackPure,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: blackPure,
-                ),
+            // CARD LIST TILE SECTION
+            InkWell(
+              onTap: () {},
+              child: CustomMenuScreenListTile(
+                imageLeading: "assets/image/problem.png",
+                title: "Ulasan dan Saran",
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(
-                top: 5.w,
-              ),
-              height: 45.w,
-              decoration: BoxDecoration(
-                  color: whitePure,
-                  borderRadius: BorderRadius.circular(
-                    10.r,
-                  )),
-              child: ListTile(
-                dense: true,
-                leading: Image(
-                  image: AssetImage(
-                    "assets/image/problem.png",
-                  ),
-                ),
-                title: Text(
-                  "Ulasan dan Saran",
-                  style: boldRobotoFont.copyWith(
-                    fontSize: 16.sp,
-                    color: blackPure,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: blackPure,
-                ),
+            InkWell(
+              onTap: () {},
+              child: CustomMenuScreenListTile(
+                imageLeading: "assets/image/call.png",
+                title: "Tentang Kami",
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(
-                top: 5.w,
-              ),
-              height: 45.w,
-              decoration: BoxDecoration(
-                  color: whitePure,
-                  borderRadius: BorderRadius.circular(
-                    10.r,
-                  )),
-              child: ListTile(
-                dense: true,
-                leading: Image(
-                  image: AssetImage(
-                    "assets/image/problem.png",
-                  ),
-                ),
-                title: Text(
-                  "Ulasan dan Saran",
-                  style: boldRobotoFont.copyWith(
-                    fontSize: 16.sp,
-                    color: blackPure,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: blackPure,
-                ),
+            InkWell(
+              onTap: () {},
+              child: CustomMenuScreenListTile(
+                imageLeading: "assets/image/sent.png",
+                title: "Bantuan",
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(
-                top: 5.w,
-              ),
-              height: 45.w,
-              decoration: BoxDecoration(
-                  color: whitePure,
-                  borderRadius: BorderRadius.circular(
-                    10.r,
-                  )),
-              child: ListTile(
-                dense: true,
-                leading: Image(
-                  image: AssetImage(
-                    "assets/image/problem.png",
-                  ),
-                ),
-                title: Text(
-                  "Ulasan dan Saran",
-                  style: boldRobotoFont.copyWith(
-                    fontSize: 16.sp,
-                    color: blackPure,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: blackPure,
-                ),
+            InkWell(
+              onTap: () {},
+              child: CustomMenuScreenListTile(
+                imageLeading: "assets/image/exit.png",
+                title: "Keluar",
+                backgroundColor: redDanger,
               ),
             )
           ],
@@ -435,7 +323,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Widget buildMission() {
+  Widget buildMission(String task) {
     return Padding(
       padding: EdgeInsets.only(
         top: 10.w,
@@ -459,7 +347,7 @@ class _MenuScreenState extends State<MenuScreen> {
               SizedBox(
                 width: 0.72.sw,
                 child: Text(
-                  "Mengumpulkan sampah sebanyak 8888888kg",
+                  task,
                   maxLines: 2,
                   style: mediumRobotoFont.copyWith(
                     fontSize: 10.sp,
@@ -472,8 +360,14 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
               Row(
                 children: [
-                  buildChip(),
-                  buildChip(),
+                  buildChip(
+                    "Balance",
+                    "100",
+                  ),
+                  buildChip(
+                    "Experience",
+                    "200",
+                  ),
                 ],
               )
             ],
@@ -483,7 +377,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Widget buildChip() {
+  Widget buildChip(String type, String value) {
     return Container(
       margin: EdgeInsets.only(
         right: 10.w,
@@ -502,14 +396,14 @@ class _MenuScreenState extends State<MenuScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
-            "Balance",
+            type,
             style: regularRobotoFont.copyWith(
               fontSize: 10.sp,
               color: lightGreen,
             ),
           ),
           Text(
-            "+100",
+            "+" + value,
             style: boldRobotoFont.copyWith(
               fontSize: 10.sp,
               color: lightGreen,

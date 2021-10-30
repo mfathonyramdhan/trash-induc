@@ -25,29 +25,31 @@ class _TransactionScreenState extends State<TransactionScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 10.sp,
-            ),
-            InkWell(
-              onTap: () {},
-              child: Icon(
+            TextButton.icon(
+              icon: Icon(
                 Icons.arrow_back_ios,
+                color: whitePure,
               ),
-            ),
-            Text(
-              "Home",
-              style: regularRobotoFont.copyWith(
-                fontSize: 14.sp,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              label: Text(
+                "Home",
+                style: regularRobotoFont.copyWith(
+                  fontSize: 14.sp,
+                  color: whitePure,
+                ),
               ),
             ),
             SizedBox(
-              width: 60.w,
+              width: 55.w,
             ),
             Center(
               child: Text(
                 "Transaksi",
                 style: boldRobotoFont.copyWith(
                   fontSize: 18.sp,
+                  color: whitePure,
                 ),
               ),
             ),
