@@ -108,7 +108,7 @@ class GarbageCard extends StatelessWidget {
             "Rp",
             textAlign: TextAlign.start,
             style: regularRobotoFont.copyWith(
-              color: grayPure,
+              color: blackPure,
               fontSize: 12.sp,
             ),
           ),
@@ -128,7 +128,7 @@ class GarbageCard extends StatelessWidget {
             "Kg",
             textAlign: TextAlign.start,
             style: regularRobotoFont.copyWith(
-              color: grayPure,
+              color: blackPure,
               fontSize: 12.sp,
             ),
           ),

@@ -1,13 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/ui/screens/home/menu_screen.dart';
 
 import '../../screens/auth/login_screen.dart';
 import '../../widgets/garbage_card.dart';
 import '../../../extension/date_time_extension.dart';
-import '../../../bloc/user_bloc.dart';
 import '../../../services/auth_services.dart';
 import '../../../services/social_services.dart';
 import '../../../shared/color.dart';
@@ -87,25 +85,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 4.h,
                     ),
-                    BlocBuilder<UserBloc, UserState>(
-                      builder: (_, state) {
-                        if (state is UserLoaded) {
-                          return Text(
-                            state.user.name ?? "-",
-                            style: boldRobotoFont.copyWith(
-                              fontSize: 24.sp,
-                            ),
-                          );
-                        } else {
-                          return Text(
-                            "Memuat...",
-                            style: boldRobotoFont.copyWith(
-                              fontSize: 24.sp,
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                    Text(
+                      "User",
+                      style: boldRobotoFont.copyWith(
+                        fontSize: 20.sp,
+                      ),
+                    )
                   ],
                 ),
                 GestureDetector(
@@ -158,34 +143,40 @@ class _HomeScreenState extends State<HomeScreen> {
                       Expanded(
                         child: BarChart(
                           BarChartData(
+                            minY: 0,
                             maxY: 100,
                             barGroups: showingBarGroups,
                             borderData: FlBorderData(
                               show: false,
                             ),
                             titlesData: FlTitlesData(
-                              show: true,
-                              bottomTitles: SideTitles(
-                                showTitles: true,
-                                getTitles: (double value) => getTitles(value),
-                                getTextStyles: (_) => mediumRobotoFont.copyWith(
-                                  color: whitePure,
-                                  fontSize: 12.sp,
+                                show: true,
+                                bottomTitles: SideTitles(
+                                  showTitles: true,
+                                  getTitles: (value) => getTitles(value),
+                                  getTextStyles: (context, value) =>
+                                      mediumRobotoFont.copyWith(
+                                    color: whitePure,
+                                    fontSize: 12.sp,
+                                  ),
                                 ),
-                              ),
-                              leftTitles: SideTitles(
-                                showTitles: true,
-                                margin: 20.r,
-                                interval: 25,
-                                reservedSize: 10,
-                                getTitles: (value) => value.toInt().toString(),
-                                getTextStyles: (_) =>
-                                    regularRobotoFont.copyWith(
-                                  color: whitePure,
-                                  fontSize: 12.sp,
+                                leftTitles: SideTitles(
+                                  showTitles: true,
+                                  margin: 5.r,
+                                  interval: 25,
+                                  reservedSize: 25,
+                                  getTextStyles: (context, value) =>
+                                      regularRobotoFont.copyWith(
+                                    color: whitePure,
+                                    fontSize: 12.sp,
+                                  ),
                                 ),
-                              ),
-                            ),
+                                topTitles: SideTitles(
+                                  showTitles: false,
+                                ),
+                                rightTitles: SideTitles(
+                                  showTitles: false,
+                                )),
                           ),
                         ),
                       ),
@@ -247,6 +238,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Generate current user local daytime
   DateTime getDateTime() => DateTime.now();
+
+  String getSideTitles(double value) {
+    switch (value.toInt()) {
+      case 1:
+        return '0';
+      case 2:
+        return '25';
+      case 3:
+        return '50';
+      case 4:
+        return '75';
+      case 5:
+        return '100';
+    }
+    return '';
+  }
 
   /// Generate short day name based on order number
   String getTitles(double value) {

@@ -21,24 +21,24 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  another_flushbar: ^1.10.22
-  cloud_firestore: ^2.2.0
+  another_flushbar: ^1.10.24
+  cloud_firestore: ^2.5.4
   cool_stepper: ^1.2.1
   cupertino_icons: ^1.0.2
-  equatable: ^2.0.2
-  firebase_auth: ^1.2.0
-  firebase_core: ^1.2.0
-  fl_chart: ^0.36.1
+  equatable: ^2.0.3
+  firebase_auth: ^3.1.4
+  firebase_core: ^1.8.0
+  fl_chart: ^0.40.2
   flutter:
     sdk: flutter
-  flutter_bloc: ^7.0.0
-  flutter_facebook_auth: ^3.4.0
+  flutter_facebook_auth: ^3.5.3
   flutter_native_splash: ^1.1.8+4
   flutter_screenutil: ^5.0.0+2
   get_storage: ^2.0.2
-  google_sign_in: ^5.0.4
+  google_sign_in: ^5.2.1
   image_picker: ^0.8.4+4
-  provider: ^5.0.0
+  shared_preferences: ^2.0.8
+  provider: ^6.0.1
   roundcheckbox: ^2.0.3
 
 dev_dependencies:
