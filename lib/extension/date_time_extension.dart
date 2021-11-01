@@ -8,7 +8,7 @@ extension DateTimeExtension on DateTime {
       case 3:
         return 'Rab';
       case 4:
-        return 'Thu';
+        return 'Kam';
       case 5:
         return 'Jum';
       case 6:
