@@ -2,16 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiloin/firebase/firebase_utils.dart';
-import 'package:kiloin/models/user.dart' as UserModel;
-import 'package:kiloin/shared/color.dart';
-
-import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/ui/screens/user/reedem/reedem_screen.dart';
-import 'package:kiloin/ui/screens/wrapper.dart';
-import 'package:kiloin/ui/widgets/menu_screen_card.dart';
-import 'package:kiloin/ui/widgets/menu_screen_list_tile.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
+
+import '../../../../models/user.dart' as UserModel;
+import '../../../../shared/color.dart';
+import '../../../../shared/font.dart';
+import '../../../../utils/firebase_utils.dart';
+import '../../../widgets/menu_screen_card.dart';
+import '../../../widgets/menu_screen_list_tile.dart';
+import '../reedem/reedem_screen.dart';
+import '../../wrapper.dart';
 
 class MenuScreen extends StatefulWidget {
   static String routeName = "/menu_screen";

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:kiloin/shared/color.dart';
+import '../../shared/color.dart';
 
 class TransactionItem extends StatelessWidget {
   const TransactionItem({Key? key}) : super(key: key);

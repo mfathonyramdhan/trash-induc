@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiloin/shared/color.dart';
-import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/ui/screens/user/reedem/reedemed_screen..dart';
-import 'package:kiloin/ui/screens/user/reedem/reward_wallet_screen.dart.dart';
-import 'package:kiloin/ui/widgets/menu_screen_card.dart';
-import 'package:kiloin/models/user.dart' as UserModel;
+
+import '../../../../shared/color.dart';
+import '../../../../shared/font.dart';
+import '../reedem/reedemed_screen.dart';
+import '../reedem/reward_wallet_screen.dart';
+import '../../../widgets/menu_screen_card.dart';
+import '../../../../models/user.dart' as UserModel;
 
 class ReedemScreen extends StatefulWidget {
   static String routeName = "/reedem";

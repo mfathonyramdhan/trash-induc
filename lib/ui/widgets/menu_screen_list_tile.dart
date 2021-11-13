@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiloin/shared/color.dart';
-import 'package:kiloin/shared/font.dart';
+
+import '../../shared/color.dart';
+import '../../shared/font.dart';
 
 class CustomMenuScreenListTile extends StatelessWidget {
   final String imageLeading;

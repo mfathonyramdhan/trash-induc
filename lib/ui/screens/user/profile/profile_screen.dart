@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiloin/shared/color.dart';
-import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/models/user.dart' as UserModel;
-import 'package:kiloin/ui/screens/user/profile/edit_screen.dart';
+
+import '../../../../shared/color.dart';
+import '../../../../shared/font.dart';
+import '../profile/edit_screen.dart';
+import '../../../../models/user.dart' as UserModel;
 
 class ProfileScreen extends StatefulWidget {
   static String routeName = "/profile";

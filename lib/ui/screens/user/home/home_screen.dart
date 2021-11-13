@@ -3,13 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiloin/models/user.dart' as UserModel;
-import 'package:kiloin/shared/color.dart';
-import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/shared/size.dart';
-import 'package:kiloin/ui/screens/user/home/menu_screen.dart';
-import 'package:kiloin/ui/widgets/garbage_card.dart';
-import 'package:kiloin/extension/date_time_extension.dart';
+
+import '../../../../models/user.dart' as UserModel;
+import '../../../../shared/color.dart';
+import '../../../../shared/font.dart';
+import '../../../../shared/size.dart';
+import '../../user/home/menu_screen.dart';
+import '../../../widgets/garbage_card.dart';
+import '../../../../extension/date_time_extension.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

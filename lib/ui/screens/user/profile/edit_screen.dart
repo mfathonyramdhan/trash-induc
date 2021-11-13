@@ -3,11 +3,12 @@ import 'package:cool_stepper/cool_stepper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiloin/shared/color.dart';
-import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/ui/widgets/dropdown_field.dart';
-import 'package:kiloin/ui/widgets/text_form_field.dart';
-import 'package:kiloin/models/user.dart' as UserModel;
+
+import '../../../../shared/color.dart';
+import '../../../../shared/font.dart';
+import '../../../widgets/dropdown_field.dart';
+import '../../../widgets/text_form_field.dart';
+import '../../../../models/user.dart' as UserModel;
 
 class EditProfileScreen extends StatefulWidget {
   static String routeName = "/edit_profile";

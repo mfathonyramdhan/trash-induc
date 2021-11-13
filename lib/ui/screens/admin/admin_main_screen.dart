@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kiloin/firebase/firebase_utils.dart';
+import 'package:kiloin/utils/firebase_utils.dart';
 import 'package:kiloin/ui/screens/auth/login_screen.dart';
 
 class AdminMainScreen extends StatefulWidget {

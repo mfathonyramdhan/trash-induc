@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:kiloin/shared/color.dart';
-import 'package:kiloin/ui/screens/admin/admin_main_screen.dart';
-import 'package:kiloin/ui/screens/petugas/petugas_main_screen.dart';
-import 'package:kiloin/ui/screens/user/home/main_screen.dart';
-import 'package:kiloin/models/user.dart' as UserModel;
 
-import 'auth/login_screen.dart';
+import '../../shared/color.dart';
+import '../screens/admin/admin_main_screen.dart';
+import '../screens/petugas/petugas_main_screen.dart';
+import '../screens/user/home/main_screen.dart';
+import '../screens/auth/login_screen.dart';
+import '../../models/user.dart' as UserModel;
 
 class Wrapper extends StatelessWidget {
   static String routeName = '/wrapper';

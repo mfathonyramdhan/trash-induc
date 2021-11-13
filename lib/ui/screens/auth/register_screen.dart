@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kiloin/firebase/firebase_utils.dart';
+import 'package:kiloin/utils/firebase_utils.dart';
 import 'package:kiloin/service/auth_service.dart';
 import 'package:kiloin/ui/screens/wrapper.dart';
 
