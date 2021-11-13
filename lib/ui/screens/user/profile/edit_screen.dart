@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_stepper/cool_stepper.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:path/path.dart';
 
+import '../../../../utils/firebase_utils.dart';
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
 import '../../../widgets/dropdown_field.dart';
@@ -33,6 +39,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController photo = TextEditingController();
   final TextEditingController photoId = TextEditingController();
   final TextEditingController photoWithId = TextEditingController();
+
+  UploadTask? task;
+  File? file;
 
   List<GlobalKey<FormState>> formKey = [
     GlobalKey<FormState>(),
@@ -99,7 +108,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               phoneNumber.text = user.phone!;
               return Container(
                 child: CoolStepper(
-                  onCompleted: () {},
+                  onCompleted: () {
+                    submitData();
+                  },
                   steps: [
                     CoolStep(
                       title: "P",
@@ -266,7 +277,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   height: 10.h,
                                 ),
                                 InkWell(
-                                  onTap: () async {},
+                                  onTap: () async {
+                                    profilePhotoPressed();
+                                  },
                                   child: Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(
@@ -281,7 +294,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Icons.person,
                                         ),
                                         title: Text(
-                                          "Foto diri kamu",
+                                          file != null
+                                              ? basename(file!.path)
+                                              : "Foto diri kamu",
                                           style: regularRobotoFont.copyWith(
                                             fontSize: 14.sp,
                                             color: blackPure,
@@ -296,7 +311,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   height: 12.h,
                                 ),
                                 InkWell(
-                                  onTap: () async {},
+                                  onTap: () async {
+                                    idPhotoPressed();
+                                  },
                                   child: Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(
@@ -311,7 +328,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Icons.person,
                                         ),
                                         title: Text(
-                                          "Foto tanda pengenalmu",
+                                          file != null
+                                              ? basename(file!.path)
+                                              : "Foto tanda pengenalmu",
                                           style: regularRobotoFont.copyWith(
                                             fontSize: 14.sp,
                                             color: blackPure,
@@ -326,7 +345,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   height: 12.h,
                                 ),
                                 InkWell(
-                                  onTap: () async {},
+                                  onTap: () async {
+                                    profileAndIdPressed();
+                                  },
                                   child: Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(
@@ -341,7 +362,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Icons.person,
                                         ),
                                         title: Text(
-                                          "Foto diri bersama tanda pengenalmu",
+                                          file != null
+                                              ? basename(file!.path)
+                                              : "Foto diri bersama tanda pengenalmu",
                                           style: regularRobotoFont.copyWith(
                                             fontSize: 14.sp,
                                             color: blackPure,
@@ -392,5 +415,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ));
           }),
     );
+  }
+
+  Future profilePhotoPressed() async {
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      allowedExtensions: ["jpg", "jpeg", "png"],
+    );
+    if (result == null) return;
+
+    final path = result.files.single.path!;
+
+    setState(() {
+      file = File(path);
+    });
+  }
+
+  Future idPhotoPressed() async {
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      allowedExtensions: ["jpg", "jpeg", "png"],
+    );
+    if (result == null) return;
+
+    final path = result.files.single.path!;
+
+    setState(() {
+      file = File(path);
+    });
+  }
+
+  Future profileAndIdPressed() async {
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      allowedExtensions: ["jpg", "jpeg", "png"],
+    );
+    if (result == null) return;
+
+    final path = result.files.single.path!;
+
+    setState(() {
+      file = File(path);
+    });
+  }
+
+  Future submitData() async {
+    if (file == null) return;
+
+    final fileName = basename(file!.path);
+    // to make folder destination based on uid
+    final destination = "uid/$fileName";
+
+    FirebaseUtils.uploadFile(destination, file!);
   }
 }
