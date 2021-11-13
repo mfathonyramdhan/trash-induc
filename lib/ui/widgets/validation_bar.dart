@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../shared/color.dart';
 
-Future<dynamic> showValidationBar(BuildContext context, {String message = "", Color color = redDanger}) {
+Future<dynamic> showValidationBar(BuildContext context,
+    {String message = "", Color color = redDanger}) {
   return Flushbar(
     duration: Duration(seconds: 4),
     flushbarPosition: FlushbarPosition.TOP,

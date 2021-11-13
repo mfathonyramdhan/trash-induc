@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiloin/ui/screens/chat/chat_screen.dart';
-import 'package:kiloin/ui/screens/profile/profile_screen.dart';
+import 'package:kiloin/shared/color.dart';
+import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/screens/user/chat/chat_screen.dart';
+import 'package:kiloin/ui/screens/user/home/home_screen.dart';
+import 'package:kiloin/ui/screens/user/profile/profile_screen.dart';
 
-import '../../screens/home/home_screen.dart';
-import '../../../shared/color.dart';
-import '../../../shared/font.dart';
-import '../../../shared/size.dart';
 import '../transaction/transaction_screen.dart';
 import '../profile/edit_screen.dart';
 

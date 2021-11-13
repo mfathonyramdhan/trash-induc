@@ -4,6 +4,8 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 
 class ChatScreen extends StatefulWidget {
+  static String routeName = "/chat";
+
   const ChatScreen({Key? key}) : super(key: key);
 
   @override

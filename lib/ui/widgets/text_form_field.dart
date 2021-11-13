@@ -4,6 +4,7 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 
 class CustomTextForm extends StatelessWidget {
+  final String? initial;
   final String label;
   final bool? readOnly;
   final TextInputType keyboardType;
@@ -12,6 +13,7 @@ class CustomTextForm extends StatelessWidget {
 
   CustomTextForm({
     Key? key,
+    this.initial,
     required this.label,
     this.readOnly = false,
     required this.keyboardType,
@@ -38,6 +40,7 @@ class CustomTextForm extends StatelessWidget {
             ),
           ),
           TextFormField(
+            initialValue: initial,
             minLines: 1,
             maxLines: 2,
             // initialValue: init,

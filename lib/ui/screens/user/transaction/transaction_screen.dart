@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kiloin/ui/screens/transaction/empty_transaction_screen.dart';
-
-import '../../../shared/font.dart';
-import '../../../shared/color.dart';
+import 'package:kiloin/shared/color.dart';
+import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/screens/user/transaction/empty_transaction_screen.dart';
 
 class TransactionScreen extends StatefulWidget {
+  static String routeName = "/transaction";
+
   const TransactionScreen({Key? key}) : super(key: key);
 
   @override

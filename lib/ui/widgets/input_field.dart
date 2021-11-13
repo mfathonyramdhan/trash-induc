@@ -12,6 +12,7 @@ class InputField extends StatelessWidget {
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
   final TextEditingController? controller;
+  final FormFieldValidator? validator;
 
   InputField({
     this.hintText,
@@ -21,11 +22,12 @@ class InputField extends StatelessWidget {
     this.keyboardType,
     this.obscureText = false,
     this.prefixIcon,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       obscureText: obscureText,
       controller: controller,
       keyboardType: keyboardType,
@@ -36,6 +38,7 @@ class InputField extends StatelessWidget {
         fontSize: 16,
         color: blackPure,
       ),
+      validator: validator,
       decoration: InputDecoration(
         filled: true,
         fillColor: whitePure,

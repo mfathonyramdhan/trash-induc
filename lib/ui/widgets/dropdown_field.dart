@@ -16,10 +16,11 @@ class CustomDropDownField extends StatefulWidget {
 }
 
 class _CustomDropDownFieldState extends State<CustomDropDownField> {
+  // api provinces: http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json
+
   List<String> provinces = [
-    "East Java",
-    "West Java",
-    "North Java",
+    "Kentot",
+    "kentot",
   ];
 
   String currentSelected = '';
@@ -46,6 +47,8 @@ class _CustomDropDownFieldState extends State<CustomDropDownField> {
             onChanged: (String? newValue) {
               setState(() {
                 currentSelected = newValue!;
+                // get data city soko api
+                // https://emsifa.github.io/api-wilayah-indonesia/api/regencies/currentSelected.json
               });
             },
             icon: Icon(
