@@ -26,22 +26,41 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final TextEditingController userId = TextEditingController();
   final TextEditingController fullName = TextEditingController();
   final TextEditingController phoneNumber = TextEditingController();
+
+  String currentProvince = "";
+  String currentCity = "";
+  String currentDistrict = "";
+  String currentVillage = "";
   final TextEditingController address = TextEditingController();
   final TextEditingController postalCode = TextEditingController();
-  final TextEditingController province = TextEditingController();
-  final TextEditingController city = TextEditingController();
-  final TextEditingController district = TextEditingController();
-  final TextEditingController village = TextEditingController();
+
+  List<String> provinces = [
+    "Jawa Timur",
+    "Jawa tapi gak jawa",
+    "Jakarta tapi gakmau dibilang jawa",
+  ];
+  List<String> city = [
+    "Jember",
+    "Jemb0t",
+    "Kntl",
+  ];
+  List<String> district = [
+    "Sumbersari",
+  ];
+  List<String> village = [
+    "Ambulu",
+  ];
 
   final TextEditingController photo = TextEditingController();
   final TextEditingController photoId = TextEditingController();
   final TextEditingController photoWithId = TextEditingController();
 
   UploadTask? task;
-  File? file;
+  File? filePhoto;
+  File? fileId;
+  File? filePhotoAndId;
 
   List<GlobalKey<FormState>> formKey = [
     GlobalKey<FormState>(),
@@ -123,10 +142,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               height: 30.h,
                             ),
                             CircleAvatar(
-                              radius: 51,
+                              radius: 51.r,
                               backgroundColor: lightGreen,
                               child: CircleAvatar(
-                                radius: 45,
+                                radius: 45.r,
                               ),
                             ),
                             SizedBox(
@@ -138,6 +157,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               keyboardType: TextInputType.none,
                               readOnly: true,
                             ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
                             CustomTextForm(
                               controller: fullName,
                               label: "Nama Lengkap",
@@ -146,19 +168,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 if (value!.isEmpty) {
                                   return "Nama tidak boleh kosong";
                                 }
-                                if (value.length < 4) {
-                                  return "Nama harus lebih dari 3 karakter";
+                                if (value.length < 2) {
+                                  return "Nama harus lebih dari 1 karakter";
                                 }
+
                                 return null;
                               },
+                            ),
+                            SizedBox(
+                              height: 10.h,
                             ),
                             CustomTextForm(
                               label: "Nomor HP",
                               keyboardType: TextInputType.number,
                               controller: phoneNumber,
                               validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Nomor HP tidak boleh kosoong";
+                                if (value!.isEmpty ||
+                                    value == null ||
+                                    value == "-") {
+                                  return "Nomor HP tidak boleh kosong";
+                                }
+                                if (value.length > 13 || value.length < 8) {
+                                  return "Nomor HP tidak valid";
                                 }
                                 return null;
                               },
@@ -168,7 +199,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       validation: () {
                         if (!formKey[0].currentState!.validate()) {
-                          return "";
+                          return "Isi semua form dengan benar";
                         }
                         return null;
                       },
@@ -202,35 +233,229 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     color: redDanger,
                                   ),
                                 ),
-                                CustomDropDownField(
-                                  label: "Provinsi",
+                                SizedBox(
+                                  height: 7.h,
                                 ),
-                                CustomDropDownField(
-                                  label: "Kota/Kabupaten",
+                                Text(
+                                  "Provinsi",
+                                  style: regularRobotoFont.copyWith(
+                                    fontSize: 14.sp,
+                                    color: blackPure,
+                                  ),
                                 ),
-                                CustomDropDownField(
-                                  label: "Kecamatan",
+                                SizedBox(
+                                  height: 6.h,
                                 ),
-                                CustomDropDownField(
-                                  label: "Desa",
+                                DropdownButtonFormField(
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      currentProvince = newValue!;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down,
+                                  ),
+                                  decoration: InputDecoration(
+                                      isDense: true,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5.r,
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 2,
+                                            color: grayPure,
+                                          )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5.r,
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 2,
+                                            color: lightGreen,
+                                          ))),
+                                  hint: Text(
+                                    "Provinsi",
+                                  ),
+                                  items: provinces
+                                      .map((value) => DropdownMenuItem(
+                                            child: Text(value),
+                                            value: value,
+                                          ))
+                                      .toList(),
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Text(
+                                  "Kota/Kabupaten",
+                                  style: regularRobotoFont.copyWith(
+                                    fontSize: 14.sp,
+                                    color: blackPure,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 6.h,
+                                ),
+                                DropdownButtonFormField(
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      currentCity = newValue!;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down,
+                                  ),
+                                  decoration: InputDecoration(
+                                      isDense: true,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5.r,
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 2,
+                                            color: grayPure,
+                                          )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5.r,
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 2,
+                                            color: lightGreen,
+                                          ))),
+                                  hint: Text(
+                                    "Kota/Kabupaten",
+                                  ),
+                                  items: city
+                                      .map((value) => DropdownMenuItem(
+                                            child: Text(value),
+                                            value: value,
+                                          ))
+                                      .toList(),
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Text(
+                                  "Kecamatan",
+                                  style: regularRobotoFont.copyWith(
+                                    fontSize: 14.sp,
+                                    color: blackPure,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 6.h,
+                                ),
+                                DropdownButtonFormField(
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      currentDistrict = newValue!;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down,
+                                  ),
+                                  decoration: InputDecoration(
+                                      isDense: true,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5.r,
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 2,
+                                            color: grayPure,
+                                          )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5.r,
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 2,
+                                            color: lightGreen,
+                                          ))),
+                                  hint: Text(
+                                    "Kecamatan",
+                                  ),
+                                  items: district
+                                      .map((value) => DropdownMenuItem(
+                                            child: Text(value),
+                                            value: value,
+                                          ))
+                                      .toList(),
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Text(
+                                  "Desa",
+                                  style: regularRobotoFont.copyWith(
+                                    fontSize: 14.sp,
+                                    color: blackPure,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 6.h,
+                                ),
+                                DropdownButtonFormField(
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      currentVillage = newValue!;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down,
+                                  ),
+                                  decoration: InputDecoration(
+                                      isDense: true,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5.r,
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 2,
+                                            color: grayPure,
+                                          )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5.r,
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 2,
+                                            color: lightGreen,
+                                          ))),
+                                  hint: Text(
+                                    "Desa",
+                                  ),
+                                  items: village
+                                      .map((value) => DropdownMenuItem(
+                                            child: Text(value),
+                                            value: value,
+                                          ))
+                                      .toList(),
+                                ),
+                                SizedBox(
+                                  height: 10.h,
                                 ),
                                 CustomTextForm(
                                   label: "Alamat lengkap",
                                   keyboardType: TextInputType.multiline,
                                   controller: address,
                                   validator: (value) {
-                                    if (value!.isEmpty) {
+                                    if (value!.isEmpty || value == null) {
                                       return "Alamat tidak boleh kosong";
                                     }
                                     return null;
                                   },
+                                ),
+                                SizedBox(
+                                  height: 10.h,
                                 ),
                                 CustomTextForm(
                                   label: "Kode Pos",
                                   keyboardType: TextInputType.number,
                                   controller: postalCode,
                                   validator: (value) {
-                                    if (value!.isEmpty) {
+                                    if (value!.isEmpty || value == null) {
                                       return "Kode pos tidak boleh kosong";
                                     }
                                     return null;
@@ -240,7 +465,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             )),
                         validation: () {
                           if (!formKey[1].currentState!.validate()) {
-                            return "";
+                            return "Isi semua form dengan benar";
                           }
                           return null;
                         }),
@@ -294,8 +519,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Icons.person,
                                         ),
                                         title: Text(
-                                          file != null
-                                              ? basename(file!.path)
+                                          filePhoto != null
+                                              ? basename(filePhoto!.path)
                                               : "Foto diri kamu",
                                           style: regularRobotoFont.copyWith(
                                             fontSize: 14.sp,
@@ -312,7 +537,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                                 InkWell(
                                   onTap: () async {
-                                    idPhotoPressed();
+                                    // idPhotoPressed();
                                   },
                                   child: Container(
                                       decoration: BoxDecoration(
@@ -328,8 +553,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Icons.person,
                                         ),
                                         title: Text(
-                                          file != null
-                                              ? basename(file!.path)
+                                          fileId != null
+                                              ? basename(fileId!.path)
                                               : "Foto tanda pengenalmu",
                                           style: regularRobotoFont.copyWith(
                                             fontSize: 14.sp,
@@ -346,7 +571,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                                 InkWell(
                                   onTap: () async {
-                                    profileAndIdPressed();
+                                    // profileAndIdPressed();
                                   },
                                   child: Container(
                                       decoration: BoxDecoration(
@@ -362,8 +587,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Icons.person,
                                         ),
                                         title: Text(
-                                          file != null
-                                              ? basename(file!.path)
+                                          filePhotoAndId != null
+                                              ? basename(filePhotoAndId!.path)
                                               : "Foto diri bersama tanda pengenalmu",
                                           style: regularRobotoFont.copyWith(
                                             fontSize: 14.sp,
@@ -375,30 +600,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         ),
                                       )),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Checkbox(
-                                        value: isAccepted,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            isAccepted = value!;
-                                          });
-                                        }),
-                                    Text(
-                                      "Dengan melengkapi data diri, saya setuju pada\nSyarat & Ketentuan dan Kebijakan Transh Induc",
-                                      style: regularRobotoFont.copyWith(
-                                        fontSize: 12.sp,
-                                        color: blackPure,
-                                      ),
-                                    )
-                                  ],
-                                )
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.start,
+                                //   children: [
+                                //     Checkbox(
+                                //         value: isAccepted,
+                                //         onChanged: (value) {
+                                //           setState(() {
+                                //             isAccepted = value!;
+                                //           });
+                                //         }),
+                                //     Text(
+                                //       "Dengan melengkapi data diri, saya setuju pada\nSyarat & Ketentuan dan Kebijakan Transh Induc",
+                                //       style: regularRobotoFont.copyWith(
+                                //         fontSize: 12.sp,
+                                //         color: blackPure,
+                                //       ),
+                                //     )
+                                //   ],
+                                // )
                               ],
                             )),
                         validation: () {
-                          if (!formKey[1].currentState!.validate()) {
-                            return "";
+                          if (!formKey[2].currentState!.validate()) {
+                            return "Isi semua form dengan benar";
                           }
                           return null;
                         })
@@ -419,6 +644,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future profilePhotoPressed() async {
     final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
       allowMultiple: false,
       allowedExtensions: ["jpg", "jpeg", "png"],
     );
@@ -427,12 +653,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final path = result.files.single.path!;
 
     setState(() {
-      file = File(path);
+      filePhoto = File(path);
     });
   }
 
   Future idPhotoPressed() async {
     final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
       allowMultiple: false,
       allowedExtensions: ["jpg", "jpeg", "png"],
     );
@@ -441,12 +668,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final path = result.files.single.path!;
 
     setState(() {
-      file = File(path);
+      fileId = File(path);
     });
   }
 
   Future profileAndIdPressed() async {
     final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
       allowMultiple: false,
       allowedExtensions: ["jpg", "jpeg", "png"],
     );
@@ -455,17 +683,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final path = result.files.single.path!;
 
     setState(() {
-      file = File(path);
+      filePhotoAndId = File(path);
     });
   }
 
   Future submitData() async {
-    if (file == null) return;
+    // if (file == null) return;
 
-    final fileName = basename(file!.path);
-    // to make folder destination based on uid
-    final destination = "uid/$fileName";
+    // final fileName = basename(file!.path);
+    // // to make folder destination based on uid
+    // final destination = "uid/$fileName";
 
-    FirebaseUtils.uploadFile(destination, file!);
+    // FirebaseUtils.uploadFile(destination, file!);
   }
 }

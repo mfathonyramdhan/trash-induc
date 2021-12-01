@@ -24,55 +24,51 @@ class CustomTextForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 20.h,
-        left: 10.w,
-        right: 10.w,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: regularRobotoFont.copyWith(
-              fontSize: 14.sp,
-              color: blackPure,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: regularRobotoFont.copyWith(
+            fontSize: 14.sp,
+            color: blackPure,
           ),
-          TextFormField(
-            initialValue: initial,
-            minLines: 1,
-            maxLines: 2,
-            // initialValue: init,
-            style: TextStyle(
-              fontSize: 16.sp,
-            ),
-            readOnly: readOnly!,
-            keyboardType: keyboardType,
-            validator: validator,
-            controller: controller,
-            decoration: InputDecoration(
-                isDense: true,
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      5.r,
-                    ),
-                    borderSide: BorderSide(
-                      width: 2,
-                      color: grayPure,
-                    )),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      5.r,
-                    ),
-                    borderSide: BorderSide(
-                      width: 2,
-                      color: lightGreen,
-                    ))),
+        ),
+        SizedBox(
+          height: 6.h,
+        ),
+        TextFormField(
+          initialValue: initial,
+          minLines: 1,
+          maxLines: 2,
+          // initialValue: init,
+          style: TextStyle(
+            fontSize: 16.sp,
           ),
-        ],
-      ),
+          readOnly: readOnly!,
+          keyboardType: keyboardType,
+          validator: validator,
+          controller: controller,
+          decoration: InputDecoration(
+              isDense: true,
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    5.r,
+                  ),
+                  borderSide: BorderSide(
+                    width: 2,
+                    color: grayPure,
+                  )),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    5.r,
+                  ),
+                  borderSide: BorderSide(
+                    width: 2,
+                    color: lightGreen,
+                  ))),
+        ),
+      ],
     );
   }
 }

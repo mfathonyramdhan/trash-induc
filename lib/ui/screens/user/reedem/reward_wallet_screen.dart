@@ -20,26 +20,28 @@ class RewardWalletState extends State<RewardWallet> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: rewardRef.get(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10.w,
-            ),
-            itemCount: snapshot.data.docs.length,
-            itemBuilder: (context, index) =>
-                buildCard(snapshot.data.docs[index].data()),
+    return Center(
+      child: FutureBuilder(
+        future: rewardRef.get(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.w,
+              ),
+              itemCount: snapshot.data.docs.length,
+              itemBuilder: (context, index) =>
+                  buildCard(snapshot.data.docs[index].data()),
+            );
+          }
+          if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          return CircularProgressIndicator(
+            color: darkGreen,
           );
-        }
-        if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        return CircularProgressIndicator(
-          color: darkGreen,
-        );
-      },
+        },
+      ),
     );
   }
 

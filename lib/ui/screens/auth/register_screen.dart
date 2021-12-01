@@ -120,7 +120,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Nomor HP tidak boleh kosong";
-                            } else if (value.length > 13) {
+                            } else if (value.length > 13 || value.length < 8) {
                               return "Masukkan nomor HP yang valid";
                             }
                           },
