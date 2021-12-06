@@ -106,16 +106,16 @@ class _InputTransactionScreenState extends State<InputTransactionScreen> {
             key: key,
             child: Column(
               children: [
-                FutureBuilder(
-                    // future: _futureAllUsers,
-                    builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    // var listUsers =
-                    //     snapshot.data!.data() as Map<String, dynamic>;
-                  }
+                // FutureBuilder(
+                //     future: _futureAllUsers,
+                //     builder: (context, snapshot) {
+                //   if (snapshot.hasData) {
+                //     var listUsers =
+                //         snapshot.data!.data() as Map<String, dynamic>;
+                //   }
 
-                  return Center(child: CircularProgressIndicator());
-                }),
+                //   return Center(child: CircularProgressIndicator());
+                // }),
                 DropdownButtonFormField(
                   onChanged: (String? newValue) {
                     setState(() {

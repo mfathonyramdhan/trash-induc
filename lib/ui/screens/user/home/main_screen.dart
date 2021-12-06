@@ -17,17 +17,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int? bottomNavBarIndex;
-  PageController? pageController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    bottomNavBarIndex = 0;
-    pageController = PageController(initialPage: bottomNavBarIndex ?? 0);
-  }
-
   List<Widget> pages = [
     ProfileScreen(),
     TransactionScreen(),

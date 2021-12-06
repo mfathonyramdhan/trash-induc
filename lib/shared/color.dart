@@ -10,3 +10,6 @@ const Color yellowPure = Color(0xFFDCC600);
 const Color blueSky = Color(0xFF00A3FF);
 const Color blackPure = Color(0xFF000000);
 const Color redDanger = Color(0xFFBD2924);
+const Color darkGray = Color(0xFF5A5A5A);
+const Color veryLightGreen = Color(0xFFB2D783);
+const Color veryLightGray = Color(0xFFE8E8E8);
