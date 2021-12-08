@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/repository/admin_drawer_repository.dart';
 import 'package:kiloin/repository/cart_item_repository.dart';
 import 'package:kiloin/utils/firebase_utils.dart';
 import 'package:kiloin/repository/user_repository.dart';
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => CartItemRepository(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AdminDrawerRepository(),
         )
       ],
       child: ScreenUtilInit(

@@ -23,7 +23,8 @@ class _InputTransactionScreenState extends State<InputTransactionScreen> {
   TextEditingController weightController = TextEditingController();
   String selectedUser = "";
   String selectedItem = "";
-  // Future _futureAllUsers = userRef.where('role', 'user').get();
+  // Future getAllUser =
+  //     FirebaseFirestore.instance.collection("users").where("role", isEqualTo: );
 
   List<String> items = [
     "Plastik",
@@ -47,8 +48,6 @@ class _InputTransactionScreenState extends State<InputTransactionScreen> {
   final itemsMission = missions
       .map((mission) => MultiSelectItem(mission, mission.name!))
       .toList();
-
-  CollectionReference userRef = FirebaseFirestore.instance.collection("users");
 
   @override
   void initState() {
