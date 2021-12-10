@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../shared/color.dart';
 import '../screens/admin/admin_main_screen.dart';
@@ -27,15 +28,22 @@ class Wrapper extends StatelessWidget {
             UserModel.User user = UserModel.User.fromJson(
                 snapshot.data!.data() as Map<String, dynamic>);
             if (user.role == "user") {
-              return Scaffold(
-                body: MainScreen(),
+              return ScreenUtilInit(
+                designSize: Size(360, 640),
+                builder: () => MainScreen(),
               );
             }
             if (user.role == "admin") {
-              return AdminMainScreen();
+              return ScreenUtilInit(
+                designSize: Size(640, 360),
+                builder: () => AdminMainScreen(),
+              );
             }
             if (user.role == "petugas") {
-              return PetugasMainScreen();
+              return ScreenUtilInit(
+                designSize: Size(640, 360),
+                builder: () => PetugasMainScreen(),
+              );
             }
           }
           return Center(

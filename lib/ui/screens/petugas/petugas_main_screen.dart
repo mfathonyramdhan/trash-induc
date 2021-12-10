@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/ui/screens/petugas/input_transaksi.dart';
-import 'package:kiloin/ui/screens/user/transaction/transaction_screen.dart';
-import 'package:kiloin/ui/widgets/petugas_drawer.dart';
 import 'package:kiloin/utils/firebase_utils.dart';
 import 'package:kiloin/ui/screens/auth/login_screen.dart';
 
@@ -17,8 +16,16 @@ class PetugasMainScreen extends StatefulWidget {
 class _PetugasMainScreenState extends State<PetugasMainScreen> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: lightGreen,
+    ));
+
     return Scaffold(
-      drawer: PetugasDrawer(),
       appBar: AppBar(
         title: Text("title"),
         titleSpacing: 0,

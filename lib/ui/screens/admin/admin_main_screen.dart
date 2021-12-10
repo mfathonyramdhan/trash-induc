@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/models/admin_navigation.dart';
+import 'package:kiloin/repository/admin_drawer_repository.dart';
+import 'package:kiloin/shared/color.dart';
+import 'package:kiloin/ui/screens/admin/admin_dashboard.dart';
+import 'package:kiloin/ui/screens/admin/akun/index.dart';
+import 'package:kiloin/ui/screens/admin/rank/index.dart';
+import 'package:kiloin/ui/screens/admin/reward/index.dart';
+import 'package:kiloin/ui/screens/admin/sampah/index.dart';
+import 'package:kiloin/ui/screens/admin/transaksi/index.dart';
 
-import 'package:kiloin/ui/widgets/admin_drawer.dart';
-import 'package:kiloin/utils/firebase_utils.dart';
-import 'package:kiloin/ui/screens/auth/login_screen.dart';
+import 'package:provider/provider.dart';
 
 class AdminMainScreen extends StatefulWidget {
   const AdminMainScreen({Key? key}) : super(key: key);
@@ -14,43 +23,35 @@ class AdminMainScreen extends StatefulWidget {
 class _AdminMainScreenState extends State<AdminMainScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: AdminDrawer(),
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              icon: Image.asset(
-                "assets/image/buttonSidebar.png",
-              ),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            );
-          },
-        ),
-        title: Text("title"),
-        titleSpacing: 0,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Admin Page",
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  await FirebaseUtils.signOut();
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      LoginScreen.routeName, (route) => false);
-                },
-                child: Text(
-                  "Sign Out",
-                ))
-          ],
-        ),
-      ),
-    );
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: lightGreen,
+    ));
+
+    return buildPages();
+  }
+
+  Widget buildPages() {
+    final repository = Provider.of<AdminDrawerRepository>(context);
+    final currentNavigation = repository.adminNavigation;
+
+    switch (currentNavigation) {
+      case AdminNavigation.dashboard:
+        return AdminDashboard();
+      case AdminNavigation.account:
+        return IndexAkun();
+      case AdminNavigation.trash:
+        return IndexSampah();
+      case AdminNavigation.transaction:
+        return IndexTransaksi();
+      case AdminNavigation.reward:
+        return IndexReward();
+      case AdminNavigation.rank:
+        return IndexRank();
+    }
   }
 }

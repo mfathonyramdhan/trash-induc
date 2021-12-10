@@ -4,14 +4,14 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
-class IndexSampah extends StatefulWidget {
-  const IndexSampah({Key? key}) : super(key: key);
+class AdminDashboard extends StatefulWidget {
+  const AdminDashboard({Key? key}) : super(key: key);
 
   @override
-  _IndexSampahState createState() => _IndexSampahState();
+  AdminDashboardState createState() => AdminDashboardState();
 }
 
-class _IndexSampahState extends State<IndexSampah> {
+class AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,19 +30,13 @@ class _IndexSampahState extends State<IndexSampah> {
           },
         ),
         title: Text(
-          "Sampah",
+          "Dashboard",
           style: boldRobotoFont.copyWith(
             fontSize: 18.sp,
           ),
         ),
         titleSpacing: 0,
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Image.asset("assets/image/buttonCreate.png"),
-          )
-        ],
       ),
     );
   }

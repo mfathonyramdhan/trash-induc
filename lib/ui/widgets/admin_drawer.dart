@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/models/admin_navigation.dart';
+import 'package:kiloin/repository/admin_drawer_repository.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:provider/provider.dart';
 
 class AdminDrawer extends StatefulWidget {
   const AdminDrawer({Key? key}) : super(key: key);
@@ -14,6 +17,7 @@ class _AdminDrawerState extends State<AdminDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      // backgroundColor: darkGreen,
       child: ListView(
         children: [
           DrawerHeader(
@@ -40,92 +44,85 @@ class _AdminDrawerState extends State<AdminDrawer> {
               color: darkGreen,
             ),
           ),
-          Ink(
-            color: veryLightGreen,
-            child: ListTile(
-              onTap: () {},
-              leading: Image.asset("assets/image/dashboardIcon.png"),
-              title: Text(
-                "Dashboard",
-                style: mediumRobotoFont.copyWith(
-                  fontSize: 16.sp,
-                  color: darkGray,
-                ),
-              ),
-            ),
+          buildTile(
+            context,
+            item: AdminNavigation.dashboard,
+            title: "Dashboard",
+            image: Image.asset("assets/image/dashboardIcon.png"),
           ),
-          Ink(
+          buildTile(
+            context,
+            item: AdminNavigation.account,
             color: veryLightGray,
-            child: ListTile(
-              onTap: () {},
-              leading: Image.asset("assets/image/akunIcon.png"),
-              title: Text(
-                "Akun",
-                style: mediumRobotoFont.copyWith(
-                  fontSize: 16.sp,
-                  color: darkGray,
-                ),
-              ),
-            ),
+            title: "Akun",
+            image: Image.asset("assets/image/akunIcon.png"),
           ),
-          Ink(
-            color: whitePure,
-            child: ListTile(
-              onTap: () {},
-              leading: Image.asset("assets/image/sampahIcon.png"),
-              title: Text(
-                "Sampah",
-                style: mediumRobotoFont.copyWith(
-                  fontSize: 16.sp,
-                  color: darkGray,
-                ),
-              ),
-            ),
+          buildTile(
+            context,
+            item: AdminNavigation.trash,
+            title: "Sampah",
+            image: Image.asset("assets/image/sampahIcon.png"),
           ),
-          Ink(
+          buildTile(
+            context,
+            item: AdminNavigation.transaction,
             color: veryLightGray,
-            child: ListTile(
-              onTap: () {},
-              leading: Image.asset("assets/image/transaksiIcon.png"),
-              title: Text(
-                "Transaksi",
-                style: mediumRobotoFont.copyWith(
-                  fontSize: 16.sp,
-                  color: darkGray,
-                ),
-              ),
-            ),
+            title: "Transaksi",
+            image: Image.asset("assets/image/transaksiIcon.png"),
           ),
-          Ink(
-            color: whitePure,
-            child: ListTile(
-              onTap: () {},
-              leading: Image.asset("assets/image/rewardIcon.png"),
-              title: Text(
-                "Reward",
-                style: mediumRobotoFont.copyWith(
-                  fontSize: 16.sp,
-                  color: darkGray,
-                ),
-              ),
-            ),
+          buildTile(
+            context,
+            item: AdminNavigation.reward,
+            title: "Reward",
+            image: Image.asset("assets/image/rewardIcon.png"),
           ),
-          Ink(
+          buildTile(
+            context,
+            item: AdminNavigation.rank,
             color: veryLightGray,
-            child: ListTile(
-              onTap: () {},
-              leading: Image.asset("assets/image/rankIcon.png"),
-              title: Text(
-                "Rank",
-                style: mediumRobotoFont.copyWith(
-                  fontSize: 16.sp,
-                  color: darkGray,
-                ),
-              ),
-            ),
+            title: "Rank",
+            image: Image.asset("assets/image/rankIcon.png"),
           ),
         ],
       ),
     );
+  }
+
+  Widget buildTile(
+    BuildContext context, {
+    required AdminNavigation item,
+    required String title,
+    required Image image,
+    Color color = whitePure,
+  }) {
+    final repository = Provider.of<AdminDrawerRepository>(context);
+    final currentSelected = repository.adminNavigation;
+    final isSelected = item == currentSelected;
+
+    return Ink(
+      color: color,
+      child: ListTile(
+        onTap: () => selectTile(context, item),
+        selected: isSelected,
+        selectedTileColor: lightGreen,
+        leading: image,
+        title: Text(
+          title,
+          style: mediumRobotoFont.copyWith(
+            fontSize: 16.sp,
+            color: darkGray,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void selectTile(BuildContext context, AdminNavigation item) {
+    final repository = Provider.of<AdminDrawerRepository>(
+      context,
+      listen: false,
+    );
+
+    repository.setAdminNavigation(item);
   }
 }

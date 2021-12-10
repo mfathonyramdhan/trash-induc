@@ -36,15 +36,12 @@ class MyApp extends StatelessWidget {
           create: (_) => AdminDrawerRepository(),
         )
       ],
-      child: ScreenUtilInit(
-        designSize: Size(360, 640),
-        builder: () => MaterialApp(
-          title: 'Bank Sampah App',
-          routes: appRoute,
-          theme: appTheme,
-          debugShowCheckedModeBanner: false,
-          home: Wrapper(),
-        ),
+      child: MaterialApp(
+        title: 'Bank Sampah App',
+        routes: appRoute,
+        theme: appTheme,
+        debugShowCheckedModeBanner: false,
+        home: Wrapper(),
       ),
     );
   }
