@@ -5,21 +5,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
-import '../reedem/reedemed_screen.dart';
-import '../reedem/reward_wallet_screen.dart';
+import 'user_reedemed_screen.dart';
+import 'user_reward_wallet_screen.dart';
 import '../../../widgets/menu_screen_card.dart';
 import '../../../../models/user.dart' as UserModel;
 
-class ReedemScreen extends StatefulWidget {
+class UserReedemScreen extends StatefulWidget {
   static String routeName = "/reedem";
 
-  const ReedemScreen({Key? key}) : super(key: key);
+  const UserReedemScreen({Key? key}) : super(key: key);
 
   @override
-  _ReedemScreenState createState() => _ReedemScreenState();
+  _UserReedemScreenState createState() => _UserReedemScreenState();
 }
 
-class _ReedemScreenState extends State<ReedemScreen> {
+class _UserReedemScreenState extends State<UserReedemScreen> {
   var currentUserId = FirebaseAuth.instance.currentUser!.uid.toString();
 
   CollectionReference userRef = FirebaseFirestore.instance.collection("users");
@@ -135,8 +135,8 @@ class _ReedemScreenState extends State<ReedemScreen> {
                                 height: 0.596.sh,
                                 child: TabBarView(
                                   children: [
-                                    RewardWallet(),
-                                    Reedemed(),
+                                    UserRewardWalletScreen(),
+                                    UserReedemedScreen(),
                                   ],
                                 ),
                               )

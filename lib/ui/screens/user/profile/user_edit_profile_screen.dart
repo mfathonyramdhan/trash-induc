@@ -16,16 +16,16 @@ import '../../../widgets/dropdown_field.dart';
 import '../../../widgets/text_form_field.dart';
 import '../../../../models/user.dart' as UserModel;
 
-class EditProfileScreen extends StatefulWidget {
+class UserEditProfileScreen extends StatefulWidget {
   static String routeName = "/edit_profile";
 
-  const EditProfileScreen({Key? key}) : super(key: key);
+  const UserEditProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _UserEditProfileScreenState createState() => _UserEditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
   final TextEditingController fullName = TextEditingController();
   final TextEditingController phoneNumber = TextEditingController();
 

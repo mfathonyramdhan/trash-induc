@@ -7,14 +7,14 @@ import 'package:intl/intl.dart';
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
 
-class RewardWallet extends StatefulWidget {
-  const RewardWallet({Key? key}) : super(key: key);
+class UserRewardWalletScreen extends StatefulWidget {
+  const UserRewardWalletScreen({Key? key}) : super(key: key);
 
   @override
-  RewardWalletState createState() => RewardWalletState();
+  UserRewardWalletScreenState createState() => UserRewardWalletScreenState();
 }
 
-class RewardWalletState extends State<RewardWallet> {
+class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
   CollectionReference rewardRef =
       FirebaseFirestore.instance.collection("rewards");
 

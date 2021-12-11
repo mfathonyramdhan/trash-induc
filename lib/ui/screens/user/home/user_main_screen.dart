@@ -4,10 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
-import '../profile/profile_screen.dart';
-import '../chat/chat_screen.dart';
-import '../home/home_screen.dart';
-import '../transaction/transaction_screen.dart';
+import '../profile/user_profile_screen.dart';
+import '../chat/user_chat_screen.dart';
+import 'user_home_screen.dart';
+import '../transaction/user_transaction_screen.dart';
 
 class MainScreen extends StatefulWidget {
   static String routeName = "/main_screen";
@@ -18,9 +18,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<Widget> pages = [
-    ProfileScreen(),
-    TransactionScreen(),
-    ChatScreen(),
+    UserProfileScreen(),
+    UserTransactionScreen(),
+    UserChatScreen(),
   ];
 
   @override
@@ -62,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
           //   ],
           // ),
 
-          HomeScreen(),
+          UserHomeScreen(),
 
           /// WIDGET: BACK LAYER BOTTOM NAVBAR
           Align(

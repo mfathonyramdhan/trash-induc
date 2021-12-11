@@ -5,19 +5,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
-import '../profile/edit_screen.dart';
+import 'user_edit_profile_screen.dart';
 import '../../../../models/user.dart' as UserModel;
 
-class ProfileScreen extends StatefulWidget {
+class UserProfileScreen extends StatefulWidget {
   static String routeName = "/profile";
 
-  const ProfileScreen({Key? key}) : super(key: key);
+  const UserProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _UserProfileScreenState extends State<UserProfileScreen> {
   var currentUserId = FirebaseAuth.instance.currentUser!.uid.toString();
 
   CollectionReference userRef = FirebaseFirestore.instance.collection("users");
@@ -187,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => EditProfileScreen(),
+                                builder: (_) => UserEditProfileScreen(),
                               ));
                             },
                             child: Container(

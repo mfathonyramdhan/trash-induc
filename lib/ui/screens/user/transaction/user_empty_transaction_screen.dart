@@ -4,14 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
 
-class EmptyTransactionScreen extends StatefulWidget {
-  const EmptyTransactionScreen({Key? key}) : super(key: key);
+class UserEmptyTransactionScreen extends StatefulWidget {
+  const UserEmptyTransactionScreen({Key? key}) : super(key: key);
 
   @override
-  EmptyTransactionScreenState createState() => EmptyTransactionScreenState();
+  UserEmptyTransactionScreenState createState() =>
+      UserEmptyTransactionScreenState();
 }
 
-class EmptyTransactionScreenState extends State<EmptyTransactionScreen> {
+class UserEmptyTransactionScreenState
+    extends State<UserEmptyTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return ListView(children: [

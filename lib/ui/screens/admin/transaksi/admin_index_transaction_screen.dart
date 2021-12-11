@@ -4,14 +4,16 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
-class AdminIndexRankScreen extends StatefulWidget {
-  const AdminIndexRankScreen({Key? key}) : super(key: key);
+class AdminIndexTransactionScreen extends StatefulWidget {
+  const AdminIndexTransactionScreen({Key? key}) : super(key: key);
 
   @override
-  _AdminIndexRankScreenState createState() => _AdminIndexRankScreenState();
+  _AdminIndexTransactionScreenState createState() =>
+      _AdminIndexTransactionScreenState();
 }
 
-class _AdminIndexRankScreenState extends State<AdminIndexRankScreen> {
+class _AdminIndexTransactionScreenState
+    extends State<AdminIndexTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,13 +32,19 @@ class _AdminIndexRankScreenState extends State<AdminIndexRankScreen> {
           },
         ),
         title: Text(
-          "Rank",
+          "Transaksi",
           style: boldRobotoFont.copyWith(
             fontSize: 18.sp,
           ),
         ),
         titleSpacing: 0,
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Image.asset("assets/image/buttonCreate.png"),
+          )
+        ],
       ),
     );
   }

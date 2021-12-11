@@ -4,14 +4,14 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
-class AdminDashboard extends StatefulWidget {
-  const AdminDashboard({Key? key}) : super(key: key);
+class AdminDashboardScreen extends StatefulWidget {
+  const AdminDashboardScreen({Key? key}) : super(key: key);
 
   @override
-  AdminDashboardState createState() => AdminDashboardState();
+  AdminDashboardScreenState createState() => AdminDashboardScreenState();
 }
 
-class AdminDashboardState extends State<AdminDashboard> {
+class AdminDashboardScreenState extends State<AdminDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

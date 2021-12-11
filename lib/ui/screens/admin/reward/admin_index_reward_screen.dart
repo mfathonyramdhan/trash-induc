@@ -4,14 +4,14 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
-class IndexAkun extends StatefulWidget {
-  const IndexAkun({Key? key}) : super(key: key);
+class AdminIndexRewardScreen extends StatefulWidget {
+  const AdminIndexRewardScreen({Key? key}) : super(key: key);
 
   @override
-  _IndexAkunState createState() => _IndexAkunState();
+  _AdminIndexRewardScreenState createState() => _AdminIndexRewardScreenState();
 }
 
-class _IndexAkunState extends State<IndexAkun> {
+class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +30,7 @@ class _IndexAkunState extends State<IndexAkun> {
           },
         ),
         title: Text(
-          "Akun",
+          "Reward",
           style: boldRobotoFont.copyWith(
             fontSize: 18.sp,
           ),

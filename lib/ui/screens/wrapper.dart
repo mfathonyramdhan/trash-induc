@@ -5,8 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../shared/color.dart';
 import '../screens/admin/admin_main_screen.dart';
-import '../screens/petugas/petugas_main_screen.dart';
-import '../screens/user/home/main_screen.dart';
+import 'officer/officer_main_screen.dart';
+import 'user/home/user_main_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../../models/user.dart' as UserModel;
 
@@ -28,27 +28,23 @@ class Wrapper extends StatelessWidget {
             UserModel.User user = UserModel.User.fromJson(
                 snapshot.data!.data() as Map<String, dynamic>);
             if (user.role == "user") {
-              return ScreenUtilInit(
-                designSize: Size(360, 640),
-                builder: () => MainScreen(),
-              );
+              return MainScreen();
             }
             if (user.role == "admin") {
-              return ScreenUtilInit(
-                designSize: Size(640, 360),
-                builder: () => AdminMainScreen(),
-              );
+              return AdminMainScreen();
             }
             if (user.role == "petugas") {
-              return ScreenUtilInit(
-                designSize: Size(640, 360),
-                builder: () => PetugasMainScreen(),
-              );
+              return OfficerMainScreen();
             }
           }
+
           return Center(
-            child: CircularProgressIndicator(
-              color: whitePure,
+            child: Column(
+              children: [
+                CircularProgressIndicator(
+                  color: whitePure,
+                ),
+              ],
             ),
           );
         },

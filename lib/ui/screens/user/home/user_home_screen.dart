@@ -8,16 +8,16 @@ import '../../../../models/user.dart' as UserModel;
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
 import '../../../../shared/size.dart';
-import '../../user/home/menu_screen.dart';
+import 'user_menu_screen.dart';
 import '../../../widgets/garbage_card.dart';
 import '../../../../extension/date_time_extension.dart';
 
-class HomeScreen extends StatefulWidget {
+class UserHomeScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _UserHomeScreenState createState() => _UserHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _UserHomeScreenState extends State<UserHomeScreen> {
   final double width = 24.r;
   final List<Color> leftBarColor = [
     whitePure,
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             Navigator.pushNamed(
                               context,
-                              MenuScreen.routeName,
+                              UserMenuScreen.routeName,
                             );
                           },
                         ),

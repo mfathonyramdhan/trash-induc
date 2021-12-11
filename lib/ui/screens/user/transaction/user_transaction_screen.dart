@@ -3,18 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
-import '../transaction/empty_transaction_screen.dart';
+import 'user_empty_transaction_screen.dart';
 
-class TransactionScreen extends StatefulWidget {
+class UserTransactionScreen extends StatefulWidget {
   static String routeName = "/transaction";
 
-  const TransactionScreen({Key? key}) : super(key: key);
+  const UserTransactionScreen({Key? key}) : super(key: key);
 
   @override
-  _TransactionScreenState createState() => _TransactionScreenState();
+  _UserTransactionScreenState createState() => _UserTransactionScreenState();
 }
 
-class _TransactionScreenState extends State<TransactionScreen> {
+class _UserTransactionScreenState extends State<UserTransactionScreen> {
   bool isEmpty = false;
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         centerTitle: true,
       ),
       body: (isEmpty)
-          ? EmptyTransactionScreen()
+          ? UserEmptyTransactionScreen()
           : Padding(
               padding: EdgeInsets.only(
                 left: 20.w,

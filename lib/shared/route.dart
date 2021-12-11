@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kiloin/ui/screens/user/chat/chat_screen.dart';
-import 'package:kiloin/ui/screens/user/home/main_screen.dart';
-import 'package:kiloin/ui/screens/user/home/menu_screen.dart';
-import 'package:kiloin/ui/screens/user/profile/edit_screen.dart';
-import 'package:kiloin/ui/screens/user/profile/profile_screen.dart';
-import 'package:kiloin/ui/screens/user/reedem/reedem_screen.dart';
-import 'package:kiloin/ui/screens/user/transaction/transaction_screen.dart';
+import 'package:kiloin/ui/screens/user/chat/user_chat_screen.dart';
+import 'package:kiloin/ui/screens/user/home/user_main_screen.dart';
+import 'package:kiloin/ui/screens/user/home/user_menu_screen.dart';
+import 'package:kiloin/ui/screens/user/profile/user_edit_profile_screen.dart';
+import 'package:kiloin/ui/screens/user/profile/user_profile_screen.dart';
+import 'package:kiloin/ui/screens/user/reedem/user_reedem_screen.dart';
+import 'package:kiloin/ui/screens/user/transaction/user_transaction_screen.dart';
 
 import '../ui/screens/auth/login_screen.dart';
 import '../ui/screens/auth/register_screen.dart';
@@ -18,10 +18,12 @@ Map<String, Widget Function(BuildContext context)> appRoute = {
   LoginScreen.routeName: (BuildContext context) => LoginScreen(),
   RegisterScreen.routeName: (BuildContext context) => RegisterScreen(),
   MainScreen.routeName: (BuildContext context) => MainScreen(),
-  MenuScreen.routeName: (BuildContext context) => MenuScreen(),
-  TransactionScreen.routeName: (BuildContext context) => TransactionScreen(),
-  ChatScreen.routeName: (BuildContext context) => ChatScreen(),
-  ProfileScreen.routeName: (BuildContext context) => ProfileScreen(),
-  ReedemScreen.routeName: (BuildContext context) => ReedemScreen(),
-  EditProfileScreen.routeName: (BuildContext context) => EditProfileScreen(),
+  UserMenuScreen.routeName: (BuildContext context) => UserMenuScreen(),
+  UserTransactionScreen.routeName: (BuildContext context) =>
+      UserTransactionScreen(),
+  UserChatScreen.routeName: (BuildContext context) => UserChatScreen(),
+  UserProfileScreen.routeName: (BuildContext context) => UserProfileScreen(),
+  UserReedemScreen.routeName: (BuildContext context) => UserReedemScreen(),
+  UserEditProfileScreen.routeName: (BuildContext context) =>
+      UserEditProfileScreen(),
 };

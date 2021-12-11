@@ -282,12 +282,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     ));
     try {
-      await auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
       // implement firestore logic
-      FirebaseUtils.setupUser(email, phoneNumber);
+      await FirebaseUtils.setupUser(email, password, phoneNumber, name: "");
       Navigator.of(context).pushReplacementNamed(
         Wrapper.routeName,
       );

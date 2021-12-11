@@ -4,14 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
 
-class Reedemed extends StatefulWidget {
-  const Reedemed({Key? key}) : super(key: key);
+class UserReedemedScreen extends StatefulWidget {
+  const UserReedemedScreen({Key? key}) : super(key: key);
 
   @override
-  _ReedemedState createState() => _ReedemedState();
+  _UserReedemedScreenState createState() => _UserReedemedScreenState();
 }
 
-class _ReedemedState extends State<Reedemed> {
+class _UserReedemedScreenState extends State<UserReedemedScreen> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

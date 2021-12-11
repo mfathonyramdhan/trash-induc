@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/repository/admin_drawer_repository.dart';
 import 'package:kiloin/repository/cart_item_repository.dart';
+import 'package:kiloin/repository/officer_drawer_repository.dart';
 import 'package:kiloin/utils/firebase_utils.dart';
-import 'package:kiloin/repository/user_repository.dart';
 import 'package:provider/provider.dart';
 
-import 'services/auth_services.dart';
 import 'shared/route.dart';
 import 'shared/theme.dart';
 import 'ui/screens/wrapper.dart';
@@ -34,14 +33,20 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => AdminDrawerRepository(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => OfficerDrawerRepository(),
         )
       ],
-      child: MaterialApp(
-        title: 'Bank Sampah App',
-        routes: appRoute,
-        theme: appTheme,
-        debugShowCheckedModeBanner: false,
-        home: Wrapper(),
+      child: ScreenUtilInit(
+        designSize: Size(360, 640),
+        builder: () => MaterialApp(
+          title: 'Bank Sampah App',
+          routes: appRoute,
+          theme: appTheme,
+          debugShowCheckedModeBanner: false,
+          home: Wrapper(),
+        ),
       ),
     );
   }

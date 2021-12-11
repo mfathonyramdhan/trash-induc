@@ -4,21 +4,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kiloin/shared/size.dart';
 
 class FirebaseUtils {
   static FirebaseAuth auth = FirebaseAuth.instance;
   static GoogleSignIn googleSignIn = GoogleSignIn();
   static User? currentUser = auth.currentUser;
 
-  static Future setupUser(String email, String phoneNumber) async {
-    String uid = currentUser!.uid.toString();
-
+  static Future setupUser(String email, String password, String phoneNumber,
+      {String? name}) async {
+    UserCredential userCred = await auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
     DocumentReference userRef =
-        FirebaseFirestore.instance.collection("users").doc(uid);
+        FirebaseFirestore.instance.collection("users").doc(userCred.user!.uid);
 
     await userRef.set({
-      "name": "-",
+      "name": name,
       "email": email,
       "phone": phoneNumber,
       "address": "-",

@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/ui/widgets/admin_drawer.dart';
+import 'package:kiloin/ui/screens/officer/transaksi/officer_add_transaction_screen.dart';
+import 'package:kiloin/ui/widgets/officer_drawer.dart';
 
-class IndexTransaksi extends StatefulWidget {
-  const IndexTransaksi({Key? key}) : super(key: key);
+class OfficerIndexTransactionScreen extends StatefulWidget {
+  const OfficerIndexTransactionScreen({Key? key}) : super(key: key);
 
   @override
-  _IndexTransaksiState createState() => _IndexTransaksiState();
+  _AdminIndexTransactionScreenState createState() =>
+      _AdminIndexTransactionScreenState();
 }
 
-class _IndexTransaksiState extends State<IndexTransaksi> {
+class _AdminIndexTransactionScreenState
+    extends State<OfficerIndexTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AdminDrawer(),
+      drawer: OfficerDrawer(),
       appBar: AppBar(
         backgroundColor: darkGreen,
         leading: Builder(
@@ -39,7 +42,13 @@ class _IndexTransaksiState extends State<IndexTransaksi> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OfficerAddTransactionScreen(),
+                ),
+              );
+            },
             icon: Image.asset("assets/image/buttonCreate.png"),
           )
         ],

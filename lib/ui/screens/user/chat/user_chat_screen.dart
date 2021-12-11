@@ -4,16 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
 
-class ChatScreen extends StatefulWidget {
+class UserChatScreen extends StatefulWidget {
   static String routeName = "/chat";
 
-  const ChatScreen({Key? key}) : super(key: key);
+  const UserChatScreen({Key? key}) : super(key: key);
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _UserChatScreenState createState() => _UserChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _UserChatScreenState extends State<UserChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

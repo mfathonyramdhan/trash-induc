@@ -5,11 +5,11 @@ import 'package:kiloin/models/admin_navigation.dart';
 import 'package:kiloin/repository/admin_drawer_repository.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/ui/screens/admin/admin_dashboard.dart';
-import 'package:kiloin/ui/screens/admin/akun/index.dart';
+import 'package:kiloin/ui/screens/admin/akun/admin_index_account_screen.dart';
 import 'package:kiloin/ui/screens/admin/rank/index.dart';
-import 'package:kiloin/ui/screens/admin/reward/index.dart';
-import 'package:kiloin/ui/screens/admin/sampah/index.dart';
-import 'package:kiloin/ui/screens/admin/transaksi/index.dart';
+import 'package:kiloin/ui/screens/admin/reward/admin_index_reward_screen.dart';
+import 'package:kiloin/ui/screens/admin/sampah/admin_index_trash_screen.dart';
+import 'package:kiloin/ui/screens/admin/transaksi/admin_index_transaction_screen.dart';
 
 import 'package:provider/provider.dart';
 
@@ -41,17 +41,17 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
 
     switch (currentNavigation) {
       case AdminNavigation.dashboard:
-        return AdminDashboard();
+        return AdminDashboardScreen();
       case AdminNavigation.account:
-        return IndexAkun();
+        return AdminIndexAccountScreen();
       case AdminNavigation.trash:
-        return IndexSampah();
+        return AdminIndexTrashScreen();
       case AdminNavigation.transaction:
-        return IndexTransaksi();
+        return AdminIndexTransactionScreen();
       case AdminNavigation.reward:
-        return IndexReward();
+        return AdminIndexRewardScreen();
       case AdminNavigation.rank:
-        return IndexRank();
+        return AdminIndexRankScreen();
     }
   }
 }

@@ -11,17 +11,17 @@ import '../../../../shared/font.dart';
 import '../../../../utils/firebase_utils.dart';
 import '../../../widgets/menu_screen_card.dart';
 import '../../../widgets/menu_screen_list_tile.dart';
-import '../reedem/reedem_screen.dart';
+import '../reedem/user_reedem_screen.dart';
 import '../../wrapper.dart';
 
-class MenuScreen extends StatefulWidget {
+class UserMenuScreen extends StatefulWidget {
   static String routeName = "/menu_screen";
 
   @override
-  _MenuScreenState createState() => _MenuScreenState();
+  _UserMenuScreenState createState() => _UserMenuScreenState();
 }
 
-class _MenuScreenState extends State<MenuScreen> {
+class _UserMenuScreenState extends State<UserMenuScreen> {
   bool isChecked = false;
 
   var currentUserId = FirebaseAuth.instance.currentUser!.uid.toString();
@@ -262,7 +262,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                       onTap: () {
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
-                                          builder: (_) => ReedemScreen(),
+                                          builder: (_) => UserReedemScreen(),
                                         ));
                                       },
                                       child: Container(
@@ -337,7 +337,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   )),
               child: Center(
                 child: FutureBuilder(
-                  future: missionRef.get(),
+                  future: missionRef.where('isActive', isEqualTo: true).get(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       var documents = snapshot.data.docs;

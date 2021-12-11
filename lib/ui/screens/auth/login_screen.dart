@@ -37,6 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
       statusBarColor: lightGreen,
     ));
 
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
