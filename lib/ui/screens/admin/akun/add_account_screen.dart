@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AccountAddAccountScreen extends StatefulWidget {
   const AccountAddAccountScreen({Key? key}) : super(key: key);
+  static String routeName = "/admin_add_account";
 
   @override
   _AdminAddAccountScreenState createState() => _AdminAddAccountScreenState();

@@ -203,7 +203,7 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                             MenuScreenCard(
                               assetPath: "assets/image/medal_backdrop.png",
                               type: "Experience",
-                              point: user.expPoint!,
+                              point: user.exp!,
                             ),
                             // BALANCE CARD
                             Container(
@@ -241,7 +241,7 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  user.balancePoint!.toString(),
+                                                  user.balance!.toString(),
                                                   style:
                                                       boldRobotoFont.copyWith(
                                                     fontSize: 30,
@@ -470,7 +470,7 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                   ),
                   buildChip(
                     "Experience",
-                    mission.xp!.toString(),
+                    mission.exp!.toString(),
                   ),
                 ],
               )

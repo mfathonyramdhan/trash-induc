@@ -4,14 +4,15 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
-class AdminIndexTrashScreen extends StatefulWidget {
-  const AdminIndexTrashScreen({Key? key}) : super(key: key);
+class AdminIndexRewardScreen extends StatefulWidget {
+  const AdminIndexRewardScreen({Key? key}) : super(key: key);
+  static String routeName = "/admin_index_reward";
 
   @override
-  _AdminIndexTrashScreenState createState() => _AdminIndexTrashScreenState();
+  _AdminIndexRewardScreenState createState() => _AdminIndexRewardScreenState();
 }
 
-class _AdminIndexTrashScreenState extends State<AdminIndexTrashScreen> {
+class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +31,7 @@ class _AdminIndexTrashScreenState extends State<AdminIndexTrashScreen> {
           },
         ),
         title: Text(
-          "Sampah",
+          "Reward",
           style: boldRobotoFont.copyWith(
             fontSize: 18.sp,
           ),

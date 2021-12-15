@@ -13,7 +13,6 @@ import '../../../shared/color.dart';
 import '../../../shared/font.dart';
 import '../../../shared/size.dart';
 import '../../../ui/screens/auth/register_screen.dart';
-import '../../../utils/firebase_exception_util.dart';
 
 class LoginScreen extends StatefulWidget {
   static String routeName = "/login_screen";

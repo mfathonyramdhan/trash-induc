@@ -6,6 +6,7 @@ import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({Key? key}) : super(key: key);
+  static String routeName = "/admin_dashboard";
 
   @override
   AdminDashboardScreenState createState() => AdminDashboardScreenState();

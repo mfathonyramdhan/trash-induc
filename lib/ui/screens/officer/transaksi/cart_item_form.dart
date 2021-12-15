@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/models/cart_item.dart';
 import 'package:kiloin/models/item.dart';
-import 'package:kiloin/repository/cart_item_repository.dart';
+import 'package:kiloin/repository/transaction_repository.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:provider/provider.dart';
 
 class CartItemFormScreen extends StatefulWidget {
-  const CartItemFormScreen({Key? key}) : super(key: key);
+  final Item? item;
+  final int? weight;
+  const CartItemFormScreen({
+    Key? key,
+    this.item,
+    this.weight,
+  }) : super(key: key);
 
   @override
   _CartItemFormScreenState createState() => _CartItemFormScreenState();
@@ -21,8 +27,7 @@ class _CartItemFormScreenState extends State<CartItemFormScreen> {
 
   Future<List<Item>> _fetchItems() async {
     var items = await FirebaseFirestore.instance.collection('items').get();
-
-    return items.docs.map((i) => Item.fromJson(i.data())).toList();
+    return items.docs.map((i) => Item.fromJson(i.data(), id: i.id)).toList();
   }
 
   @override
@@ -86,7 +91,12 @@ class _CartItemFormScreenState extends State<CartItemFormScreen> {
                       items: snapshot.hasData
                           ? snapshot.data!
                               .map((value) => DropdownMenuItem(
-                                    child: Text(value.name.toString()),
+                                    child: Text(
+                                      value.name.toString() +
+                                          " - " +
+                                          value.sell.toString() +
+                                          "/kg",
+                                    ),
                                     value: value,
                                   ))
                               .toList()
@@ -105,17 +115,22 @@ class _CartItemFormScreenState extends State<CartItemFormScreen> {
                 decoration: InputDecoration(
                   hintText: "Masukkan berat sampah(kg)",
                 ),
-                validator: (value) {},
               ),
               ElevatedButton(
                 onPressed: () {
-                  final repository = Provider.of<CartItemRepository>(
+                  final repository = Provider.of<TransactionRepository>(
                     context,
                     listen: false,
                   );
                   repository.addItem(
                     CartItem(
-                        selectedItem!.name!, int.parse(weightController.text)),
+                      selectedItem!,
+                      selectedItem!.name!,
+                      double.tryParse(
+                              weightController.text.replaceAll(',', '.'))!
+                          .toDouble(),
+                      selectedItem!.sell!.toDouble(),
+                    ),
                   );
                   Navigator.of(context).pop();
                 },

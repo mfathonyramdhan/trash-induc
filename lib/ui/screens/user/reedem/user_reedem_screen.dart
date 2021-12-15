@@ -90,7 +90,7 @@ class _UserReedemScreenState extends State<UserReedemScreen> {
                           child: MenuScreenCard(
                         assetPath: "assets/image/medal_backdrop.png",
                         type: "Balance",
-                        point: user.balancePoint!,
+                        point: user.balance!,
                       )),
                       SizedBox(
                         height: 20.h,

@@ -6,6 +6,7 @@ import 'package:kiloin/ui/widgets/officer_drawer.dart';
 
 class OfficerDashboardScreen extends StatefulWidget {
   const OfficerDashboardScreen({Key? key}) : super(key: key);
+  static String routeName = "/officer_dashboard";
 
   @override
   OfficerDashboardScreenState createState() => OfficerDashboardScreenState();

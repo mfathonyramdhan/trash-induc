@@ -1,9 +1,15 @@
+import 'package:kiloin/models/item.dart';
+
 class CartItem {
-  final String type;
-  final int qty;
+  Item item;
+  String type;
+  double qty;
+  double price;
 
   CartItem(
+    this.item,
     this.type,
     this.qty,
+    this.price,
   );
 }

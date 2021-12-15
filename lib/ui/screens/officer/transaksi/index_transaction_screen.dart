@@ -2,20 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/ui/widgets/admin_drawer.dart';
+import 'package:kiloin/ui/screens/officer/transaksi/add_transaction_screen.dart';
+import 'package:kiloin/ui/widgets/officer_drawer.dart';
 
-class AdminIndexRewardScreen extends StatefulWidget {
-  const AdminIndexRewardScreen({Key? key}) : super(key: key);
+class OfficerIndexTransactionScreen extends StatefulWidget {
+  const OfficerIndexTransactionScreen({Key? key}) : super(key: key);
+  static String routeName = "/officer_index_transaction";
 
   @override
-  _AdminIndexRewardScreenState createState() => _AdminIndexRewardScreenState();
+  _AdminIndexTransactionScreenState createState() =>
+      _AdminIndexTransactionScreenState();
 }
 
-class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
+class _AdminIndexTransactionScreenState
+    extends State<OfficerIndexTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AdminDrawer(),
+      drawer: OfficerDrawer(),
       appBar: AppBar(
         backgroundColor: darkGreen,
         leading: Builder(
@@ -30,7 +34,7 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
           },
         ),
         title: Text(
-          "Reward",
+          "Transaksi",
           style: boldRobotoFont.copyWith(
             fontSize: 18.sp,
           ),
@@ -39,7 +43,13 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OfficerAddTransactionScreen(),
+                ),
+              );
+            },
             icon: Image.asset("assets/image/buttonCreate.png"),
           )
         ],

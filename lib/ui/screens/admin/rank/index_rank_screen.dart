@@ -6,6 +6,7 @@ import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
 class AdminIndexRankScreen extends StatefulWidget {
   const AdminIndexRankScreen({Key? key}) : super(key: key);
+  static String routeName = "/admin_index_rank";
 
   @override
   _AdminIndexRankScreenState createState() => _AdminIndexRankScreenState();
