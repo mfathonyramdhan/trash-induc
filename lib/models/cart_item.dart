@@ -12,4 +12,12 @@ class CartItem {
     this.qty,
     this.price,
   );
+
+  double getTotalPrice() {
+    if (qty > 0 && price > 0) {
+      return qty * price;
+    }
+
+    return 0;
+  }
 }

@@ -4,8 +4,8 @@ class User {
   final String? email;
   final String? phone;
   final String? address;
-  final int? exp;
-  final int? balance;
+  final double? exp;
+  final double? balance;
   final String role;
   final String membership;
 
@@ -21,20 +21,20 @@ class User {
     this.membership = "bronze",
   });
 
-  User.fromJson(Map<String, dynamic?> json, {String? id})
+  User.fromJson(Map<String, dynamic> json, {String? id})
       : this(
           id: id,
           name: json["name"]! as String,
           email: json["email"]! as String,
           phone: json["phone"]! as String,
           address: json["address"]! as String,
-          exp: json["exp"]! as int,
-          balance: json["balance"]! as int,
+          exp: double.tryParse(json['exp'].toString()),
+          balance: double.tryParse(json['balance'].toString()),
           role: json["role"] as String? ?? "user",
           membership: json["membership"] as String? ?? "bronze",
         );
 
-  Map<String, dynamic?> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       "name": name,
       "email": email,

@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/models/cart_item.dart';
-import 'package:kiloin/models/item.dart';
 import 'package:kiloin/models/mission.dart';
 import 'package:kiloin/models/user.dart';
 import 'package:kiloin/repository/transaction_repository.dart';
 import 'package:kiloin/shared/color.dart';
-import 'package:kiloin/ui/screens/officer/transaksi/cart_item_form.dart';
+import 'package:kiloin/ui/screens/officer/transaksi/add_cart_item_screen.dart';
+import 'package:kiloin/ui/screens/officer/transaksi/edit_cart_item_screen.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -55,12 +54,14 @@ class _OfficerAddTransactionScreenState
       missions = await FirebaseFirestore.instance
           .collection('missions')
           .where('is_active', isEqualTo: true)
+          .where('hidden', isEqualTo: false)
           .where(FieldPath.documentId, whereNotIn: completedMissionIds)
           .get();
     } else {
       missions = await FirebaseFirestore.instance
           .collection('missions')
           .where('is_active', isEqualTo: true)
+          .where('hidden', isEqualTo: false)
           .get();
     }
 
@@ -215,11 +216,9 @@ class _OfficerAddTransactionScreenState
                               .map((e) => User.fromJson(e.data(), id: e.id))
                               .toList();
                         },
-                        label: "Select user",
-                        hint: "Test hint",
+                        label: "Cari user",
                         itemAsString: (User? user) => user!.email.toString(),
                         showSearchBox: true,
-                        showClearButton: true,
                         onChanged: (User? user) {
                           if (user == null) {
                             return;
@@ -262,6 +261,7 @@ class _OfficerAddTransactionScreenState
                     child: Consumer<TransactionRepository>(
                         builder: (context, repository, child) {
                       List<CartItem> items = repository.cartItems;
+                      print('table rebuild');
                       return DataTable(
                         // columnSpacing: 30,
                         columns: [
@@ -377,6 +377,9 @@ class _OfficerAddTransactionScreenState
             throw Exception('User tidak ditemukan');
           }
 
+          double totalExp = 0;
+          double totalBalance = 0;
+
           var transaction =
               await FirebaseFirestore.instance.collection('transactions').add({
             'created_at': DateTime.now(),
@@ -393,6 +396,8 @@ class _OfficerAddTransactionScreenState
               'price': cart.item.sell,
               'qty': cart.qty
             });
+            totalExp += cart.item.exp_point! * cart.qty;
+            totalBalance += cart.item.balance_point! * cart.qty;
           });
 
           if (repository.missions.isNotEmpty) {
@@ -407,9 +412,6 @@ class _OfficerAddTransactionScreenState
                   'Data misi tidak valid Silahkan coba buka ulang fitur tambah transaksi');
             }
 
-            int totalExp = userData.exp!;
-            int totalBalance = userData.balance!;
-
             for (var mission in repository.missions) {
               await FirebaseFirestore.instance
                   .collection('user_completed_missions')
@@ -421,17 +423,30 @@ class _OfficerAddTransactionScreenState
               totalExp += mission.exp!;
               totalBalance += mission.balance!;
             }
-
-            print('Total Exp: ' + totalExp.toString());
-            print('Total Balance: ' + totalBalance.toString());
-
-            userRef.update({
-              'exp': totalExp,
-              'balance': totalBalance,
-            });
-
-            return true;
           }
+
+          if (repository.isSampahChecked) {
+            var bonusMilahSampah = await FirebaseFirestore.instance
+                .collection('missions')
+                .doc('bonus-milah-sampah')
+                .get();
+
+            if (bonusMilahSampah.exists) {
+              var bonusData = Mission.fromJson(bonusMilahSampah.data()!);
+              totalBalance += bonusData.balance!;
+              totalExp += bonusData.exp!;
+            }
+          }
+
+          print('Total Exp: ' + totalExp.toString());
+          print('Total Balance: ' + totalBalance.toString());
+
+          userRef.update({
+            'exp': totalExp + userData.exp!,
+            'balance': totalBalance + userData.balance!,
+          });
+
+          return true;
         })
         .then((v) => print("apakah mari? " + v.toString()))
         .catchError((error) => print(error.toString()));
@@ -468,26 +483,33 @@ class _OfficerAddTransactionScreenState
 
   List<DataRow> itemNotEmpty(List<CartItem> items) {
     List<DataRow> dataRows = [];
+    final repoTrans =
+        Provider.of<TransactionRepository>(context, listen: false);
     items.forEach((CartItem item) => dataRows.add(DataRow(cells: [
           DataCell(
-            Text(item.type),
+            Text(item.item.name.toString()),
           ),
           DataCell(Text(
             item.qty.toString(),
           )),
           DataCell(Text(
-            (item.price * item.qty).toString(),
+            item.getTotalPrice().toString(),
           )),
           DataCell(Row(
             children: [
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EditCartItemFormScreen(item)));
+                  },
                   icon: Icon(
                     Icons.edit,
                     color: darkGreen,
                   )),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    repoTrans.removeItem(item);
+                  },
                   icon: Icon(
                     Icons.delete,
                     color: redDanger,

@@ -16,6 +16,13 @@ class AdminIndexAccountScreen extends StatefulWidget {
 }
 
 class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
+  int dropDownValue = 10;
+  List<int> items = [
+    10,
+    25,
+    50,
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +57,57 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
       ),
       body: ListView(children: [
         PaginatedDataTable(
-          actions: [
-            Text("data"),
-          ],
+          rowsPerPage: dropDownValue,
+          header: Row(
+            children: [
+              Flexible(
+                child: TextField(
+                  style: TextStyle(fontSize: 14.sp),
+                  onChanged: (String? value) {},
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(10),
+                      isDense: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                        8.r,
+                      )),
+                      hintText: "Cari akun",
+                      prefixIcon: Icon(
+                        Icons.search,
+                        size: 28,
+                        color: lightGreen,
+                      )),
+                ),
+              ),
+              SizedBox(
+                width: 13.h,
+              ),
+              DropdownButton<int>(
+                elevation: 2,
+                value: dropDownValue,
+                icon: Icon(
+                  Icons.visibility,
+                  size: 18,
+                ),
+                items: items.map((int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text(
+                      value.toString(),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (int? value) {
+                  setState(() {
+                    dropDownValue = value!;
+                  });
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+            ],
+          ),
           columns: [
             DataColumn(
               label: Text("P"),

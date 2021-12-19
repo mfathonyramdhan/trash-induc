@@ -9,10 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path/path.dart';
 
-import '../../../../utils/firebase_utils.dart';
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
-import '../../../widgets/dropdown_field.dart';
 import '../../../widgets/text_form_field.dart';
 import '../../../../models/user.dart' as UserModel;
 

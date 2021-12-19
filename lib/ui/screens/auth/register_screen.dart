@@ -4,16 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kiloin/utils/firebase_utils.dart';
-import 'package:kiloin/service/auth_service.dart';
 import 'package:kiloin/ui/screens/wrapper.dart';
 
 import '../../widgets/action_button.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/loading_bar.dart';
 import '../../widgets/social_button.dart';
-import '../../widgets/validation_bar.dart';
-import '../../../services/auth_services.dart';
-import '../../../services/social_services.dart';
 import '../../../shared/color.dart';
 import '../../../shared/font.dart';
 import '../../../shared/size.dart';

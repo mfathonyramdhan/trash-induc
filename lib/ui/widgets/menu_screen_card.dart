@@ -7,7 +7,7 @@ import '../../shared/font.dart';
 class MenuScreenCard extends StatelessWidget {
   final String assetPath;
   final String type;
-  final int point;
+  final double point;
   const MenuScreenCard({
     Key? key,
     required this.assetPath,

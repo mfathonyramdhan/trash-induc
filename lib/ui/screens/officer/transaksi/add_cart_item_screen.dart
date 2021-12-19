@@ -8,12 +8,8 @@ import 'package:kiloin/shared/color.dart';
 import 'package:provider/provider.dart';
 
 class CartItemFormScreen extends StatefulWidget {
-  final Item? item;
-  final int? weight;
   const CartItemFormScreen({
     Key? key,
-    this.item,
-    this.weight,
   }) : super(key: key);
 
   @override

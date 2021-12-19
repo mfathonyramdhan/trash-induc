@@ -29,12 +29,22 @@ class TransactionRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeItem(int index) {
-    _cartItems.removeAt(index);
+  void removeItem(CartItem item) {
+    _cartItems.removeAt(_cartItems.indexOf(item));
     notifyListeners();
   }
 
-  void updateItem(int index) {
+  void updateItem(CartItem item) {
+    var find = _cartItems.where((CartItem ci) => ci.item.id == item.item.id);
+    print(_cartItems);
+    print(item.item.name.toString());
+    if (find.isNotEmpty) {
+      print(_cartItems.indexOf(find.first));
+      _cartItems[_cartItems.indexOf(find.first)] = item;
+    } else {
+      print('Item yang dicari ga ketemu: ' + item.item.id.toString());
+    }
+
     notifyListeners();
   }
 

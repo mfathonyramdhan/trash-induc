@@ -203,7 +203,7 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                             MenuScreenCard(
                               assetPath: "assets/image/medal_backdrop.png",
                               type: "Experience",
-                              point: user.exp!,
+                              point: user.exp!.toDouble(),
                             ),
                             // BALANCE CARD
                             Container(
