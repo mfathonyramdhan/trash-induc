@@ -261,7 +261,6 @@ class _OfficerAddTransactionScreenState
                     child: Consumer<TransactionRepository>(
                         builder: (context, repository, child) {
                       List<CartItem> items = repository.cartItems;
-                      print('table rebuild');
                       return DataTable(
                         // columnSpacing: 30,
                         columns: [
@@ -371,7 +370,13 @@ class _OfficerAddTransactionScreenState
               .collection('users')
               .doc(repository.userId);
           var user = await userRef.get();
-          var userData = User.fromJson(user.data()!);
+          var userData = User.fromJson(user.data()!, id: user.id);
+          var pegawaiRef = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .get();
+          var pegawaiData =
+              User.fromJson(pegawaiRef.data()!, id: pegawaiRef.id);
 
           if (!user.exists) {
             throw Exception('User tidak ditemukan');
@@ -383,8 +388,8 @@ class _OfficerAddTransactionScreenState
           var transaction =
               await FirebaseFirestore.instance.collection('transactions').add({
             'created_at': DateTime.now(),
-            'user_id': repository.userId,
-            'petugas_id': FirebaseAuth.instance.currentUser!.uid.toString()
+            'user': userData.toJson(),
+            'petugas': pegawaiData.toJson()
           });
 
           repository.cartItems.forEach((cart) async {
@@ -392,8 +397,7 @@ class _OfficerAddTransactionScreenState
                 .collection('transaction_items')
                 .add({
               'transaction_id': transaction.id,
-              'item_id': cart.item.id,
-              'price': cart.item.sell,
+              'item': cart.item.toJson(),
               'qty': cart.qty
             });
             totalExp += cart.item.exp_point! * cart.qty;
@@ -438,9 +442,6 @@ class _OfficerAddTransactionScreenState
             }
           }
 
-          print('Total Exp: ' + totalExp.toString());
-          print('Total Balance: ' + totalBalance.toString());
-
           userRef.update({
             'exp': totalExp + userData.exp!,
             'balance': totalBalance + userData.balance!,
@@ -449,7 +450,7 @@ class _OfficerAddTransactionScreenState
           return true;
         })
         .then((v) => print("apakah mari? " + v.toString()))
-        .catchError((error) => print(error.toString()));
+        .catchError((error) => print(error.toString() + " ini eror"));
     // check mission
     // check user
     // insert transactions

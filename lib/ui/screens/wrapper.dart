@@ -28,7 +28,6 @@ class Wrapper extends StatelessWidget {
           future: userRef.doc(firebaseUser.currentUser!.uid.toString()).get(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
-              print(snapshot.data!.data());
               User user = User.fromJson(snapshot.data!.data());
               if (user.role == "user") {
                 return MainScreen();

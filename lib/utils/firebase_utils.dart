@@ -24,8 +24,8 @@ class FirebaseUtils {
       "email": email,
       "phone": phoneNumber,
       "address": "-",
-      "expPoint": 0,
-      "balancePoint": 0,
+      "exp": 0,
+      "balance": 0,
       "role": "user",
       "membership": "bronze"
     });

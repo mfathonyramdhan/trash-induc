@@ -63,6 +63,13 @@ class _OfficerDrawerState extends State<OfficerDrawer> {
             title: "Reward",
             image: Image.asset("assets/image/rewardIcon.png"),
           ),
+          buildTile(context,
+              item: OfficerNavigation.logout,
+              title: "Sign Out",
+              image: Image.asset(
+                "assets/image/exit.png",
+                color: redDanger,
+              ))
         ],
       ),
     );

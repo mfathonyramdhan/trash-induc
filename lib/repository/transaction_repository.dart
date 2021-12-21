@@ -36,13 +36,8 @@ class TransactionRepository extends ChangeNotifier {
 
   void updateItem(CartItem item) {
     var find = _cartItems.where((CartItem ci) => ci.item.id == item.item.id);
-    print(_cartItems);
-    print(item.item.name.toString());
     if (find.isNotEmpty) {
-      print(_cartItems.indexOf(find.first));
       _cartItems[_cartItems.indexOf(find.first)] = item;
-    } else {
-      print('Item yang dicari ga ketemu: ' + item.item.id.toString());
     }
 
     notifyListeners();

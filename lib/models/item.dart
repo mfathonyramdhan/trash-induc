@@ -25,6 +25,7 @@ class Item {
 
   Map<String, dynamic> toJson() {
     return {
+      "id": id,
       "name": name,
       "buy": buy,
       "sell": sell,

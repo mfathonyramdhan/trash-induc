@@ -4,5 +4,6 @@ enum OfficerNavigation {
   // trash,
   transaction,
   reward,
+  logout,
   // rank,
 }

@@ -3,9 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:kiloin/models/officer_navigation.dart';
 import 'package:kiloin/repository/officer_drawer_repository.dart';
 import 'package:kiloin/shared/color.dart';
+import 'package:kiloin/ui/screens/auth/login_screen.dart';
+import 'package:kiloin/ui/screens/loading.dart';
 import 'package:kiloin/ui/screens/officer/officer_dashboard.dart';
 import 'package:kiloin/ui/screens/officer/reward/index_reward_screen.dart';
 import 'package:kiloin/ui/screens/officer/transaksi/index_transaction_screen.dart';
+import 'package:kiloin/utils/firebase_utils.dart';
 import 'package:provider/provider.dart';
 
 class OfficerMainScreen extends StatefulWidget {
@@ -42,6 +45,8 @@ class _OfficerMainScreenState extends State<OfficerMainScreen> {
         return OfficerIndexTransactionScreen();
       case OfficerNavigation.reward:
         return OfficerIndexRewardScreen();
+      case OfficerNavigation.logout:
+        return LogoutScreen();
     }
   }
 }

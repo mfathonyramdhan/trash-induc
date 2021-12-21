@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:kiloin/models/transaction.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/screens/officer/transaksi/add_transaction_screen.dart';
@@ -10,12 +13,81 @@ class OfficerIndexTransactionScreen extends StatefulWidget {
   static String routeName = "/officer_index_transaction";
 
   @override
-  _AdminIndexTransactionScreenState createState() =>
-      _AdminIndexTransactionScreenState();
+  _OfficerIndexTransactionScreenState createState() =>
+      _OfficerIndexTransactionScreenState();
 }
 
-class _AdminIndexTransactionScreenState
+class _OfficerIndexTransactionScreenState
     extends State<OfficerIndexTransactionScreen> {
+  TextEditingController searchController = TextEditingController();
+  int dropdownValue = 10;
+  List<int> dropdownValues = [
+    10,
+    25,
+    50,
+  ];
+
+  Future<List<Transaction>>? _futureTransactions;
+
+  CollectionReference transactionRef =
+      FirebaseFirestore.instance.collection("transactions");
+
+  Future<List<Transaction>> _filterTransactions() async {
+    var transactions = <Transaction>[];
+
+    if (searchController.text.trim() != '') {
+      var searchQuery = searchController.text.trim().toLowerCase();
+      var userEmail = await FirebaseFirestore.instance
+          .collection('transactions')
+          .where('user.email', isGreaterThanOrEqualTo: searchQuery)
+          .where('user.email', isLessThan: searchQuery + 'z')
+          .get();
+
+      var userName = await FirebaseFirestore.instance
+          .collection('transactions')
+          .where('user.name', isGreaterThan: searchQuery)
+          .where('user.name', isLessThan: searchQuery + 'z')
+          .get();
+
+      var petugasEmail = await FirebaseFirestore.instance
+          .collection('transactions')
+          .where('petugas.email', isGreaterThanOrEqualTo: searchQuery)
+          .where('petugas.email', isLessThan: searchQuery + 'z')
+          .get();
+
+      var petugasName = await FirebaseFirestore.instance
+          .collection('transactions')
+          .where('petugas.name', isGreaterThan: searchQuery)
+          .where('petugas.name', isLessThan: searchQuery + 'z')
+          .get();
+
+      var data = [];
+      data.addAll(userEmail.docs);
+      data.addAll(userName.docs);
+      data.addAll(petugasEmail.docs);
+      data.addAll(petugasName.docs);
+      transactions.addAll(data
+          .map((e) => Transaction.fromJson(e.data()))
+          .whereType<Transaction>()
+          .toList());
+    } else {
+      var result =
+          await FirebaseFirestore.instance.collection('transactions').get();
+      transactions = result.docs
+          .map((e) => Transaction.fromJson(e.data()))
+          .whereType<Transaction>()
+          .toList();
+    }
+
+    return transactions;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureTransactions = _filterTransactions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +126,120 @@ class _AdminIndexTransactionScreenState
           )
         ],
       ),
+      body: ListView(
+        children: [
+          FutureBuilder<List<Transaction>>(
+              future: _futureTransactions,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return PaginatedDataTable(
+                    rowsPerPage: dropdownValue,
+                    columns: [
+                      DataColumn(
+                        label: Text("No"),
+                      ),
+                      DataColumn(
+                        label: Text("User"),
+                      ),
+                      DataColumn(
+                        label: Text("Petugas"),
+                      ),
+                      DataColumn(
+                        label: Text("Tanggal"),
+                      ),
+                    ],
+                    source: OfficerDataTransaction(data: snapshot.data!),
+                    header: Row(
+                      children: [
+                        Flexible(
+                          child: TextField(
+                            controller: searchController,
+                            style: TextStyle(fontSize: 14.sp),
+                            onChanged: (String? value) {
+                              setState(() {
+                                _futureTransactions = _filterTransactions();
+                              });
+                            },
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                isDense: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                  8.r,
+                                )),
+                                hintText: "Cari transaksi",
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  size: 28,
+                                  color: lightGreen,
+                                )),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 13.h,
+                        ),
+                        DropdownButton<int>(
+                          elevation: 2,
+                          value: dropdownValue,
+                          icon: Icon(
+                            Icons.visibility,
+                            size: 18,
+                          ),
+                          items: dropdownValues.map((int value) {
+                            return DropdownMenuItem<int>(
+                              value: value,
+                              child: Text(
+                                value.toString(),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (int? value) {
+                            setState(() {
+                              dropdownValue = value!;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: lightGreen,
+                  ),
+                );
+              })
+        ],
+      ),
     );
   }
+}
+
+class OfficerDataTransaction extends DataTableSource {
+  final List<Transaction> data;
+
+  OfficerDataTransaction({required this.data});
+  @override
+  DataRow? getRow(int index) {
+    Transaction transaction = data[index];
+    return DataRow(cells: [
+      DataCell(Text((index + 1).toString())),
+      DataCell(Text(transaction.user!.name.toString())),
+      DataCell(Text(transaction.petugas!.name.toString())),
+      DataCell(Text(DateFormat.yMd().format(DateTime.fromMicrosecondsSinceEpoch(
+          transaction.created_at!.microsecondsSinceEpoch)))),
+    ]);
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
 }

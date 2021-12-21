@@ -9,6 +9,9 @@ import 'package:kiloin/ui/screens/admin/rank/index_rank_screen.dart';
 import 'package:kiloin/ui/screens/admin/reward/index_reward_screen.dart';
 import 'package:kiloin/ui/screens/admin/sampah/index_trash_screen.dart';
 import 'package:kiloin/ui/screens/admin/transaksi/index_transaction_screen.dart';
+import 'package:kiloin/ui/screens/auth/login_screen.dart';
+import 'package:kiloin/ui/screens/loading.dart';
+import 'package:kiloin/utils/firebase_utils.dart';
 
 import 'package:provider/provider.dart';
 
@@ -52,6 +55,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         return AdminIndexRewardScreen();
       case AdminNavigation.rank:
         return AdminIndexRankScreen();
+      case AdminNavigation.logout:
+        return LogoutScreen();
     }
   }
 }
