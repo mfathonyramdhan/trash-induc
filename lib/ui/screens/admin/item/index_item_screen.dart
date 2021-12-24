@@ -2,22 +2,23 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/models/item.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/ui/screens/admin/reward/add_reward_screen.dart';
-import 'package:kiloin/ui/screens/admin/reward/detail_reward_screen.dart';
-import 'package:kiloin/ui/screens/admin/reward/edit_reward_screen.dart';
+import 'package:kiloin/ui/screens/admin/item/add_item_screen.dart';
+import 'package:kiloin/ui/screens/admin/item/detail_item_screen.dart';
+import 'package:kiloin/ui/screens/admin/item/edit_item_screen.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
-class AdminIndexRewardScreen extends StatefulWidget {
-  const AdminIndexRewardScreen({Key? key}) : super(key: key);
-  static String routeName = "/admin_index_reward";
+class AdminIndexItemScreen extends StatefulWidget {
+  const AdminIndexItemScreen({Key? key}) : super(key: key);
+  static String routeName = "/admin_index_trash";
 
   @override
-  _AdminIndexRewardScreenState createState() => _AdminIndexRewardScreenState();
+  _AdminIndexItemScreenState createState() => _AdminIndexItemScreenState();
 }
 
-class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
+class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
   int dropdownValue = 10;
   TextEditingController searchController = TextEditingController();
   List<int> dropdownValues = [
@@ -25,6 +26,17 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
     25,
     50,
   ];
+
+  Future<List<Item>>? _futureItems;
+
+  // Future<List<Item>> _filterItems() {
+  //   return;
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +56,7 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
           },
         ),
         title: Text(
-          "Reward",
+          "Sampah",
           style: boldRobotoFont.copyWith(
             fontSize: 18.sp,
           ),
@@ -54,9 +66,11 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AdminAddRewardScreen(),
-              ));
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AdminAddItemScreen(),
+                ),
+              );
             },
             icon: Image.asset("assets/image/buttonCreate.png"),
           )
@@ -84,7 +98,7 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
                               borderRadius: BorderRadius.circular(
                             8.r,
                           )),
-                          hintText: "Cari reward",
+                          hintText: "Cari sampah",
                           prefixIcon: Icon(
                             Icons.search,
                             size: 28,
@@ -124,7 +138,6 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
               columns: [
                 DataColumn(
                   label: Text("No"),
-                  numeric: true,
                 ),
                 DataColumn(
                   label: Text("Foto"),
@@ -133,17 +146,26 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
                   label: Text("Nama"),
                 ),
                 DataColumn(
-                  label: Text("Harga"),
+                  label: Text("Jual(/kg)"),
                   numeric: true,
                 ),
                 DataColumn(
-                  label: Text("Expired"),
+                  label: Text("Beli(/kg)"),
+                  numeric: true,
+                ),
+                DataColumn(
+                  label: Text("Exp"),
+                  numeric: true,
+                ),
+                DataColumn(
+                  label: Text("Balance"),
+                  numeric: true,
                 ),
                 DataColumn(
                   label: Text("Aksi"),
                 ),
               ],
-              source: AdminDataReward(
+              source: AdminDataItem(
                 context: context,
               ),
             );
@@ -154,11 +176,11 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
   }
 }
 
-class AdminDataReward extends DataTableSource {
+class AdminDataItem extends DataTableSource {
   // final List<Item> item;
   final BuildContext context;
 
-  AdminDataReward({
+  AdminDataItem({
     //   required this.item,
     required this.context,
   });
@@ -176,9 +198,11 @@ class AdminDataReward extends DataTableSource {
     return DataRow(cells: [
       DataCell(Text(_data[index]['id'].toString()), onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AdminDetailRewardScreen(),
+          builder: (context) => AdminDetailItemScreen(),
         ));
       }),
+      DataCell(Text(_data[index]["title"])),
+      DataCell(Text(_data[index]["price"].toString())),
       DataCell(Text(_data[index]["title"])),
       DataCell(Text(_data[index]["price"].toString())),
       DataCell(Text(_data[index]["title"])),
@@ -192,7 +216,7 @@ class AdminDataReward extends DataTableSource {
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AdminEditRewardScreen(),
+                    builder: (context) => AdminEditItemScreen(),
                   ));
                 },
                 icon: Icon(

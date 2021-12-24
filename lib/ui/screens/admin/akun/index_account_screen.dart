@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/screens/admin/akun/add_account_screen.dart';
+import 'package:kiloin/ui/screens/admin/akun/detail_account_screen.dart';
+import 'package:kiloin/ui/screens/admin/akun/edit_account_screen.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
 class AdminIndexAccountScreen extends StatefulWidget {
@@ -50,7 +53,11 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AdminAddAccountScreen(),
+              ));
+            },
             icon: Image.asset("assets/image/buttonCreate.png"),
           )
         ],
@@ -110,37 +117,90 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
           ),
           columns: [
             DataColumn(
-              label: Text("P"),
+              label: Text("No"),
             ),
             DataColumn(
-              label: Text("P"),
+              label: Text("Nama"),
             ),
             DataColumn(
-              label: Text("P"),
+              label: Text("Email"),
+            ),
+            DataColumn(
+              label: Text("Balance"),
+              numeric: true,
+            ),
+            DataColumn(
+              label: Text("Exp"),
+              numeric: true,
+            ),
+            DataColumn(
+              label: Text("Aksi"),
             ),
           ],
-          source: Data(),
+          source: AdminDataAccount(context: context),
         ),
       ]),
     );
   }
 }
 
-class Data extends DataTableSource {
+class AdminDataAccount extends DataTableSource {
+  final BuildContext context;
+
+  AdminDataAccount({
+    required this.context,
+  });
+
   final List<Map<String, dynamic>> _data = List.generate(
       100,
       (index) => {
             "id": index,
             "title": "Item $index",
-            "price": Random().nextInt(10000)
+            "price": Random().nextInt(10000),
+            "p": Random().nextInt(10000),
+            "pr": Random().nextInt(10000),
           });
 
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(_data[index]['id'].toString())),
+      DataCell(Text(_data[index]['id'].toString()), onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AdminDetailAccountScreen(),
+        ));
+      }),
       DataCell(Text(_data[index]["title"])),
       DataCell(Text(_data[index]["price"].toString())),
+      DataCell(Text(_data[index]["p"].toString())),
+      DataCell(Text(_data[index]["pr"].toString())),
+      DataCell(
+        Row(
+          children: [
+            IconButton(
+                splashRadius: 15,
+                constraints: BoxConstraints(),
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AdminEditAccountScreen(),
+                  ));
+                },
+                icon: Icon(
+                  Icons.edit,
+                  color: darkGreen,
+                )),
+            IconButton(
+                splashRadius: 15,
+                constraints: BoxConstraints(),
+                padding: EdgeInsets.zero,
+                onPressed: () {},
+                icon: Icon(
+                  Icons.delete,
+                  color: redDanger,
+                ))
+          ],
+        ),
+      ),
     ]);
   }
 

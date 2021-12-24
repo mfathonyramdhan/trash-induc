@@ -3,15 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 
-class AdminAddAccountScreen extends StatefulWidget {
-  const AdminAddAccountScreen({Key? key}) : super(key: key);
-  static String routeName = "/admin_add_account";
+class AdminDetailRewardScreen extends StatefulWidget {
+  const AdminDetailRewardScreen({Key? key}) : super(key: key);
 
   @override
-  _AdminAddAccountScreenState createState() => _AdminAddAccountScreenState();
+  _AdminDetailRewardScreenState createState() =>
+      _AdminDetailRewardScreenState();
 }
 
-class _AdminAddAccountScreenState extends State<AdminAddAccountScreen> {
+class _AdminDetailRewardScreenState extends State<AdminDetailRewardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,16 +25,13 @@ class _AdminAddAccountScreenState extends State<AdminAddAccountScreen> {
               Icons.arrow_back_ios,
             )),
         title: Text(
-          "Tambah Akun",
+          "Detail reward",
           style: boldRobotoFont.copyWith(
             fontSize: 18.sp,
           ),
         ),
         titleSpacing: 0,
         centerTitle: true,
-      ),
-      body: ListView(
-        children: [],
       ),
     );
   }

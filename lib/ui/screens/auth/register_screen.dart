@@ -29,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   GoogleSignIn googleSignIn = GoogleSignIn();
 
   TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController rePasswordController = TextEditingController();
 
@@ -109,15 +109,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         /// WIDGET: CUSTOM TEXT FIELD
                         InputField(
-                          controller: phoneController,
-                          hintText: "Nomor HP",
+                          controller: nameController,
+                          hintText: "Nama lengkap",
                           keyboardType: TextInputType.phone,
                           borderRadius: 0,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Nomor HP tidak boleh kosong";
-                            } else if (value.length > 13 || value.length < 8) {
-                              return "Masukkan nomor HP yang valid";
+                              return "Nama tidak boleh kosong";
+                            } else if (value.length < 3) {
+                              return "Nama tidak boleh kurang dari 3 karakter";
                             }
                           },
                         ),
@@ -267,7 +267,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       isLogining = true;
     });
     String email = emailController.text;
-    String phoneNumber = phoneController.text;
+    String name = nameController.text;
     String password = passwordController.text;
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text(
@@ -279,7 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     ));
     try {
       // implement firestore logic
-      await FirebaseUtils.setupUser(email, password, phoneNumber, name: "");
+      await FirebaseUtils.setupUser(email, password, name);
       Navigator.of(context).pushReplacementNamed(
         Wrapper.routeName,
       );
@@ -313,7 +313,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     await FirebaseAuth.instance.signInWithCredential(credential);
     FirebaseUtils.setupUserForGoogle();
-    Navigator.of(context).pushReplacementNamed(Wrapper.routeName);
+    Navigator.of(context).pushReplacementNamed(
+      Wrapper.routeName,
+    );
   }
 
   /// Method will be execute when submit (sign up) button is pressed

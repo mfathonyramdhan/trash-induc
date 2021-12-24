@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:kiloin/models/transaction.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/screens/officer/transaksi/detail_transaction_screen.dart';
 import 'package:kiloin/ui/screens/officer/transaksi/add_transaction_screen.dart';
 import 'package:kiloin/ui/widgets/officer_drawer.dart';
 
@@ -67,14 +68,14 @@ class _OfficerIndexTransactionScreenState
       data.addAll(petugasEmail.docs);
       data.addAll(petugasName.docs);
       transactions.addAll(data
-          .map((e) => Transaction.fromJson(e.data()))
+          .map((e) => Transaction.fromJson(e.data(), id: e.id))
           .whereType<Transaction>()
           .toList());
     } else {
       var result =
           await FirebaseFirestore.instance.collection('transactions').get();
       transactions = result.docs
-          .map((e) => Transaction.fromJson(e.data()))
+          .map((e) => Transaction.fromJson(e.data(), id: e.id))
           .whereType<Transaction>()
           .toList();
     }
@@ -148,7 +149,8 @@ class _OfficerIndexTransactionScreenState
                         label: Text("Tanggal"),
                       ),
                     ],
-                    source: OfficerDataTransaction(data: snapshot.data!),
+                    source: OfficerDataTransaction(
+                        data: snapshot.data!, context: context),
                     header: Row(
                       children: [
                         Flexible(
@@ -220,17 +222,30 @@ class _OfficerIndexTransactionScreenState
 
 class OfficerDataTransaction extends DataTableSource {
   final List<Transaction> data;
+  final BuildContext context;
 
-  OfficerDataTransaction({required this.data});
+  OfficerDataTransaction({required this.data, required this.context});
+
+  detailPage(Transaction transaction) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => DetailTransactionScreen(),
+    ));
+  }
+
   @override
   DataRow? getRow(int index) {
     Transaction transaction = data[index];
     return DataRow(cells: [
-      DataCell(Text((index + 1).toString())),
-      DataCell(Text(transaction.user!.name.toString())),
-      DataCell(Text(transaction.petugas!.name.toString())),
-      DataCell(Text(DateFormat.yMd().format(DateTime.fromMicrosecondsSinceEpoch(
-          transaction.created_at!.microsecondsSinceEpoch)))),
+      DataCell(Text((index + 1).toString()),
+          onTap: () => detailPage(transaction)),
+      DataCell(Text(transaction.user!.name.toString()),
+          onTap: () => detailPage(transaction)),
+      DataCell(Text(transaction.petugas!.name.toString()),
+          onTap: () => detailPage(transaction)),
+      DataCell(
+          Text(DateFormat.yMd().format(DateTime.fromMicrosecondsSinceEpoch(
+              transaction.created_at!.microsecondsSinceEpoch))),
+          onTap: () => detailPage(transaction)),
     ]);
   }
 

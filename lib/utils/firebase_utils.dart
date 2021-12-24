@@ -10,8 +10,11 @@ class FirebaseUtils {
   static GoogleSignIn googleSignIn = GoogleSignIn();
   static User? currentUser = auth.currentUser;
 
-  static Future setupUser(String email, String password, String phoneNumber,
-      {String? name}) async {
+  static Future setupUser(
+    String email,
+    String password,
+    String name,
+  ) async {
     UserCredential userCred = await auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -22,8 +25,8 @@ class FirebaseUtils {
     await userRef.set({
       "name": name,
       "email": email,
-      "phone": phoneNumber,
-      "address": "-",
+      "phone": "",
+      "address": "",
       "exp": 0,
       "balance": 0,
       "role": "user",
@@ -39,12 +42,12 @@ class FirebaseUtils {
         FirebaseFirestore.instance.collection("users").doc(uid);
 
     await userRef.set({
-      "name": "-",
-      "email": "-",
-      "phone": "-",
-      "address": "-",
-      "expPoint": 0,
-      "balancePoint": 0,
+      "name": currentUser!.displayName,
+      "email": currentUser!.email,
+      "phone": "",
+      "address": "",
+      "exp": 0,
+      "balance": 0,
       "role": "user",
       "membership": "bronze"
     });

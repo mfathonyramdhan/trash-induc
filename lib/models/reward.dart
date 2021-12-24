@@ -1,1 +1,1 @@
-class Rewards {}
+class Reward {}
