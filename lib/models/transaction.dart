@@ -5,12 +5,14 @@ class Transaction {
   final String? id;
   final User? user;
   final User? petugas;
+  // ignore: non_constant_identifier_names
   final Timestamp? created_at;
 
   Transaction({
     this.id,
     this.user,
     this.petugas,
+    // ignore: non_constant_identifier_names
     this.created_at,
   });
 

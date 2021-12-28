@@ -227,7 +227,62 @@ class AdminDataItem extends DataTableSource {
                 splashRadius: 15,
                 constraints: BoxConstraints(),
                 padding: EdgeInsets.zero,
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: RichText(
+                            text: TextSpan(
+                                text: "Anda yakin ingin menghapus ",
+                                style: regularRobotoFont.copyWith(
+                                  fontSize: 14.sp,
+                                  color: darkGreen,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: "Plastik",
+                                    style: boldRobotoFont.copyWith(
+                                      fontSize: 14.sp,
+                                      color: darkGreen,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                      text: "?",
+                                      style: regularRobotoFont.copyWith(
+                                        fontSize: 14.sp,
+                                        color: darkGreen,
+                                      ))
+                                ]),
+                          ),
+                          actions: [
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: whitePure,
+                                    side: BorderSide(
+                                      color: darkGreen,
+                                    )),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Batal",
+                                    style: mediumRobotoFont.copyWith(
+                                      fontSize: 12.sp,
+                                      color: darkGreen,
+                                    ))),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: darkGreen,
+                                ),
+                                onPressed: () {},
+                                child: Text("Ya, saya yakin",
+                                    style: mediumRobotoFont.copyWith(
+                                      fontSize: 12.sp,
+                                    )))
+                          ],
+                        );
+                      });
+                },
                 icon: Icon(
                   Icons.delete,
                   color: redDanger,

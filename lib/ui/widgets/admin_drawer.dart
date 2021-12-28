@@ -85,7 +85,7 @@ class _AdminDrawerState extends State<AdminDrawer> {
           ),
           buildTile(context,
               item: AdminNavigation.logout,
-              title: "Sign Out",
+              title: "Keluar",
               image: Image.asset(
                 "assets/image/exit.png",
                 color: redDanger,

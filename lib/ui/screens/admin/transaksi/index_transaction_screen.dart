@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/screens/admin/transaksi/add_transaction_screen.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
 class AdminIndexTransactionScreen extends StatefulWidget {
@@ -42,7 +43,11 @@ class _AdminIndexTransactionScreenState
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AdminAddTransactionScreen(),
+              ));
+            },
             icon: Image.asset("assets/image/buttonCreate.png"),
           )
         ],

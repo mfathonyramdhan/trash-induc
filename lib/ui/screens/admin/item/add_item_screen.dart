@@ -149,23 +149,24 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                   ],
                 ),
                 ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size.fromHeight(
-                          35.h,
-                        ),
-                        elevation: 5,
-                        primary: darkGreen,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                          8.r,
-                        ))),
-                    onPressed: () {},
-                    child: Text(
-                      "Tambahkan item",
-                      style: boldRobotoFont.copyWith(
-                        fontSize: 14.sp,
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size.fromHeight(
+                        35.h,
                       ),
-                    ))
+                      elevation: 5,
+                      primary: darkGreen,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                        8.r,
+                      ))),
+                  onPressed: () {},
+                  child: Text(
+                    "Tambahkan item",
+                    style: boldRobotoFont.copyWith(
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ),
               ],
             ),
           )

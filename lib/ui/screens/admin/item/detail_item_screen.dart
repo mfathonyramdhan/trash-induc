@@ -35,29 +35,107 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
       ),
       body: ListView(
         children: [
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              primary: darkGreen,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AdminEditItemScreen(),
-              ));
-            },
-            icon: Icon(
-              Icons.edit,
-            ),
-            label: Text("Edit item"),
-          ),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              primary: redDanger,
-            ),
-            onPressed: () {},
-            icon: Icon(
-              Icons.delete,
-            ),
-            label: Text("Hapus item"),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Nama item",
+                style: boldRobotoFont.copyWith(
+                  fontSize: 14.sp,
+                  color: darkGray,
+                ),
+              ),
+              TextFormField(
+                initialValue: "Kertas",
+                readOnly: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                    8.r,
+                  )),
+                  isDense: true,
+                ),
+              ),
+              Text(
+                "Foto Item",
+                style: boldRobotoFont.copyWith(
+                  fontSize: 14.sp,
+                  color: darkGray,
+                ),
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    Text(
+                      "Nama foto item.jpg",
+                    ),
+                    Container(
+                      height: 100.h,
+                      width: 60.w,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  "https://dummyimage.com/600x400/000/fff.jpg"))),
+                    )
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Harga jual(Rp)",
+                          style: boldRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: darkGray,
+                          ),
+                        ),
+                        TextFormField(
+                          initialValue: "2500",
+                          readOnly: true,
+                          decoration: InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                8.r,
+                              ))),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Harga beli(Rp)",
+                          style: boldRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: darkGray,
+                          ),
+                        ),
+                        TextFormField(
+                          initialValue: "2200",
+                          readOnly: true,
+                          decoration: InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                8.r,
+                              ))),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ],
           )
         ],
       ),

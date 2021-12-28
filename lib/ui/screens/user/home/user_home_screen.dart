@@ -116,8 +116,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             image: AssetImage("assets/image/icon_toggle.png"),
                           ),
                           onTap: () async {
-                            // onLogoutPressed(context);
-
                             Navigator.pushNamed(
                               context,
                               UserMenuScreen.routeName,

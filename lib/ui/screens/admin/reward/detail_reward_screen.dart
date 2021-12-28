@@ -33,6 +33,80 @@ class _AdminDetailRewardScreenState extends State<AdminDetailRewardScreen> {
         titleSpacing: 0,
         centerTitle: true,
       ),
+      body: ListView(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Nama reward",
+                style: boldRobotoFont.copyWith(
+                  fontSize: 14.sp,
+                  color: darkGray,
+                ),
+              ),
+              TextFormField(
+                initialValue: "Piring cantik",
+                readOnly: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      8.r,
+                    ),
+                  ),
+                  isDense: true,
+                ),
+              ),
+              Text(
+                "Berakhir pada tanggal",
+                style: boldRobotoFont.copyWith(
+                  fontSize: 14.sp,
+                  color: darkGray,
+                ),
+              ),
+              TextFormField(
+                initialValue: "27/10/1999",
+                readOnly: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      8.r,
+                    ),
+                  ),
+                  isDense: true,
+                ),
+              ),
+              Text(
+                "Foto reward",
+                style: boldRobotoFont.copyWith(
+                  fontSize: 14.sp,
+                  color: darkGray,
+                ),
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    Text(
+                      "Nama foto reward.jpg",
+                    ),
+                    Container(
+                      height: 100.h,
+                      width: 60.w,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              "https://dummyimage.com/600x400/000/fff.jpg"),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
