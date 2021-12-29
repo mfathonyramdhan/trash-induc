@@ -6,7 +6,6 @@ import 'package:kiloin/shared/font.dart';
 
 import '../../shared/color.dart';
 import '../screens/admin/admin_main_screen.dart';
-import 'officer/officer_main_screen.dart';
 import 'user/home/user_main_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../../models/user.dart';
@@ -32,11 +31,8 @@ class Wrapper extends StatelessWidget {
               if (user.role == "user") {
                 return MainScreen();
               }
-              if (user.role == "admin") {
-                return AdminMainScreen();
-              }
               if (user.role == "petugas") {
-                return OfficerMainScreen();
+                return AdminMainScreen();
               }
             }
 

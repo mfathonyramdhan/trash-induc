@@ -9,6 +9,7 @@ import 'package:kiloin/utils/firebase_utils.dart';
 
 class LogoutScreen extends StatefulWidget {
   const LogoutScreen({Key? key}) : super(key: key);
+  static String routeName = "/logout";
 
   @override
   _LogoutScreenState createState() => _LogoutScreenState();

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kiloin/ui/screens/admin/admin_dashboard.dart';
 import 'package:kiloin/ui/screens/admin/admin_main_screen.dart';
-import 'package:kiloin/ui/screens/officer/officer_dashboard.dart';
-import 'package:kiloin/ui/screens/officer/officer_main_screen.dart';
+import 'package:kiloin/ui/screens/loading.dart';
 import 'package:kiloin/ui/screens/user/chat/user_chat_screen.dart';
 import 'package:kiloin/ui/screens/user/home/user_main_screen.dart';
 import 'package:kiloin/ui/screens/user/home/user_menu_screen.dart';
@@ -22,6 +21,7 @@ Map<String, Widget Function(BuildContext context)> appRoute = {
   Wrapper.routeName: (BuildContext context) => Wrapper(),
   LoginScreen.routeName: (BuildContext context) => LoginScreen(),
   RegisterScreen.routeName: (BuildContext context) => RegisterScreen(),
+  LogoutScreen.routeName: (BuildContext context) => LogoutScreen(),
 
   // USER
   MainScreen.routeName: (BuildContext context) => MainScreen(),
@@ -38,9 +38,4 @@ Map<String, Widget Function(BuildContext context)> appRoute = {
   AdminDashboardScreen.routeName: (BuildContext context) =>
       AdminDashboardScreen(),
   AdminMainScreen.routeName: (BuildContext context) => AdminMainScreen(),
-
-  // OFFICER
-  OfficerDashboardScreen.routeName: (BuildContext context) =>
-      OfficerDashboardScreen(),
-  OfficerMainScreen.routeName: (BuildContext context) => OfficerMainScreen(),
 };
