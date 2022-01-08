@@ -191,8 +191,8 @@ class _AdminAddMissionScreenState extends State<AdminAddMissionScreen> {
 
     await FirebaseFirestore.instance.collection("missions").add({
       "name": name,
-      "exp": double.parse(exp),
-      "balance": double.parse(balance),
+      "exp": int.parse(exp),
+      "balance": int.parse(balance),
       "is_active": is_active,
       "hidden": hidden
     });
