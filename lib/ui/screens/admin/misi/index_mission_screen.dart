@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/models/mission.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/screens/admin/misi/add_mission_screen.dart';
@@ -26,6 +28,46 @@ class _AdminIndexMissionScreenState extends State<AdminIndexMissionScreen> {
     25,
     50,
   ];
+
+  Future<List<Mission>>? _futureMissions;
+
+  CollectionReference transactionRef =
+      FirebaseFirestore.instance.collection("missions");
+
+  Future<List<Mission>> _filterMissions() async {
+    var missions = <Mission>[];
+
+    if (searchController.text.trim() != '') {
+      var searchQuery = searchController.text.trim().toLowerCase();
+      var missionName = await FirebaseFirestore.instance
+          .collection('missions')
+          .where('mission.name', isGreaterThanOrEqualTo: searchQuery)
+          .where('mission.name', isLessThan: searchQuery + 'z')
+          .get();
+
+      var data = [];
+      data.addAll(missionName.docs);
+      missions.addAll(data
+          .map((e) => Mission.fromJson(e.data(), id: e.id))
+          .whereType<Mission>()
+          .toList());
+    } else {
+      var result =
+          await FirebaseFirestore.instance.collection('missions').get();
+      missions = result.docs
+          .map((e) => Mission.fromJson(e.data(), id: e.id))
+          .whereType<Mission>()
+          .toList();
+    }
+
+    return missions;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureMissions = _filterMissions();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,89 +106,101 @@ class _AdminIndexMissionScreenState extends State<AdminIndexMissionScreen> {
         ],
       ),
       body: ListView(children: [
-        FutureBuilder(
+        FutureBuilder<List<Mission>>(
+          future: _futureMissions,
           builder: (context, snapshot) {
-            return PaginatedDataTable(
-              header: Row(
-                children: [
-                  Flexible(
-                    child: TextField(
-                      controller: searchController,
-                      style: TextStyle(fontSize: 14.sp),
-                      onChanged: (String? value) {
+            if (snapshot.hasData) {
+              return PaginatedDataTable(
+                header: Row(
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        controller: searchController,
+                        style: TextStyle(fontSize: 14.sp),
+                        onChanged: (String? value) {
+                          setState(() {
+                            _futureMissions = _filterMissions();
+                          });
+                        },
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10),
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                              8.r,
+                            )),
+                            hintText: "Cari misi",
+                            prefixIcon: Icon(
+                              Icons.search,
+                              size: 28,
+                              color: lightGreen,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 13.h,
+                    ),
+                    DropdownButton<int>(
+                      elevation: 2,
+                      value: dropdownValue,
+                      icon: Icon(
+                        Icons.visibility,
+                        size: 18,
+                      ),
+                      items: dropdownValues.map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(
+                            value.toString(),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (int? value) {
                         setState(() {
-                          // _futureTransactions = _filterTransactions();
+                          dropdownValue = value!;
                         });
                       },
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          isDense: true,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                            8.r,
-                          )),
-                          hintText: "Cari misi",
-                          prefixIcon: Icon(
-                            Icons.search,
-                            size: 28,
-                            color: lightGreen,
-                          )),
                     ),
-                  ),
-                  SizedBox(
-                    width: 13.h,
-                  ),
-                  DropdownButton<int>(
-                    elevation: 2,
-                    value: dropdownValue,
-                    icon: Icon(
-                      Icons.visibility,
-                      size: 18,
+                    SizedBox(
+                      width: 10,
                     ),
-                    items: dropdownValues.map((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(
-                          value.toString(),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (int? value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
+                  ],
+                ),
+                columns: [
+                  DataColumn(
+                    label: Text("No"),
+                    numeric: true,
                   ),
-                  SizedBox(
-                    width: 10,
+                  DataColumn(
+                    label: Text("Nama"),
+                  ),
+                  DataColumn(
+                    label: Text("Exp"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Balance"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Status aktif"),
+                  ),
+                  DataColumn(
+                    label: Text("Sembunyikan"),
+                  ),
+                  DataColumn(
+                    label: Text("Aksi"),
                   ),
                 ],
-              ),
-              columns: [
-                DataColumn(
-                  label: Text("No"),
-                  numeric: true,
+                rowsPerPage: dropdownValue,
+                source: AdminDataMission(
+                  context: context,
+                  data: snapshot.data!,
                 ),
-                DataColumn(
-                  label: Text("Foto"),
-                ),
-                DataColumn(
-                  label: Text("Nama"),
-                ),
-                DataColumn(
-                  label: Text("Harga"),
-                  numeric: true,
-                ),
-                DataColumn(
-                  label: Text("Expired"),
-                ),
-                DataColumn(
-                  label: Text("Aksi"),
-                ),
-              ],
-              source: AdminDataMission(
-                context: context,
-              ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
             );
           },
         ),
@@ -156,34 +210,42 @@ class _AdminIndexMissionScreenState extends State<AdminIndexMissionScreen> {
 }
 
 class AdminDataMission extends DataTableSource {
-  // final List<Item> item;
+  final List<Mission> data;
   final BuildContext context;
 
   AdminDataMission({
-    //   required this.item,
+    required this.data,
     required this.context,
   });
 
-  final List<Map<String, dynamic>> _data = List.generate(
-      200,
-      (index) => {
-            "id": index,
-            "title": "Item $index",
-            "price": Random().nextInt(10000)
-          });
+  detailPage(Mission mission) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => DetailMissionScreen(mission: mission),
+    ));
+  }
 
   @override
   DataRow? getRow(int index) {
+    Mission mission = data[index];
     return DataRow(cells: [
-      DataCell(Text(_data[index]['id'].toString()), onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AdminDetailMissionScreen(),
-        ));
-      }),
-      DataCell(Text(_data[index]["title"])),
-      DataCell(Text(_data[index]["price"].toString())),
-      DataCell(Text(_data[index]["title"])),
-      DataCell(Text(_data[index]["price"].toString())),
+      DataCell(
+        Text((index + 1).toString()),
+        onTap: () => detailPage(mission),
+      ),
+      DataCell(
+        Text(mission.name.toString()),
+        onTap: () => detailPage(mission),
+      ),
+      DataCell(
+        Text(mission.exp.toString()),
+        onTap: () => detailPage(mission),
+      ),
+      DataCell(Text(mission.balance.toString()),
+          onTap: () => detailPage(mission)),
+      DataCell(Text(mission.is_active.toString()),
+          onTap: () => detailPage(mission)),
+      DataCell(Text(mission.hidden.toString()),
+          onTap: () => detailPage(mission)),
       DataCell(
         Row(
           children: [
@@ -274,7 +336,7 @@ class AdminDataMission extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _data.length;
+  int get rowCount => data.length;
 
   @override
   int get selectedRowCount => 0;

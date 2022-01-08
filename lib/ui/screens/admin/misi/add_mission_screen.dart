@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/repository/mission_repository.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:provider/provider.dart';
 
 class AdminAddMissionScreen extends StatefulWidget {
   const AdminAddMissionScreen({Key? key}) : super(key: key);
@@ -15,7 +18,6 @@ class _AdminAddMissionScreenState extends State<AdminAddMissionScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController expController = TextEditingController();
   TextEditingController balanceController = TextEditingController();
-  DateTime selectedDate = DateTime.now();
   GlobalKey<FormState> key = GlobalKey<FormState>();
 
   @override
@@ -25,7 +27,12 @@ class _AdminAddMissionScreenState extends State<AdminAddMissionScreen> {
         backgroundColor: darkGreen,
         leading: IconButton(
             onPressed: () {
+              final repository = Provider.of<MissionRepository>(
+                context,
+                listen: false,
+              );
               Navigator.of(context).pop();
+              repository.clearAll();
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -102,31 +109,47 @@ class _AdminAddMissionScreenState extends State<AdminAddMissionScreen> {
                       isDense: true,
                     ),
                   ),
-                  ListTile(
-                    title: Text(
-                      "Sembunyikan dari misi",
-                      style: boldRobotoFont.copyWith(
-                        fontSize: 14.sp,
-                        color: darkGray,
-                      ),
-                    ),
-                    leading: Checkbox(
-                      value: false,
-                      onChanged: (bool) {},
-                    ),
+                  Consumer(
+                    builder: (context, repository, child) {
+                      final repository =
+                          Provider.of<MissionRepository>(context);
+                      return ListTile(
+                        title: Text(
+                          "Sembunyikan dari misi",
+                          style: boldRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: darkGray,
+                          ),
+                        ),
+                        leading: Checkbox(
+                          value: repository.isSembunyikanChecked,
+                          onChanged: (bool) {
+                            repository.setCheckBoxSembunyikan(bool!);
+                          },
+                        ),
+                      );
+                    },
                   ),
-                  ListTile(
-                    title: Text(
-                      "Aktifkan misi",
-                      style: boldRobotoFont.copyWith(
-                        fontSize: 14.sp,
-                        color: darkGray,
-                      ),
-                    ),
-                    leading: Checkbox(
-                      value: false,
-                      onChanged: (bool) {},
-                    ),
+                  Consumer(
+                    builder: (context, repository, child) {
+                      final repository =
+                          Provider.of<MissionRepository>(context);
+                      return ListTile(
+                        title: Text(
+                          "Aktifkan misi",
+                          style: boldRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: darkGray,
+                          ),
+                        ),
+                        leading: Checkbox(
+                          value: repository.isAktifkanChecked,
+                          onChanged: (bool) {
+                            repository.setCheckBoxAktifkan(bool!);
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ],
               )),
@@ -138,7 +161,10 @@ class _AdminAddMissionScreenState extends State<AdminAddMissionScreen> {
                     borderRadius: BorderRadius.circular(
                   8.r,
                 ))),
-            onPressed: () {},
+            onPressed: () async {
+              await submitData();
+              Navigator.of(context).pop();
+            },
             child: Text(
               "Tambahkan misi",
               style: boldRobotoFont.copyWith(
@@ -149,5 +175,26 @@ class _AdminAddMissionScreenState extends State<AdminAddMissionScreen> {
         ],
       ),
     );
+  }
+
+  Future submitData() async {
+    final repository = Provider.of<MissionRepository>(
+      context,
+      listen: false,
+    );
+
+    String name = nameController.text;
+    String exp = expController.text;
+    String balance = balanceController.text;
+    bool is_active = repository.isAktifkanChecked;
+    bool hidden = repository.isSembunyikanChecked;
+
+    await FirebaseFirestore.instance.collection("missions").add({
+      "name": name,
+      "exp": double.parse(exp),
+      "balance": double.parse(balance),
+      "is_active": is_active,
+      "hidden": hidden
+    });
   }
 }

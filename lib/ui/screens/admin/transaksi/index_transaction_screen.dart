@@ -224,7 +224,10 @@ class AdminDataTransaction extends DataTableSource {
   final List<Transaction> data;
   final BuildContext context;
 
-  AdminDataTransaction({required this.data, required this.context});
+  AdminDataTransaction({
+    required this.data,
+    required this.context,
+  });
 
   detailPage(Transaction transaction) {
     Navigator.of(context).push(MaterialPageRoute(

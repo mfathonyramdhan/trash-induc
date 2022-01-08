@@ -63,146 +63,147 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
               Transaction transaction = Transaction.fromJson(
                   snapshot.data!.data() as Map<String, dynamic>,
                   id: widget.transaction.id);
-              return ListView(
-                children: [
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  Container(
-                    width: 50.w,
-                    height: 75.h,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/image/splash.png"),
+              return SizedBox(
+                height: double.infinity,
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Container(
+                      width: 50.w,
+                      height: 75.h,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/image/splash.png"),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Text(
-                    "Trash induc",
-                    style: boldRobotoFont.copyWith(
-                      fontSize: 14.sp,
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      "Trash induc",
+                      style: boldRobotoFont.copyWith(
+                        fontSize: 14.sp,
+                        color: blackPure,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      "ID: " + transaction.id.toString(),
+                      style: regularRobotoFont.copyWith(
+                        fontSize: 18.sp,
+                        color: blackPure,
+                      ),
+                    ),
+                    Text(
+                      transaction.created_at.toString(),
+                      style: regularRobotoFont.copyWith(
+                        fontSize: 18.sp,
+                        color: blackPure,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Nama: ",
+                          style: mediumRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: blackPure,
+                          ),
+                        ),
+                        Text(
+                          transaction.user!.name.toString(),
+                          style: mediumRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: blackPure,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "ID User: ",
+                          style: mediumRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: blackPure,
+                          ),
+                        ),
+                        Text(
+                          transaction.user!.email.toString(),
+                          style: mediumRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: blackPure,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Petugas: ",
+                          style: mediumRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: blackPure,
+                          ),
+                        ),
+                        Text(
+                          transaction.petugas!.name.toString(),
+                          style: mediumRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: blackPure,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "ID Petugas: ",
+                          style: mediumRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: blackPure,
+                          ),
+                        ),
+                        Text(
+                          transaction.petugas!.email.toString(),
+                          style: mediumRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: blackPure,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(
                       color: blackPure,
                     ),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Text(
-                    "ID: " + transaction.id.toString(),
-                    style: regularRobotoFont.copyWith(
-                      fontSize: 18.sp,
-                      color: blackPure,
-                    ),
-                  ),
-                  Text(
-                    transaction.created_at.toString(),
-                    style: regularRobotoFont.copyWith(
-                      fontSize: 18.sp,
-                      color: blackPure,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Nama: ",
-                        style: mediumRobotoFont.copyWith(
-                          fontSize: 14.sp,
-                          color: blackPure,
-                        ),
-                      ),
-                      Text(
-                        transaction.user!.name.toString(),
-                        style: mediumRobotoFont.copyWith(
-                          fontSize: 14.sp,
-                          color: blackPure,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "ID User: ",
-                        style: mediumRobotoFont.copyWith(
-                          fontSize: 14.sp,
-                          color: blackPure,
-                        ),
-                      ),
-                      Text(
-                        transaction.user!.email.toString(),
-                        style: mediumRobotoFont.copyWith(
-                          fontSize: 14.sp,
-                          color: blackPure,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Petugas: ",
-                        style: mediumRobotoFont.copyWith(
-                          fontSize: 14.sp,
-                          color: blackPure,
-                        ),
-                      ),
-                      Text(
-                        transaction.petugas!.name.toString(),
-                        style: mediumRobotoFont.copyWith(
-                          fontSize: 14.sp,
-                          color: blackPure,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "ID Petugas: ",
-                        style: mediumRobotoFont.copyWith(
-                          fontSize: 14.sp,
-                          color: blackPure,
-                        ),
-                      ),
-                      Text(
-                        transaction.petugas!.email.toString(),
-                        style: mediumRobotoFont.copyWith(
-                          fontSize: 14.sp,
-                          color: blackPure,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    color: blackPure,
-                  ),
-                  FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      future: FirebaseFirestore.instance
-                          .collection('transaction_items')
-                          .where('transaction_id', isEqualTo: transaction.id)
-                          .get(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          var transactionItems = snapshot.data!.docs
-                              .map((i) => TransactionItem.fromJson(i.data()))
-                              .toList();
-                          return Expanded(
-                            child: ListView.builder(
+                    FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        future: FirebaseFirestore.instance
+                            .collection('transaction_items')
+                            .where('transaction_id', isEqualTo: transaction.id)
+                            .get(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            var transactionItems = snapshot.data!.docs
+                                .map((i) => TransactionItem.fromJson(i.data()))
+                                .toList();
+                            return ListView.builder(
                                 itemCount: transactionItems.length,
                                 itemBuilder: (context, index) => ListTile(
                                       leading: Text(
                                         transactionItems[index].qty.toString(),
                                       ),
-                                    )),
-                          );
-                        }
+                                    ));
+                          }
 
-                        return CircularProgressIndicator();
-                      }),
-                ],
+                          return CircularProgressIndicator();
+                        }),
+                  ],
+                ),
               );
             }
             return CircularProgressIndicator();
