@@ -5,6 +5,7 @@ import 'package:kiloin/repository/admin_drawer_repository.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/ui/screens/admin/admin_dashboard.dart';
 import 'package:kiloin/ui/screens/admin/akun/index_account_screen.dart';
+import 'package:kiloin/ui/screens/admin/misi/index_mission_screen.dart';
 import 'package:kiloin/ui/screens/admin/rank/index_rank_screen.dart';
 import 'package:kiloin/ui/screens/admin/reward/index_reward_screen.dart';
 import 'package:kiloin/ui/screens/admin/item/index_item_screen.dart';
@@ -52,6 +53,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         return AdminIndexRewardScreen();
       case AdminNavigation.rank:
         return AdminIndexRankScreen();
+      case AdminNavigation.mission:
+        return AdminIndexMissionScreen();
       case AdminNavigation.logout:
         return LogoutScreen();
     }

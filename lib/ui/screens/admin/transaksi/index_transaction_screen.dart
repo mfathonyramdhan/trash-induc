@@ -7,7 +7,7 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/screens/admin/transaksi/add_transaction_screen.dart';
 import 'package:kiloin/ui/screens/admin/transaksi/detail_transaction_screen.dart';
-import 'package:kiloin/ui/widgets/officer_drawer.dart';
+import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
 class AdminIndexTransactionScreen extends StatefulWidget {
   const AdminIndexTransactionScreen({Key? key}) : super(key: key);
@@ -92,7 +92,7 @@ class _AdminIndexTransactionScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: OfficerDrawer(),
+      drawer: AdminDrawer(),
       appBar: AppBar(
         backgroundColor: darkGreen,
         leading: Builder(
@@ -149,7 +149,7 @@ class _AdminIndexTransactionScreenState
                         label: Text("Tanggal"),
                       ),
                     ],
-                    source: OfficerDataTransaction(
+                    source: AdminDataTransaction(
                         data: snapshot.data!, context: context),
                     header: Row(
                       children: [
@@ -220,15 +220,15 @@ class _AdminIndexTransactionScreenState
   }
 }
 
-class OfficerDataTransaction extends DataTableSource {
+class AdminDataTransaction extends DataTableSource {
   final List<Transaction> data;
   final BuildContext context;
 
-  OfficerDataTransaction({required this.data, required this.context});
+  AdminDataTransaction({required this.data, required this.context});
 
   detailPage(Transaction transaction) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => DetailTransactionScreen(),
+      builder: (context) => DetailTransactionScreen(transaction: transaction),
     ));
   }
 

@@ -83,8 +83,15 @@ class _AdminDrawerState extends State<AdminDrawer> {
             title: "Rank",
             image: Image.asset("assets/image/rankIcon.png"),
           ),
+          buildTile(
+            context,
+            item: AdminNavigation.mission,
+            title: "Misi",
+            image: Image.asset("assets/image/rankIcon.png"),
+          ),
           buildTile(context,
               item: AdminNavigation.logout,
+              color: veryLightGray,
               title: "Keluar",
               image: Image.asset(
                 "assets/image/exit.png",

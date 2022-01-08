@@ -25,7 +25,14 @@ class TransactionRepository extends ChangeNotifier {
   }
 
   void addItem(CartItem item) {
-    _cartItems.add(item);
+    var existingItem =
+        _cartItems.indexWhere((ci) => ci.item.id == item.item.id);
+
+    if (existingItem > -1) {
+      _cartItems[existingItem].qty += item.qty;
+    } else {
+      _cartItems.add(item);
+    }
     notifyListeners();
   }
 

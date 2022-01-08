@@ -5,5 +5,6 @@ enum AdminNavigation {
   transaction,
   reward,
   rank,
+  mission,
   logout,
 }

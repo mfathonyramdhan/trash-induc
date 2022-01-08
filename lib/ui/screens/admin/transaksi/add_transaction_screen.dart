@@ -361,7 +361,13 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
                   final repository =
                       Provider.of<TransactionRepository>(context);
                   return ListTile(
-                    title: Text("Sampah sudah dipisah berdasarkan jenis"),
+                    title: Text(
+                      "Sampah sudah dipisah",
+                      style: boldRobotoFont.copyWith(
+                        fontSize: 14.sp,
+                        color: darkGray,
+                      ),
+                    ),
                     leading: Checkbox(
                         value: repository.isSampahChecked,
                         onChanged: (bool) {
@@ -406,7 +412,7 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
             'petugas': pegawaiData.toJson()
           });
 
-          repository.cartItems.forEach((cart) async {
+          for (var cart in repository.cartItems) {
             await FirebaseFirestore.instance
                 .collection('transaction_items')
                 .add({
@@ -416,7 +422,7 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
             });
             totalExp += cart.item.exp_point! * cart.qty;
             totalBalance += cart.item.balance_point! * cart.qty;
-          });
+          }
 
           if (repository.missions.isNotEmpty) {
             var listMissions = await FirebaseFirestore.instance
@@ -456,14 +462,14 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
             }
           }
 
-          userRef.update({
+          await userRef.update({
             'exp': totalExp + userData.exp!,
             'balance': totalBalance + userData.balance!,
           });
 
           return true;
         })
-        .then((v) => print("apakah mari? " + v.toString()))
+        .then((v) => v ? Navigator.of(context).pop() : print(v))
         .catchError((error) => print(error.toString() + " ini eror"));
     // check mission
     // check user
