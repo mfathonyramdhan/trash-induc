@@ -4,17 +4,18 @@ import 'package:kiloin/models/mission.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 
-class DetailMissionScreen extends StatefulWidget {
-  const DetailMissionScreen({Key? key, required this.mission})
+class AdminDetailMissionScreen extends StatefulWidget {
+  const AdminDetailMissionScreen({Key? key, required this.mission})
       : super(key: key);
 
   final Mission mission;
 
   @override
-  DetailMissionScreenState createState() => DetailMissionScreenState();
+  AdminDetailMissionScreenState createState() =>
+      AdminDetailMissionScreenState();
 }
 
-class DetailMissionScreenState extends State<DetailMissionScreen> {
+class AdminDetailMissionScreenState extends State<AdminDetailMissionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,7 +1,7 @@
-import 'dart:math';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/models/user.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/screens/admin/akun/add_account_screen.dart';
@@ -19,12 +19,52 @@ class AdminIndexAccountScreen extends StatefulWidget {
 }
 
 class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
+  TextEditingController searchController = TextEditingController();
   int dropDownValue = 10;
   List<int> items = [
     10,
     25,
     50,
   ];
+
+  Future<List<User>>? _futureUsers;
+
+  CollectionReference transactionRef =
+      FirebaseFirestore.instance.collection("users");
+
+  Future<List<User>> _filterUsers() async {
+    var users = <User>[];
+
+    if (searchController.text.trim() != '') {
+      var searchQuery = searchController.text.trim().toLowerCase();
+      var missionName = await FirebaseFirestore.instance
+          .collection('users')
+          .where('mission.name', isGreaterThanOrEqualTo: searchQuery)
+          .where('mission.name', isLessThan: searchQuery + 'z')
+          .get();
+
+      var data = [];
+      data.addAll(missionName.docs);
+      users.addAll(data
+          .map((e) => User.fromJson(e.data(), id: e.id))
+          .whereType<User>()
+          .toList());
+    } else {
+      var result = await FirebaseFirestore.instance.collection('users').get();
+      users = result.docs
+          .map((e) => User.fromJson(e.data(), id: e.id))
+          .whereType<User>()
+          .toList();
+    }
+
+    return users;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureUsers = _filterUsers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,81 +103,98 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
         ],
       ),
       body: ListView(children: [
-        PaginatedDataTable(
-          rowsPerPage: dropDownValue,
-          header: Row(
-            children: [
-              Flexible(
-                child: TextField(
-                  style: TextStyle(fontSize: 14.sp),
-                  onChanged: (String? value) {},
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      isDense: true,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                        8.r,
-                      )),
-                      hintText: "Cari akun",
-                      prefixIcon: Icon(
-                        Icons.search,
-                        size: 28,
-                        color: lightGreen,
-                      )),
-                ),
-              ),
-              SizedBox(
-                width: 13.h,
-              ),
-              DropdownButton<int>(
-                elevation: 2,
-                value: dropDownValue,
-                icon: Icon(
-                  Icons.visibility,
-                  size: 18,
-                ),
-                items: items.map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text(
-                      value.toString(),
+        FutureBuilder<List<User>>(
+          future: _filterUsers(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return PaginatedDataTable(
+                rowsPerPage: dropDownValue,
+                header: Row(
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        style: TextStyle(fontSize: 14.sp),
+                        onChanged: (String? value) {},
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10),
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                              8.r,
+                            )),
+                            hintText: "Cari akun",
+                            prefixIcon: Icon(
+                              Icons.search,
+                              size: 28,
+                              color: lightGreen,
+                            )),
+                      ),
                     ),
-                  );
-                }).toList(),
-                onChanged: (int? value) {
-                  setState(() {
-                    dropDownValue = value!;
-                  });
-                },
-              ),
-              SizedBox(
-                width: 10,
-              ),
-            ],
-          ),
-          columns: [
-            DataColumn(
-              label: Text("No"),
-            ),
-            DataColumn(
-              label: Text("Nama"),
-            ),
-            DataColumn(
-              label: Text("Email"),
-            ),
-            DataColumn(
-              label: Text("Balance"),
-              numeric: true,
-            ),
-            DataColumn(
-              label: Text("Exp"),
-              numeric: true,
-            ),
-            DataColumn(
-              label: Text("Aksi"),
-            ),
-          ],
-          source: AdminDataAccount(context: context),
+                    SizedBox(
+                      width: 13.h,
+                    ),
+                    DropdownButton<int>(
+                      elevation: 2,
+                      value: dropDownValue,
+                      icon: Icon(
+                        Icons.visibility,
+                        size: 18,
+                      ),
+                      items: items.map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(
+                            value.toString(),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (int? value) {
+                        setState(() {
+                          dropDownValue = value!;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+                columns: [
+                  DataColumn(
+                    label: Text("No"),
+                  ),
+                  DataColumn(
+                    label: Text("Nama"),
+                  ),
+                  DataColumn(
+                    label: Text("Email"),
+                  ),
+                  DataColumn(
+                    label: Text("Balance"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Exp"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Membership"),
+                  ),
+                  DataColumn(
+                    label: Text("Role"),
+                  ),
+                  DataColumn(
+                    label: Text("Aksi"),
+                  ),
+                ],
+                source:
+                    AdminDataAccount(context: context, data: snapshot.data!),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
         ),
       ]),
     );
@@ -146,33 +203,55 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
 
 class AdminDataAccount extends DataTableSource {
   final BuildContext context;
+  final List<User> data;
 
   AdminDataAccount({
     required this.context,
+    required this.data,
   });
 
-  final List<Map<String, dynamic>> _data = List.generate(
-      100,
-      (index) => {
-            "id": index,
-            "title": "Item $index",
-            "price": Random().nextInt(10000),
-            "p": Random().nextInt(10000),
-            "pr": Random().nextInt(10000),
-          });
+  detailPage(User user) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => AdminDetailAccountScreen(user: user),
+    ));
+  }
 
   @override
   DataRow? getRow(int index) {
+    User user = data[index];
     return DataRow(cells: [
-      DataCell(Text(_data[index]['id'].toString()), onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AdminDetailAccountScreen(),
-        ));
-      }),
-      DataCell(Text(_data[index]["title"])),
-      DataCell(Text(_data[index]["price"].toString())),
-      DataCell(Text(_data[index]["p"].toString())),
-      DataCell(Text(_data[index]["pr"].toString())),
+      DataCell(
+        Text((index + 1).toString()),
+        onTap: () => detailPage(user),
+      ),
+      DataCell(
+        Text(user.name!),
+        onTap: () => detailPage(user),
+      ),
+      DataCell(
+        Text(user.email!),
+        onTap: () => detailPage(user),
+      ),
+      DataCell(
+        Text(
+          user.balance!.toString(),
+        ),
+        onTap: () => detailPage(user),
+      ),
+      DataCell(
+        Text(
+          user.exp!.toString(),
+        ),
+        onTap: () => detailPage(user),
+      ),
+      DataCell(
+        Text(user.membership),
+        onTap: () => detailPage(user),
+      ),
+      DataCell(
+        Text(user.role),
+        onTap: () => detailPage(user),
+      ),
       DataCell(
         Row(
           children: [
@@ -263,7 +342,7 @@ class AdminDataAccount extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _data.length;
+  int get rowCount => data.length;
 
   @override
   int get selectedRowCount => 0;

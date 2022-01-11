@@ -220,7 +220,7 @@ class AdminDataMission extends DataTableSource {
 
   detailPage(Mission mission) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => DetailMissionScreen(mission: mission),
+      builder: (context) => AdminDetailMissionScreen(mission: mission),
     ));
   }
 
