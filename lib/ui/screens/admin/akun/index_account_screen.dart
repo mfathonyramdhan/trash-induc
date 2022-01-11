@@ -29,22 +29,19 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
 
   Future<List<User>>? _futureUsers;
 
-  CollectionReference transactionRef =
-      FirebaseFirestore.instance.collection("users");
-
   Future<List<User>> _filterUsers() async {
     var users = <User>[];
 
     if (searchController.text.trim() != '') {
       var searchQuery = searchController.text.trim().toLowerCase();
-      var missionName = await FirebaseFirestore.instance
+      var userName = await FirebaseFirestore.instance
           .collection('users')
-          .where('mission.name', isGreaterThanOrEqualTo: searchQuery)
-          .where('mission.name', isLessThan: searchQuery + 'z')
+          .where('user.name', isGreaterThanOrEqualTo: searchQuery)
+          .where('user.name', isLessThan: searchQuery + 'z')
           .get();
 
       var data = [];
-      data.addAll(missionName.docs);
+      data.addAll(userName.docs);
       users.addAll(data
           .map((e) => User.fromJson(e.data(), id: e.id))
           .whereType<User>()
@@ -104,7 +101,7 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
       ),
       body: ListView(children: [
         FutureBuilder<List<User>>(
-          future: _filterUsers(),
+          future: _futureUsers,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return PaginatedDataTable(
@@ -114,7 +111,9 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
                     Flexible(
                       child: TextField(
                         style: TextStyle(fontSize: 14.sp),
-                        onChanged: (String? value) {},
+                        onChanged: (String? value) {
+                          _futureUsers = _filterUsers();
+                        },
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10),
                             isDense: true,

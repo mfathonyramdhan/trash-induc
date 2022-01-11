@@ -31,9 +31,6 @@ class _AdminIndexMissionScreenState extends State<AdminIndexMissionScreen> {
 
   Future<List<Mission>>? _futureMissions;
 
-  CollectionReference transactionRef =
-      FirebaseFirestore.instance.collection("missions");
-
   Future<List<Mission>> _filterMissions() async {
     var missions = <Mission>[];
 

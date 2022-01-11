@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/models/user.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
@@ -22,6 +24,45 @@ class _AdminIndexRankScreenState extends State<AdminIndexRankScreen> {
     50,
   ];
   TextEditingController searchController = TextEditingController();
+
+  Future<List<User>>? _futureUsers;
+
+  Future<List<User>> _filterUsers() async {
+    var users = <User>[];
+
+    if (searchController.text.trim() != '') {
+      var searchQuery = searchController.text.trim().toLowerCase();
+      var userName = await FirebaseFirestore.instance
+          .collection('users')
+          .where('user.name', isGreaterThanOrEqualTo: searchQuery)
+          .where('user.name', isLessThan: searchQuery + 'z')
+          .get();
+
+      var data = [];
+      data.addAll(userName.docs);
+      users.addAll(data
+          .map((e) => User.fromJson(e.data(), id: e.id))
+          .whereType<User>()
+          .toList());
+    } else {
+      var result = await FirebaseFirestore.instance
+          .collection('users')
+          .orderBy('balance', descending: true)
+          .get();
+      users = result.docs
+          .map((e) => User.fromJson(e.data(), id: e.id))
+          .whereType<User>()
+          .toList();
+    }
+
+    return users;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureUsers = _filterUsers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,90 +91,94 @@ class _AdminIndexRankScreenState extends State<AdminIndexRankScreen> {
         centerTitle: true,
       ),
       body: ListView(children: [
-        FutureBuilder(
+        FutureBuilder<List<User>>(
+          future: _futureUsers,
           builder: (context, snapshot) {
-            return PaginatedDataTable(
-              header: Row(
-                children: [
-                  Flexible(
-                    child: TextField(
-                      controller: searchController,
-                      style: TextStyle(fontSize: 14.sp),
-                      onChanged: (String? value) {
+            if (snapshot.hasData) {
+              return PaginatedDataTable(
+                header: Row(
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        controller: searchController,
+                        style: TextStyle(fontSize: 14.sp),
+                        onChanged: (String? value) {
+                          setState(() {
+                            _futureUsers = _filterUsers();
+                          });
+                        },
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10),
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                              8.r,
+                            )),
+                            hintText: "Cari user",
+                            prefixIcon: Icon(
+                              Icons.search,
+                              size: 28,
+                              color: lightGreen,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 13.h,
+                    ),
+                    DropdownButton<int>(
+                      elevation: 2,
+                      value: dropdownValue,
+                      icon: Icon(
+                        Icons.visibility,
+                        size: 18,
+                      ),
+                      items: dropdownValues.map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(
+                            value.toString(),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (int? value) {
                         setState(() {
-                          // _futureTransactions = _filterTransactions();
+                          dropdownValue = value!;
                         });
                       },
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          isDense: true,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                            8.r,
-                          )),
-                          hintText: "Cari user",
-                          prefixIcon: Icon(
-                            Icons.search,
-                            size: 28,
-                            color: lightGreen,
-                          )),
                     ),
-                  ),
-                  SizedBox(
-                    width: 13.h,
-                  ),
-                  DropdownButton<int>(
-                    elevation: 2,
-                    value: dropdownValue,
-                    icon: Icon(
-                      Icons.visibility,
-                      size: 18,
+                    SizedBox(
+                      width: 10,
                     ),
-                    items: dropdownValues.map((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(
-                          value.toString(),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (int? value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
+                  ],
+                ),
+                columns: [
+                  DataColumn(
+                    label: Text("Rank"),
+                    numeric: true,
                   ),
-                  SizedBox(
-                    width: 10,
+                  DataColumn(
+                    label: Text("Nama"),
+                  ),
+                  DataColumn(
+                    label: Text("Membership"),
+                  ),
+                  DataColumn(
+                    label: Text("EXP"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Balance"),
+                    numeric: true,
                   ),
                 ],
-              ),
-              columns: [
-                DataColumn(
-                  label: Text("No"),
-                  numeric: true,
+                source: AdminDataRank(
+                  context: context,
+                  data: snapshot.data!,
                 ),
-                DataColumn(
-                  label: Text("Foto"),
-                ),
-                DataColumn(
-                  label: Text("Nama"),
-                ),
-                DataColumn(
-                  label: Text("Membership"),
-                ),
-                DataColumn(
-                  label: Text("EXP"),
-                  numeric: true,
-                ),
-                DataColumn(
-                  label: Text("Balance"),
-                  numeric: true,
-                ),
-              ],
-              source: AdminDataRank(
-                context: context,
-              ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
             );
           },
         ),
@@ -143,32 +188,37 @@ class _AdminIndexRankScreenState extends State<AdminIndexRankScreen> {
 }
 
 class AdminDataRank extends DataTableSource {
+  final List<User> data;
   final BuildContext context;
 
   AdminDataRank({
     required this.context,
+    required this.data,
   });
-
-  final List<Map<String, dynamic>> _data = List.generate(
-      100,
-      (index) => {
-            "id": index,
-            "title": "Item $index",
-            "price": Random().nextInt(10000),
-            "p": Random().nextInt(10000),
-            "pr": Random().nextInt(10000),
-            "pri": Random().nextInt(10000),
-          });
 
   @override
   DataRow? getRow(int index) {
+    User user = data[index];
     return DataRow(cells: [
-      DataCell(Text(_data[index]['id'].toString())),
-      DataCell(Text(_data[index]["title"])),
-      DataCell(Text(_data[index]["price"].toString())),
-      DataCell(Text(_data[index]["p"].toString())),
-      DataCell(Text(_data[index]["pr"].toString())),
-      DataCell(Text(_data[index]["pri"].toString())),
+      DataCell(
+        Text((index + 1).toString()),
+      ),
+      DataCell(
+        Text(user.name!),
+      ),
+      DataCell(
+        Text(user.membership),
+      ),
+      DataCell(
+        Text(
+          user.exp!.toString(),
+        ),
+      ),
+      DataCell(
+        Text(
+          user.balance!.toString(),
+        ),
+      ),
     ]);
   }
 
@@ -176,7 +226,7 @@ class AdminDataRank extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _data.length;
+  int get rowCount => data.length;
 
   @override
   int get selectedRowCount => 0;

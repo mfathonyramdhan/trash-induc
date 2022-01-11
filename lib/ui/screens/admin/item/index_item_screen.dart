@@ -29,10 +29,6 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
 
   Future<List<Item>>? _futureItems;
 
-  // Future<List<Item>> _filterItems() {
-  //   return;
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -78,96 +74,102 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
       ),
       body: ListView(children: [
         FutureBuilder(
+          future: _futureItems,
           builder: (context, snapshot) {
-            return PaginatedDataTable(
-              header: Row(
-                children: [
-                  Flexible(
-                    child: TextField(
-                      controller: searchController,
-                      style: TextStyle(fontSize: 14.sp),
-                      onChanged: (String? value) {
+            if (snapshot.hasData) {
+              return PaginatedDataTable(
+                header: Row(
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        controller: searchController,
+                        style: TextStyle(fontSize: 14.sp),
+                        onChanged: (String? value) {
+                          setState(() {
+                            // _futureItems = _filterItems();
+                          });
+                        },
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10),
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                              8.r,
+                            )),
+                            hintText: "Cari sampah",
+                            prefixIcon: Icon(
+                              Icons.search,
+                              size: 28,
+                              color: lightGreen,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 13.h,
+                    ),
+                    DropdownButton<int>(
+                      elevation: 2,
+                      value: dropdownValue,
+                      icon: Icon(
+                        Icons.visibility,
+                        size: 18,
+                      ),
+                      items: dropdownValues.map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(
+                            value.toString(),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (int? value) {
                         setState(() {
-                          // _futureTransactions = _filterTransactions();
+                          dropdownValue = value!;
                         });
                       },
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          isDense: true,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                            8.r,
-                          )),
-                          hintText: "Cari sampah",
-                          prefixIcon: Icon(
-                            Icons.search,
-                            size: 28,
-                            color: lightGreen,
-                          )),
                     ),
-                  ),
-                  SizedBox(
-                    width: 13.h,
-                  ),
-                  DropdownButton<int>(
-                    elevation: 2,
-                    value: dropdownValue,
-                    icon: Icon(
-                      Icons.visibility,
-                      size: 18,
+                    SizedBox(
+                      width: 10,
                     ),
-                    items: dropdownValues.map((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(
-                          value.toString(),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (int? value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
+                  ],
+                ),
+                columns: [
+                  DataColumn(
+                    label: Text("No"),
                   ),
-                  SizedBox(
-                    width: 10,
+                  DataColumn(
+                    label: Text("Foto"),
+                  ),
+                  DataColumn(
+                    label: Text("Nama"),
+                  ),
+                  DataColumn(
+                    label: Text("Jual(/kg)"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Beli(/kg)"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Exp"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Balance"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Aksi"),
                   ),
                 ],
-              ),
-              columns: [
-                DataColumn(
-                  label: Text("No"),
+                source: AdminDataItem(
+                  context: context,
                 ),
-                DataColumn(
-                  label: Text("Foto"),
-                ),
-                DataColumn(
-                  label: Text("Nama"),
-                ),
-                DataColumn(
-                  label: Text("Jual(/kg)"),
-                  numeric: true,
-                ),
-                DataColumn(
-                  label: Text("Beli(/kg)"),
-                  numeric: true,
-                ),
-                DataColumn(
-                  label: Text("Exp"),
-                  numeric: true,
-                ),
-                DataColumn(
-                  label: Text("Balance"),
-                  numeric: true,
-                ),
-                DataColumn(
-                  label: Text("Aksi"),
-                ),
-              ],
-              source: AdminDataItem(
-                context: context,
-              ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
             );
           },
         ),
