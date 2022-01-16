@@ -234,60 +234,101 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) => buildListRank(index),
-                      itemCount: 10,
-                    ),
-                  )
+                  FutureBuilder(builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Expanded(
+                        child: ListView.builder(
+                          itemBuilder: (context, index) => ListTile(
+                            leading: Text(
+                              (index + 1).toString(),
+                              style: boldRobotoFont.copyWith(
+                                fontSize: 14.sp,
+                                color: darkGreen,
+                              ),
+                            ),
+                            title: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 15.r,
+                                ),
+                                SizedBox(
+                                  width: 8.w,
+                                ),
+                                Text(
+                                  "Nama",
+                                  style: mediumRobotoFont.copyWith(
+                                    fontSize: 14.sp,
+                                    color: darkGreen,
+                                  ),
+                                )
+                              ],
+                            ),
+                            trailing: Text(
+                              "\$ 100",
+                              style: regularRobotoFont.copyWith(
+                                fontSize: 10.sp,
+                                color: lightGreen,
+                              ),
+                            ),
+                          ),
+                          itemCount: 10,
+                        ),
+                      );
+                    }
+                    // return Center(
+                    //   child: CircularProgressIndicator(
+                    // color: darkGreen,
+                    // ),
+                    // );
+                    return Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) => ListTile(
+                          leading: Text(
+                            (index + 1).toString(),
+                            style: boldRobotoFont.copyWith(
+                              fontSize: 14.sp,
+                              color: darkGreen,
+                            ),
+                          ),
+                          title: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 15.r,
+                              ),
+                              SizedBox(
+                                width: 8.w,
+                              ),
+                              Text(
+                                "Nama",
+                                style: mediumRobotoFont.copyWith(
+                                  fontSize: 14.sp,
+                                  color: darkGreen,
+                                ),
+                              )
+                            ],
+                          ),
+                          trailing: Text(
+                            "\$ 100",
+                            style: regularRobotoFont.copyWith(
+                              fontSize: 10.sp,
+                              color: lightGreen,
+                            ),
+                          ),
+                        ),
+                        itemCount: 10,
+                      ),
+                    );
+                  })
                 ],
               ),
             );
           }
-          if (snapshot.hasError) {
-            print(snapshot.error);
-          }
+
           return Center(
               child: CircularProgressIndicator(
             color: darkGreen,
           ));
         },
-      ),
-    );
-  }
-
-  Widget buildListRank(int index) {
-    return ListTile(
-      leading: Text(
-        (index + 1).toString(),
-        style: boldRobotoFont.copyWith(
-          fontSize: 14.sp,
-          color: darkGreen,
-        ),
-      ),
-      title: Row(
-        children: [
-          CircleAvatar(
-            radius: 15.r,
-          ),
-          SizedBox(
-            width: 8.w,
-          ),
-          Text(
-            "Nama",
-            style: mediumRobotoFont.copyWith(
-              fontSize: 14.sp,
-              color: darkGreen,
-            ),
-          )
-        ],
-      ),
-      trailing: Text(
-        "\$ 100",
-        style: regularRobotoFont.copyWith(
-          fontSize: 10.sp,
-          color: lightGreen,
-        ),
       ),
     );
   }

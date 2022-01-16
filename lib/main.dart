@@ -13,7 +13,6 @@ import 'ui/screens/wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
 
   runApp(MyApp());
@@ -39,8 +38,18 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: ScreenUtilInit(
-        designSize: Size(360, 640),
+        designSize: Size(
+          360,
+          640,
+        ),
         builder: () => MaterialApp(
+          builder: (context, widget) {
+            ScreenUtil.setContext(context);
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: widget!,
+            );
+          },
           title: 'Bank Sampah App',
           routes: appRoute,
           theme: appTheme,
