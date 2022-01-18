@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:kiloin/models/reward.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 
 class AdminDetailRewardScreen extends StatefulWidget {
-  const AdminDetailRewardScreen({Key? key}) : super(key: key);
+  const AdminDetailRewardScreen({
+    Key? key,
+    required this.reward,
+  }) : super(key: key);
+
+  final Reward reward;
 
   @override
   _AdminDetailRewardScreenState createState() =>
@@ -46,7 +53,7 @@ class _AdminDetailRewardScreenState extends State<AdminDetailRewardScreen> {
                 ),
               ),
               TextFormField(
-                initialValue: "Piring cantik",
+                initialValue: widget.reward.name,
                 readOnly: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -65,7 +72,10 @@ class _AdminDetailRewardScreenState extends State<AdminDetailRewardScreen> {
                 ),
               ),
               TextFormField(
-                initialValue: "27/10/1999",
+                initialValue: DateFormat("dd/MM/yyyy")
+                    .format(DateTime.fromMicrosecondsSinceEpoch(
+                  widget.reward.expired_at!.microsecondsSinceEpoch,
+                )),
                 readOnly: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -83,26 +93,30 @@ class _AdminDetailRewardScreenState extends State<AdminDetailRewardScreen> {
                   color: darkGray,
                 ),
               ),
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      "Nama foto reward.jpg",
-                    ),
-                    Container(
-                      height: 100.h,
-                      width: 60.w,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              "https://dummyimage.com/600x400/000/fff.jpg"),
-                        ),
-                      ),
+              widget.reward.photoUrl == ""
+                  ? Center(
+                      child: Text("Tidak ada foto"),
                     )
-                  ],
-                ),
-              ),
+                  : Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            widget.reward.photoUrl!,
+                          ),
+                          Container(
+                            height: 100.h,
+                            width: 60.w,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    "https://dummyimage.com/600x400/000/fff.jpg"),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
             ],
           )
         ],

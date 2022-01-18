@@ -138,6 +138,7 @@ class _AdminIndexTransactionScreenState
                     columns: [
                       DataColumn(
                         label: Text("No"),
+                        numeric: true,
                       ),
                       DataColumn(
                         label: Text("User"),
@@ -231,7 +232,9 @@ class AdminDataTransaction extends DataTableSource {
 
   detailPage(Transaction transaction) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => DetailTransactionScreen(transaction: transaction),
+      builder: (context) => DetailTransactionScreen(
+        transaction: transaction,
+      ),
     ));
   }
 
@@ -239,16 +242,30 @@ class AdminDataTransaction extends DataTableSource {
   DataRow? getRow(int index) {
     Transaction transaction = data[index];
     return DataRow(cells: [
-      DataCell(Text((index + 1).toString()),
-          onTap: () => detailPage(transaction)),
-      DataCell(Text(transaction.user!.name.toString()),
-          onTap: () => detailPage(transaction)),
-      DataCell(Text(transaction.petugas!.name.toString()),
-          onTap: () => detailPage(transaction)),
       DataCell(
-          Text(DateFormat.yMd().format(DateTime.fromMicrosecondsSinceEpoch(
-              transaction.created_at!.microsecondsSinceEpoch))),
-          onTap: () => detailPage(transaction)),
+        Text(
+          (index + 1).toString(),
+        ),
+        onTap: () => detailPage(transaction),
+      ),
+      DataCell(
+        Text(
+          transaction.user!.name.toString(),
+        ),
+        onTap: () => detailPage(transaction),
+      ),
+      DataCell(
+        Text(
+          transaction.petugas!.name.toString(),
+        ),
+        onTap: () => detailPage(transaction),
+      ),
+      DataCell(
+        Text(DateFormat("dd/MM/yyyy").format(
+            DateTime.fromMicrosecondsSinceEpoch(
+                transaction.created_at!.microsecondsSinceEpoch))),
+        onTap: () => detailPage(transaction),
+      ),
     ]);
   }
 

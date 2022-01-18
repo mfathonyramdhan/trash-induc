@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/models/user.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/ui/screens/admin/akun/edit_account_screen.dart';
 
 class AdminDetailAccountScreen extends StatefulWidget {
-  final User user;
   const AdminDetailAccountScreen({
     Key? key,
     required this.user,
   }) : super(key: key);
+
+  final User user;
 
   @override
   _AdminDetailAccountScreenState createState() =>
@@ -40,7 +40,100 @@ class _AdminDetailAccountScreenState extends State<AdminDetailAccountScreen> {
         centerTitle: true,
       ),
       body: ListView(
-        children: [],
+        children: [
+          widget.user.photoUrl == ""
+              ? Center(
+                  child: Text("Tidak ada foto"),
+                )
+              : CircleAvatar(
+                  backgroundImage: NetworkImage(widget.user.photoUrl!),
+                ),
+          Text("Nama"),
+          TextFormField(
+            initialValue: widget.user.name,
+            readOnly: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                8.r,
+              )),
+              isDense: true,
+            ),
+          ),
+          Text("Email"),
+          TextFormField(
+            initialValue: widget.user.email,
+            readOnly: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                8.r,
+              )),
+              isDense: true,
+            ),
+          ),
+          Text("Phone"),
+          TextFormField(
+            initialValue:
+                widget.user.phone == "" ? "Belum diisi" : widget.user.phone,
+            readOnly: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                8.r,
+              )),
+              isDense: true,
+            ),
+          ),
+          Text("Balance"),
+          TextFormField(
+            initialValue: widget.user.balance.toString(),
+            readOnly: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                8.r,
+              )),
+              isDense: true,
+            ),
+          ),
+          Text("Exp"),
+          TextFormField(
+            initialValue: widget.user.exp.toString(),
+            readOnly: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                8.r,
+              )),
+              isDense: true,
+            ),
+          ),
+          Text("Membership"),
+          TextFormField(
+            initialValue: widget.user.membership,
+            readOnly: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                8.r,
+              )),
+              isDense: true,
+            ),
+          ),
+          Text("Role"),
+          TextFormField(
+            initialValue: widget.user.role,
+            readOnly: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                8.r,
+              )),
+              isDense: true,
+            ),
+          ),
+        ],
       ),
     );
   }

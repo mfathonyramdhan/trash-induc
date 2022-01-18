@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -197,7 +195,9 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
               );
             }
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: darkGreen,
+              ),
             );
           },
         ),
@@ -217,7 +217,9 @@ class AdminDataItem extends DataTableSource {
 
   detailPage(Item item) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AdminDetailItemScreen(),
+      builder: (context) => AdminDetailItemScreen(
+        item: item,
+      ),
     ));
   }
 

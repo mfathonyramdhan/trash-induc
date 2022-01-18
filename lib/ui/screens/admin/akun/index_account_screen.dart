@@ -186,8 +186,10 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
                     label: Text("Aksi"),
                   ),
                 ],
-                source:
-                    AdminDataAccount(context: context, data: snapshot.data!),
+                source: AdminDataAccount(
+                  context: context,
+                  data: snapshot.data!,
+                ),
               );
             }
             return Center(

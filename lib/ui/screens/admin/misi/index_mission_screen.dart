@@ -226,22 +226,37 @@ class AdminDataMission extends DataTableSource {
     Mission mission = data[index];
     return DataRow(cells: [
       DataCell(
-        Text((index + 1).toString()),
+        Text(
+          (index + 1).toString(),
+        ),
         onTap: () => detailPage(mission),
       ),
       DataCell(
-        Text(mission.name.toString()),
+        Text(
+          mission.name.toString(),
+        ),
         onTap: () => detailPage(mission),
       ),
       DataCell(
-        Text(mission.exp.toString()),
+        Text(
+          mission.exp.toString(),
+        ),
         onTap: () => detailPage(mission),
       ),
-      DataCell(Text(mission.balance.toString()),
+      DataCell(
+          Text(
+            mission.balance.toString(),
+          ),
           onTap: () => detailPage(mission)),
-      DataCell(Text(mission.is_active.toString()),
+      DataCell(
+          Text(
+            mission.is_active == true ? "Ya" : "Tidak",
+          ),
           onTap: () => detailPage(mission)),
-      DataCell(Text(mission.hidden.toString()),
+      DataCell(
+          Text(
+            mission.hidden == true ? "Ya" : "Tidak",
+          ),
           onTap: () => detailPage(mission)),
       DataCell(
         Row(

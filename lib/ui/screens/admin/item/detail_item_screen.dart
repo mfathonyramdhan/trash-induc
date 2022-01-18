@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/models/item.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/ui/screens/admin/item/edit_item_screen.dart';
 
 class AdminDetailItemScreen extends StatefulWidget {
-  const AdminDetailItemScreen({Key? key}) : super(key: key);
+  const AdminDetailItemScreen({
+    Key? key,
+    required this.item,
+  }) : super(key: key);
+
+  final Item item;
 
   @override
   _AdminDetailItemScreenState createState() => _AdminDetailItemScreenState();
@@ -46,7 +51,7 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
                 ),
               ),
               TextFormField(
-                initialValue: "Kertas",
+                initialValue: widget.item.name,
                 readOnly: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -63,24 +68,28 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
                   color: darkGray,
                 ),
               ),
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      "Nama foto item.jpg",
-                    ),
-                    Container(
-                      height: 100.h,
-                      width: 60.w,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  "https://dummyimage.com/600x400/000/fff.jpg"))),
+              widget.item.photoUrl != null
+                  ? Center(
+                      child: Text("Tidak ada foto"),
                     )
-                  ],
-                ),
-              ),
+                  : Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            widget.item.photoUrl.toString(),
+                          ),
+                          Container(
+                            height: 100.h,
+                            width: 60.w,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        "https://dummyimage.com/600x400/000/fff.jpg"))),
+                          )
+                        ],
+                      ),
+                    ),
               Row(
                 children: [
                   Flexible(
@@ -96,7 +105,7 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: "2500",
+                          initialValue: widget.item.sell.toString(),
                           readOnly: true,
                           decoration: InputDecoration(
                               isDense: true,
@@ -121,7 +130,7 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: "2200",
+                          initialValue: widget.item.buy.toString(),
                           readOnly: true,
                           decoration: InputDecoration(
                               isDense: true,

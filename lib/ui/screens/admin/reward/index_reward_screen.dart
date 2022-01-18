@@ -1,7 +1,10 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:kiloin/models/reward.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/screens/admin/reward/add_reward_screen.dart';
@@ -25,6 +28,42 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
     25,
     50,
   ];
+
+  Future<List<Reward>>? _futureRewards;
+
+  Future<List<Reward>> _filterRewards() async {
+    var rewards = <Reward>[];
+
+    if (searchController.text.trim() != '') {
+      var searchQuery = searchController.text.trim().toLowerCase();
+      var rewardName = await FirebaseFirestore.instance
+          .collection('rewards')
+          .where('reward.name', isGreaterThanOrEqualTo: searchQuery)
+          .where('reward.name', isLessThan: searchQuery + 'z')
+          .get();
+
+      var data = [];
+      data.addAll(rewardName.docs);
+      rewards.addAll(data
+          .map((e) => Reward.fromJson(e.data(), id: e.id))
+          .whereType<Reward>()
+          .toList());
+    } else {
+      var result = await FirebaseFirestore.instance.collection('rewards').get();
+      rewards = result.docs
+          .map((e) => Reward.fromJson(e.data(), id: e.id))
+          .whereType<Reward>()
+          .toList();
+    }
+
+    return rewards;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _futureRewards = _filterRewards();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,88 +102,91 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
         ],
       ),
       body: ListView(children: [
-        FutureBuilder(
+        FutureBuilder<List<Reward>>(
+          future: _futureRewards,
           builder: (context, snapshot) {
-            return PaginatedDataTable(
-              header: Row(
-                children: [
-                  Flexible(
-                    child: TextField(
-                      controller: searchController,
-                      style: TextStyle(fontSize: 14.sp),
-                      onChanged: (String? value) {
+            if (snapshot.hasData) {
+              return PaginatedDataTable(
+                header: Row(
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        controller: searchController,
+                        style: TextStyle(fontSize: 14.sp),
+                        onChanged: (String? value) {
+                          setState(() {
+                            // _futureTransactions = _filterTransactions();
+                          });
+                        },
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(10),
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                              8.r,
+                            )),
+                            hintText: "Cari reward",
+                            prefixIcon: Icon(
+                              Icons.search,
+                              size: 28,
+                              color: lightGreen,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 13.h,
+                    ),
+                    DropdownButton<int>(
+                      elevation: 2,
+                      value: dropdownValue,
+                      icon: Icon(
+                        Icons.visibility,
+                        size: 18,
+                      ),
+                      items: dropdownValues.map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(
+                            value.toString(),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (int? value) {
                         setState(() {
-                          // _futureTransactions = _filterTransactions();
+                          dropdownValue = value!;
                         });
                       },
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          isDense: true,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                            8.r,
-                          )),
-                          hintText: "Cari reward",
-                          prefixIcon: Icon(
-                            Icons.search,
-                            size: 28,
-                            color: lightGreen,
-                          )),
                     ),
-                  ),
-                  SizedBox(
-                    width: 13.h,
-                  ),
-                  DropdownButton<int>(
-                    elevation: 2,
-                    value: dropdownValue,
-                    icon: Icon(
-                      Icons.visibility,
-                      size: 18,
+                    SizedBox(
+                      width: 10,
                     ),
-                    items: dropdownValues.map((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(
-                          value.toString(),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (int? value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
+                  ],
+                ),
+                columns: [
+                  DataColumn(
+                    label: Text("No"),
+                    numeric: true,
                   ),
-                  SizedBox(
-                    width: 10,
+                  DataColumn(
+                    label: Text("Nama"),
+                  ),
+                  DataColumn(
+                    label: Text("Harga"),
+                    numeric: true,
+                  ),
+                  DataColumn(
+                    label: Text("Expired"),
+                  ),
+                  DataColumn(
+                    label: Text("Aksi"),
                   ),
                 ],
-              ),
-              columns: [
-                DataColumn(
-                  label: Text("No"),
-                  numeric: true,
-                ),
-                DataColumn(
-                  label: Text("Foto"),
-                ),
-                DataColumn(
-                  label: Text("Nama"),
-                ),
-                DataColumn(
-                  label: Text("Harga"),
-                  numeric: true,
-                ),
-                DataColumn(
-                  label: Text("Expired"),
-                ),
-                DataColumn(
-                  label: Text("Aksi"),
-                ),
-              ],
-              source: AdminDataReward(
-                context: context,
+                source: AdminDataReward(context: context, data: snapshot.data!),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(
+                color: darkGreen,
               ),
             );
           },
@@ -155,34 +197,48 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
 }
 
 class AdminDataReward extends DataTableSource {
-  // final List<Item> item;
+  final List<Reward> data;
   final BuildContext context;
 
   AdminDataReward({
-    //   required this.item,
+    required this.data,
     required this.context,
   });
 
-  final List<Map<String, dynamic>> _data = List.generate(
-      200,
-      (index) => {
-            "id": index,
-            "title": "Item $index",
-            "price": Random().nextInt(10000)
-          });
+  detailPage(Reward reward) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => AdminDetailRewardScreen(
+        reward: reward,
+      ),
+    ));
+  }
 
   @override
   DataRow? getRow(int index) {
+    Reward reward = data[index];
     return DataRow(cells: [
-      DataCell(Text(_data[index]['id'].toString()), onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AdminDetailRewardScreen(),
-        ));
-      }),
-      DataCell(Text(_data[index]["title"])),
-      DataCell(Text(_data[index]["price"].toString())),
-      DataCell(Text(_data[index]["title"])),
-      DataCell(Text(_data[index]["price"].toString())),
+      DataCell(
+        Text((index + 1).toString()),
+        onTap: () => detailPage(reward),
+      ),
+      DataCell(
+        Text(
+          reward.name!,
+        ),
+        onTap: () => detailPage(reward),
+      ),
+      DataCell(
+        Text(
+          reward.cost.toString(),
+        ),
+        onTap: () => detailPage(reward),
+      ),
+      DataCell(
+        Text(DateFormat("dd/MM/yyyy").format(
+            DateTime.fromMicrosecondsSinceEpoch(
+                reward.expired_at!.microsecondsSinceEpoch))),
+        onTap: () => detailPage(reward),
+      ),
       DataCell(
         Row(
           children: [
@@ -273,7 +329,7 @@ class AdminDataReward extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _data.length;
+  int get rowCount => data.length;
 
   @override
   int get selectedRowCount => 0;
