@@ -6,6 +6,7 @@ class User {
   final String? address;
   final double? exp;
   final double? balance;
+  final String? photoUrl;
   final String role;
   final String membership;
 
@@ -17,6 +18,7 @@ class User {
     this.address,
     this.exp,
     this.balance,
+    this.photoUrl,
     this.role = "user",
     this.membership = "bronze",
   });
@@ -30,6 +32,7 @@ class User {
           address: json["address"]! as String,
           exp: double.tryParse(json['exp'].toString()),
           balance: double.tryParse(json['balance'].toString()),
+          photoUrl: json["photoUrl"]! as String,
           role: json["role"] as String? ?? "user",
           membership: json["membership"] as String? ?? "bronze",
         );
@@ -43,6 +46,7 @@ class User {
       "address": address,
       "exp": exp,
       "balance": balance,
+      "photoUrl": photoUrl,
       "role": role,
       "membership": membership
     };

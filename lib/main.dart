@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/repository/account_repository.dart';
 import 'package:kiloin/repository/admin_drawer_repository.dart';
 import 'package:kiloin/repository/mission_repository.dart';
 import 'package:kiloin/repository/transaction_repository.dart';
@@ -35,6 +36,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => MissionRepository(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AccountRepository(),
         )
       ],
       child: ScreenUtilInit(

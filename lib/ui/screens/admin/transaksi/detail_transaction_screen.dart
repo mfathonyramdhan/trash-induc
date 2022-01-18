@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:kiloin/models/transaction.dart';
 import 'package:kiloin/models/transaction_item.dart';
 import 'package:kiloin/shared/color.dart';
@@ -100,7 +101,10 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                     ),
                   ),
                   Text(
-                    transaction.created_at.toString(),
+                    DateFormat("dd/MM/yyyy")
+                        .format(DateTime.fromMicrosecondsSinceEpoch(
+                      transaction.created_at!.microsecondsSinceEpoch,
+                    )),
                     style: regularRobotoFont.copyWith(
                       fontSize: 18.sp,
                       color: blackPure,
@@ -191,8 +195,6 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                           var transactionItems = snapshot.data!.docs
                               .map((i) => TransactionItem.fromJson(i.data()))
                               .toList();
-                          // return Text(
-                          //     transactionItems.first.toJson().toString());
 
                           return Column(
                             children: [

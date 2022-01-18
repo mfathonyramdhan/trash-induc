@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/models/item.dart';
@@ -29,9 +30,38 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
 
   Future<List<Item>>? _futureItems;
 
+  Future<List<Item>> _filterItems() async {
+    var items = <Item>[];
+
+    if (searchController.text.trim() != '') {
+      var searchQuery = searchController.text.trim().toLowerCase();
+      var itemName = await FirebaseFirestore.instance
+          .collection('items')
+          .where('item.name', isGreaterThanOrEqualTo: searchQuery)
+          .where('item.name', isLessThan: searchQuery + 'z')
+          .get();
+
+      var data = [];
+      data.addAll(itemName.docs);
+      items.addAll(data
+          .map((e) => Item.fromJson(e.data(), id: e.id))
+          .whereType<Item>()
+          .toList());
+    } else {
+      var result = await FirebaseFirestore.instance.collection('items').get();
+      items = result.docs
+          .map((e) => Item.fromJson(e.data(), id: e.id))
+          .whereType<Item>()
+          .toList();
+    }
+
+    return items;
+  }
+
   @override
   void initState() {
     super.initState();
+    _futureItems = _filterItems();
   }
 
   @override
@@ -73,7 +103,7 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
         ],
       ),
       body: ListView(children: [
-        FutureBuilder(
+        FutureBuilder<List<Item>>(
           future: _futureItems,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -86,7 +116,7 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
                         style: TextStyle(fontSize: 14.sp),
                         onChanged: (String? value) {
                           setState(() {
-                            // _futureItems = _filterItems();
+                            _futureItems = _filterItems();
                           });
                         },
                         decoration: InputDecoration(
@@ -138,9 +168,6 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
                     label: Text("No"),
                   ),
                   DataColumn(
-                    label: Text("Foto"),
-                  ),
-                  DataColumn(
                     label: Text("Nama"),
                   ),
                   DataColumn(
@@ -165,6 +192,7 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
                 ],
                 source: AdminDataItem(
                   context: context,
+                  data: snapshot.data!,
                 ),
               );
             }
@@ -179,36 +207,58 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
 }
 
 class AdminDataItem extends DataTableSource {
-  // final List<Item> item;
+  final List<Item> data;
   final BuildContext context;
 
   AdminDataItem({
-    //   required this.item,
+    required this.data,
     required this.context,
   });
 
-  final List<Map<String, dynamic>> _data = List.generate(
-      200,
-      (index) => {
-            "id": index,
-            "title": "Item $index",
-            "price": Random().nextInt(10000)
-          });
+  detailPage(Item item) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => AdminDetailItemScreen(),
+    ));
+  }
 
   @override
   DataRow? getRow(int index) {
+    Item item = data[index];
     return DataRow(cells: [
-      DataCell(Text(_data[index]['id'].toString()), onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AdminDetailItemScreen(),
-        ));
-      }),
-      DataCell(Text(_data[index]["title"])),
-      DataCell(Text(_data[index]["price"].toString())),
-      DataCell(Text(_data[index]["title"])),
-      DataCell(Text(_data[index]["price"].toString())),
-      DataCell(Text(_data[index]["title"])),
-      DataCell(Text(_data[index]["price"].toString())),
+      DataCell(
+        Text((index + 1).toString()),
+        onTap: () => detailPage(item),
+      ),
+      DataCell(
+        Text(
+          item.name!,
+        ),
+        onTap: () => detailPage(item),
+      ),
+      DataCell(
+        Text(
+          item.sell.toString(),
+        ),
+        onTap: () => detailPage(item),
+      ),
+      DataCell(
+        Text(
+          item.buy.toString(),
+        ),
+        onTap: () => detailPage(item),
+      ),
+      DataCell(
+        Text(
+          item.exp_point.toString(),
+        ),
+        onTap: () => detailPage(item),
+      ),
+      DataCell(
+        Text(
+          item.balance_point.toString(),
+        ),
+        onTap: () => detailPage(item),
+      ),
       DataCell(
         Row(
           children: [
@@ -299,7 +349,7 @@ class AdminDataItem extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _data.length;
+  int get rowCount => data.length;
 
   @override
   int get selectedRowCount => 0;

@@ -30,7 +30,8 @@ class FirebaseUtils {
       "exp": 0,
       "balance": 0,
       "role": "user",
-      "membership": "bronze"
+      "membership": "bronze",
+      "photoUrl": ""
     });
     return;
   }

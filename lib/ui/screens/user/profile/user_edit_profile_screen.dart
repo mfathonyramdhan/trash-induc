@@ -5,7 +5,9 @@ import 'package:cool_stepper/cool_stepper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 import '../../../../shared/color.dart';
@@ -144,7 +146,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                                   radius: 51.r,
                                   backgroundColor: lightGreen,
                                   child: CircleAvatar(
-                                    backgroundImage: user.phone != null
+                                    backgroundImage: file != null
                                         ? AssetImage(
                                             "assets/image/blank-profile-picture.png")
                                         : AssetImage(
@@ -195,8 +197,12 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                                                                   .spaceEvenly,
                                                           children: [
                                                             TextButton.icon(
-                                                                onPressed:
-                                                                    () {},
+                                                                onPressed: () {
+                                                                  pickImage(
+                                                                    ImageSource
+                                                                        .camera,
+                                                                  );
+                                                                },
                                                                 icon: Icon(
                                                                   Icons.camera,
                                                                   color:
@@ -214,8 +220,12 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                                                                   ),
                                                                 )),
                                                             TextButton.icon(
-                                                                onPressed:
-                                                                    () {},
+                                                                onPressed: () {
+                                                                  pickImage(
+                                                                    ImageSource
+                                                                        .gallery,
+                                                                  );
+                                                                },
                                                                 icon: Icon(
                                                                   Icons.photo,
                                                                   color:
@@ -577,28 +587,20 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
     );
   }
 
-  // Future profilePhotoPressed() async {
-  //   final result = await FilePicker.platform.pickFiles(
-  //     type: FileType.custom,
-  //     allowMultiple: false,
-  //     allowedExtensions: ["jpg", "jpeg", "png"],
-  //   );
-  //   if (result == null) return;
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
 
-  //   final path = result.files.single.path!;
-
-  //   setState(() {
-  //     filePhoto = File(path);
-  //   });
-  // }
-
-  Future submitData() async {
-    // if (file == null) return;
-
-    // final fileName = basename(file!.path);
-    // // to make folder destination based on uid
-    // final destination = "uid/$fileName";
-
-    // FirebaseUtils.uploadFile(destination, file!);
+      final temporaryImage = File(image.path);
+      setState(() {
+        this.file = temporaryImage;
+      });
+      print("success set image");
+    } on PlatformException catch (e) {
+      print("Failed to take image: $e");
+    }
   }
+
+  Future submitData() async {}
 }

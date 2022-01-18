@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:path/path.dart';
 
 class AdminAddItemScreen extends StatefulWidget {
   const AdminAddItemScreen({Key? key}) : super(key: key);
@@ -13,6 +17,11 @@ class AdminAddItemScreen extends StatefulWidget {
 
 class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
   GlobalKey<FormState> key = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController sellController = TextEditingController();
+  TextEditingController buyController = TextEditingController();
+  TextEditingController fileController = TextEditingController();
+  File? file;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +59,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                   ),
                 ),
                 TextFormField(
+                  controller: nameController,
                   decoration: InputDecoration(
                     hintText: "Contoh: Kertas",
                     border: OutlineInputBorder(
@@ -70,6 +80,9 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                   children: [
                     Flexible(
                         child: TextFormField(
+                      initialValue:
+                          file != null ? file.toString() : "No selected file",
+                      readOnly: true,
                       decoration: InputDecoration(
                           isDense: true,
                           hintText: "Foto item",
@@ -89,7 +102,11 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                               90.w,
                               47.h,
                             )),
-                        onPressed: () {},
+                        onPressed: () {
+                          pickImage(
+                            ImageSource.gallery,
+                          );
+                        },
                         icon: Icon(
                           Icons.upload_file,
                         ),
@@ -111,6 +128,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            controller: sellController,
                             decoration: InputDecoration(
                                 isDense: true,
                                 hintText: "Contoh: 1000",
@@ -135,6 +153,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            controller: buyController,
                             decoration: InputDecoration(
                                 isDense: true,
                                 hintText: "Contoh: 1000",
@@ -173,5 +192,20 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
         ],
       ),
     );
+  }
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+
+      final temporaryImage = File(image.path);
+      setState(() {
+        this.file = temporaryImage;
+      });
+      print("success set image");
+    } on Exception catch (e) {
+      print("Failed to take image: $e");
+    }
   }
 }

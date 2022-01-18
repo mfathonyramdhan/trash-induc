@@ -115,7 +115,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      (user.name == "-")
+                                      (user.name == "")
                                           ? SizedBox(
                                               width: 160.w,
                                               child: Text(

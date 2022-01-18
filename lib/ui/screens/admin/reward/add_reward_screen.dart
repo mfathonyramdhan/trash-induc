@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 
@@ -14,6 +15,7 @@ class AdminAddRewardScreen extends StatefulWidget {
 class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController costController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
   GlobalKey<FormState> key = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
 
@@ -90,15 +92,24 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                     ),
                   ),
                   TextFormField(
+                    controller: dateController,
                     readOnly: true,
                     onTap: () {
                       showDatePicker(
-                          context: context,
-                          initialDate: selectedDate,
-                          firstDate: DateTime(2021),
-                          lastDate: DateTime(2050));
+                              context: context,
+                              initialDate: selectedDate,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2050))
+                          .then((value) {
+                        setState(() {
+                          selectedDate = value!;
+                        });
+                      });
                     },
                     decoration: InputDecoration(
+                      hintText: DateFormat("dd/MM/yyyy").format(
+                        selectedDate,
+                      ),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(
                         8.r,
@@ -117,6 +128,7 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                     children: [
                       Flexible(
                           child: TextFormField(
+                        readOnly: true,
                         decoration: InputDecoration(
                             isDense: true,
                             hintText: "Foto reward",
@@ -136,7 +148,9 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                               90.w,
                               47.h,
                             )),
-                        onPressed: () {},
+                        onPressed: () {
+                          pickImage();
+                        },
                         icon: Icon(
                           Icons.upload_file,
                         ),
@@ -169,4 +183,6 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
       ),
     );
   }
+
+  Future pickImage() async {}
 }
