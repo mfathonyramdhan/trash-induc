@@ -146,11 +146,9 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                                   radius: 51.r,
                                   backgroundColor: lightGreen,
                                   child: CircleAvatar(
-                                    backgroundImage: file != null
-                                        ? AssetImage(
-                                            "assets/image/blank-profile-picture.png")
-                                        : AssetImage(
-                                            "assets/image/blank-profile-picture.png"),
+                                    backgroundImage: user.photoUrl != ""
+                                        ? Image.network(user.photoUrl!).image
+                                        : AssetImage("assets/image/photo.png"),
                                     radius: 45.r,
                                   ),
                                 ),

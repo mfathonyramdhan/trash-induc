@@ -103,8 +103,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     radius: 40,
                                     backgroundColor: lightGreen,
                                     child: CircleAvatar(
-                                      backgroundImage: AssetImage(
-                                          "assets/image/blank-profile-picture.png"),
+                                      backgroundImage: user.photoUrl != ""
+                                          ? Image.network(user.photoUrl!).image
+                                          : AssetImage(
+                                              "assets/image/photo.png"),
                                       radius: 37,
                                     ),
                                   ),
@@ -234,91 +236,69 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ),
                   ),
-                  FutureBuilder(builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (context, index) => ListTile(
-                            leading: Text(
-                              (index + 1).toString(),
-                              style: boldRobotoFont.copyWith(
-                                fontSize: 14.sp,
-                                color: darkGreen,
-                              ),
-                            ),
-                            title: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 15.r,
-                                ),
-                                SizedBox(
-                                  width: 8.w,
-                                ),
-                                Text(
-                                  "Nama",
-                                  style: mediumRobotoFont.copyWith(
+                  FutureBuilder<QuerySnapshot<Object?>>(
+                      future:
+                          userRef.orderBy("balance", descending: true).get(),
+                      builder: (BuildContext context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<UserModel.User> users = [];
+                          for (var i in snapshot.data!.docs) {
+                            users.add(UserModel.User.fromJson(
+                                i.data() as Map<String, dynamic>));
+                          }
+
+                          return Expanded(
+                            child: ListView.builder(
+                              itemBuilder: (context, index) => ListTile(
+                                leading: Text(
+                                  (index + 1).toString(),
+                                  style: boldRobotoFont.copyWith(
                                     fontSize: 14.sp,
                                     color: darkGreen,
                                   ),
-                                )
-                              ],
-                            ),
-                            trailing: Text(
-                              "\$ 100",
-                              style: regularRobotoFont.copyWith(
-                                fontSize: 10.sp,
-                                color: lightGreen,
-                              ),
-                            ),
-                          ),
-                          itemCount: 10,
-                        ),
-                      );
-                    }
-                    // return Center(
-                    //   child: CircularProgressIndicator(
-                    // color: darkGreen,
-                    // ),
-                    // );
-                    return Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (context, index) => ListTile(
-                          leading: Text(
-                            (index + 1).toString(),
-                            style: boldRobotoFont.copyWith(
-                              fontSize: 14.sp,
-                              color: darkGreen,
-                            ),
-                          ),
-                          title: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 15.r,
-                              ),
-                              SizedBox(
-                                width: 8.w,
-                              ),
-                              Text(
-                                "Nama",
-                                style: mediumRobotoFont.copyWith(
-                                  fontSize: 14.sp,
-                                  color: darkGreen,
                                 ),
-                              )
-                            ],
-                          ),
-                          trailing: Text(
-                            "\$ 100",
-                            style: regularRobotoFont.copyWith(
-                              fontSize: 10.sp,
-                              color: lightGreen,
+                                title: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 15.r,
+                                      backgroundImage:
+                                          users[index].photoUrl != ""
+                                              ? Image.network(
+                                                      users[index].photoUrl!)
+                                                  .image
+                                              : AssetImage(
+                                                  "assets/image/photo.png"),
+                                    ),
+                                    SizedBox(
+                                      width: 8.w,
+                                    ),
+                                    Text(
+                                      users[index].name!,
+                                      style: mediumRobotoFont.copyWith(
+                                        fontSize: 14.sp,
+                                        color: darkGreen,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                trailing: Text(
+                                  users[index].balance.toString(),
+                                  style: regularRobotoFont.copyWith(
+                                    fontSize: 10.sp,
+                                    color: lightGreen,
+                                  ),
+                                ),
+                              ),
+                              itemCount: users.length,
                             ),
+                          );
+                        }
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: darkGreen,
                           ),
-                        ),
-                        itemCount: 10,
-                      ),
-                    );
-                  })
+                        );
+                      })
                 ],
               ),
             );

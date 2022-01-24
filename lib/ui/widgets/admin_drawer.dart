@@ -87,7 +87,10 @@ class _AdminDrawerState extends State<AdminDrawer> {
             context,
             item: AdminNavigation.mission,
             title: "Misi",
-            image: Image.asset("assets/image/rankIcon.png"),
+            image: Image.asset(
+              "assets/image/missionIcon.png",
+              height: 30,
+            ),
           ),
           buildTile(context,
               item: AdminNavigation.logout,

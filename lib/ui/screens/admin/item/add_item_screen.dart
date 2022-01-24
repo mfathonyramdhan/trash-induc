@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,8 +23,9 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController sellController = TextEditingController();
   TextEditingController buyController = TextEditingController();
-  TextEditingController fileController = TextEditingController();
-  File? file;
+  TextEditingController expController = TextEditingController();
+  TextEditingController balanceController = TextEditingController();
+  File? selectedFile;
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +84,12 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                   children: [
                     Flexible(
                         child: TextFormField(
-                      initialValue:
-                          file != null ? file.toString() : "No selected file",
                       readOnly: true,
                       decoration: InputDecoration(
                           isDense: true,
-                          hintText: "Foto item",
+                          hintText: selectedFile == null
+                              ? "No file selected"
+                              : basename(selectedFile!.path),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
                             8.r,
@@ -167,6 +171,60 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     )
                   ],
                 ),
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Exp point/kg",
+                            style: boldRobotoFont.copyWith(
+                              fontSize: 14.sp,
+                              color: darkGray,
+                            ),
+                          ),
+                          TextFormField(
+                            controller: expController,
+                            decoration: InputDecoration(
+                                isDense: true,
+                                hintText: "Contoh: 1000",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                  8.r,
+                                ))),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Balance point/kg",
+                            style: boldRobotoFont.copyWith(
+                              fontSize: 14.sp,
+                              color: darkGray,
+                            ),
+                          ),
+                          TextFormField(
+                            controller: balanceController,
+                            decoration: InputDecoration(
+                                isDense: true,
+                                hintText: "Contoh: 1000",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                  8.r,
+                                ))),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       minimumSize: Size.fromHeight(
@@ -178,7 +236,9 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                           borderRadius: BorderRadius.circular(
                         8.r,
                       ))),
-                  onPressed: () {},
+                  onPressed: () {
+                    submitData("items", selectedFile!);
+                  },
                   child: Text(
                     "Tambahkan item",
                     style: boldRobotoFont.copyWith(
@@ -199,13 +259,33 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
 
-      final temporaryImage = File(image.path);
       setState(() {
-        this.file = temporaryImage;
+        selectedFile = File(image.path).absolute;
       });
-      print("success set image");
     } on Exception catch (e) {
       print("Failed to take image: $e");
     }
+  }
+
+  Future submitData(String destination, File pickedFile) async {
+    String itemName = nameController.text;
+    int itemBuy = int.parse(buyController.text);
+    int itemSell = int.parse(sellController.text);
+    int itemExp = int.parse(expController.text);
+    int itemBalance = int.parse(balanceController.text);
+    String fileName = basename(pickedFile.path);
+    final itemRef = FirebaseFirestore.instance.collection(destination);
+    final storageRef =
+        FirebaseStorage.instance.ref().child(destination).child(fileName);
+    await storageRef.putFile(pickedFile);
+    String url = await storageRef.getDownloadURL();
+    await itemRef.add({
+      "name": itemName,
+      "sell": itemSell,
+      "buy": itemBuy,
+      "exp_point": itemExp,
+      "balance_point": itemBalance,
+      "photoUrl": url,
+    });
   }
 }

@@ -9,6 +9,7 @@ class FirebaseUtils {
   static FirebaseAuth auth = FirebaseAuth.instance;
   static GoogleSignIn googleSignIn = GoogleSignIn();
   static User? currentUser = auth.currentUser;
+  static FirebaseStorage storage = FirebaseStorage.instance;
 
   static Future setupUser(
     String email,
@@ -64,16 +65,6 @@ class FirebaseUtils {
     } else if (loginProvider == "google.com") {
       await googleSignIn.signOut();
       await auth.signOut();
-    }
-  }
-
-  static UploadTask? uploadFile(String destination, File file) {
-    try {
-      final ref = FirebaseStorage.instance.ref(destination);
-
-      return ref.putFile(file);
-    } on FirebaseException catch (e) {
-      return null;
     }
   }
 

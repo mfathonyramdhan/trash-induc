@@ -104,7 +104,7 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
         centerTitle: true,
       ),
       bottomNavigationBar: Container(
-        height: 100.h,
+        height: 180.h,
         decoration: BoxDecoration(
             color: Colors.transparent,
             borderRadius: BorderRadius.only(
@@ -363,10 +363,6 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
                   return ListTile(
                     title: Text(
                       "Sampah sudah dipisah",
-                      style: boldRobotoFont.copyWith(
-                        fontSize: 14.sp,
-                        color: darkGray,
-                      ),
                     ),
                     leading: Checkbox(
                         value: repository.isSampahChecked,
