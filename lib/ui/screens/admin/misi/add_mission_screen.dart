@@ -183,18 +183,24 @@ class _AdminAddMissionScreenState extends State<AdminAddMissionScreen> {
       listen: false,
     );
 
+    final missionRef = FirebaseFirestore.instance.collection("missions");
+
     String name = nameController.text;
     String exp = expController.text;
     String balance = balanceController.text;
     bool is_active = repository.isAktifkanChecked;
     bool hidden = repository.isSembunyikanChecked;
 
-    await FirebaseFirestore.instance.collection("missions").add({
-      "name": name,
-      "exp": int.parse(exp),
-      "balance": int.parse(balance),
-      "is_active": is_active,
-      "hidden": hidden
-    });
+    try {
+      await missionRef.add({
+        "name": name,
+        "exp": int.parse(exp),
+        "balance": int.parse(balance),
+        "is_active": is_active,
+        "hidden": hidden
+      }).then((value) => Navigator.of(context).pop());
+    } catch (e) {
+      print(e);
+    }
   }
 }

@@ -38,8 +38,8 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
       var searchQuery = searchController.text.trim().toLowerCase();
       var rewardName = await FirebaseFirestore.instance
           .collection('rewards')
-          .where('reward.name', isGreaterThanOrEqualTo: searchQuery)
-          .where('reward.name', isLessThan: searchQuery + 'z')
+          .where('name', isGreaterThanOrEqualTo: searchQuery)
+          .where('name', isLessThan: searchQuery + 'z')
           .get();
 
       var data = [];
@@ -181,7 +181,10 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
                     label: Text("Aksi"),
                   ),
                 ],
-                source: AdminDataReward(context: context, data: snapshot.data!),
+                source: AdminDataReward(
+                  context: context,
+                  data: snapshot.data!,
+                ),
               );
             }
             return Center(
@@ -248,7 +251,9 @@ class AdminDataReward extends DataTableSource {
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AdminEditRewardScreen(),
+                    builder: (context) => AdminEditRewardScreen(
+                      reward: reward,
+                    ),
                   ));
                 },
                 icon: Icon(
@@ -273,7 +278,7 @@ class AdminDataReward extends DataTableSource {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: "Plastik",
+                                    text: reward.name,
                                     style: boldRobotoFont.copyWith(
                                       fontSize: 14.sp,
                                       color: darkGreen,

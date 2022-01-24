@@ -1,11 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/models/mission.dart';
+import 'package:kiloin/repository/mission_repository.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:provider/provider.dart';
 
 class AdminEditMissionScreen extends StatefulWidget {
-  const AdminEditMissionScreen({Key? key}) : super(key: key);
+  const AdminEditMissionScreen({
+    Key? key,
+    required this.mission,
+  }) : super(key: key);
   static String routeName = "/admin_edit_reward";
+
+  final Mission mission;
 
   @override
   _AdminEditMissionScreenState createState() => _AdminEditMissionScreenState();
@@ -13,9 +22,17 @@ class AdminEditMissionScreen extends StatefulWidget {
 
 class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
   TextEditingController nameController = TextEditingController();
-  TextEditingController costController = TextEditingController();
+  TextEditingController expController = TextEditingController();
+  TextEditingController balanceController = TextEditingController();
   GlobalKey<FormState> key = GlobalKey<FormState>();
-  DateTime selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.mission.name!;
+    expController.text = widget.mission.exp.toString();
+    balanceController.text = widget.mission.balance.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +69,7 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
                 ),
               ),
               TextFormField(
-                readOnly: true,
+                controller: nameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(
@@ -69,7 +86,7 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
                 ),
               ),
               TextFormField(
-                readOnly: true,
+                controller: expController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(
@@ -86,7 +103,7 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
                 ),
               ),
               TextFormField(
-                readOnly: true,
+                controller: balanceController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(
@@ -104,7 +121,7 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
                   ),
                 ),
                 leading: Checkbox(
-                  value: false,
+                  value: widget.mission.hidden,
                   onChanged: (bool) {},
                 ),
               ),
@@ -117,7 +134,7 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
                   ),
                 ),
                 leading: Checkbox(
-                  value: false,
+                  value: widget.mission.is_active,
                   onChanged: (bool) {},
                 ),
               ),
@@ -142,5 +159,33 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
         ],
       ),
     );
+  }
+
+  Future updateData() async {
+    final repository = Provider.of<MissionRepository>(
+      context,
+      listen: false,
+    );
+
+    final missionRef = FirebaseFirestore.instance.collection("missions");
+
+    String name = nameController.text;
+    String exp = expController.text;
+    String balance = balanceController.text;
+    bool is_active = repository.isAktifkanChecked;
+    bool hidden = repository.isSembunyikanChecked;
+
+    try {
+      await missionRef.doc(widget.mission.id).update({
+        "name": name,
+        "exp": int.parse(exp),
+        "balance": int.parse(balance),
+        "is_active": is_active,
+        "hidden": hidden
+      });
+      Navigator.of(context).pop();
+    } catch (e) {
+      print(e);
+    }
   }
 }

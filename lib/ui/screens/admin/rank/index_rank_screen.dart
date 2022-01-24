@@ -34,8 +34,8 @@ class _AdminIndexRankScreenState extends State<AdminIndexRankScreen> {
       var searchQuery = searchController.text.trim().toLowerCase();
       var userName = await FirebaseFirestore.instance
           .collection('users')
-          .where('user.name', isGreaterThanOrEqualTo: searchQuery)
-          .where('user.name', isLessThan: searchQuery + 'z')
+          .where('name', isGreaterThanOrEqualTo: searchQuery)
+          .where('name', isLessThan: searchQuery + 'z')
           .get();
 
       var data = [];

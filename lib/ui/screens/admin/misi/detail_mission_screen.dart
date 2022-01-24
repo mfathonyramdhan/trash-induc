@@ -5,8 +5,10 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 
 class AdminDetailMissionScreen extends StatefulWidget {
-  const AdminDetailMissionScreen({Key? key, required this.mission})
-      : super(key: key);
+  const AdminDetailMissionScreen({
+    Key? key,
+    required this.mission,
+  }) : super(key: key);
 
   final Mission mission;
 
@@ -51,6 +53,7 @@ class AdminDetailMissionScreenState extends State<AdminDetailMissionScreen> {
                 ),
               ),
               TextFormField(
+                initialValue: widget.mission.name,
                 readOnly: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -68,6 +71,7 @@ class AdminDetailMissionScreenState extends State<AdminDetailMissionScreen> {
                 ),
               ),
               TextFormField(
+                initialValue: widget.mission.exp.toString(),
                 readOnly: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -85,6 +89,7 @@ class AdminDetailMissionScreenState extends State<AdminDetailMissionScreen> {
                 ),
               ),
               TextFormField(
+                initialValue: widget.mission.balance.toString(),
                 readOnly: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -103,8 +108,8 @@ class AdminDetailMissionScreenState extends State<AdminDetailMissionScreen> {
                   ),
                 ),
                 leading: Checkbox(
-                  value: false,
-                  onChanged: (bool) {},
+                  value: widget.mission.hidden,
+                  onChanged: null,
                 ),
               ),
               ListTile(
@@ -116,8 +121,8 @@ class AdminDetailMissionScreenState extends State<AdminDetailMissionScreen> {
                   ),
                 ),
                 leading: Checkbox(
-                  value: false,
-                  onChanged: (bool) {},
+                  value: widget.mission.is_active,
+                  onChanged: null,
                 ),
               ),
             ],

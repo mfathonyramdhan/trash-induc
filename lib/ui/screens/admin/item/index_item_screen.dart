@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/models/item.dart';
@@ -35,8 +36,8 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
       var searchQuery = searchController.text.trim().toLowerCase();
       var itemName = await FirebaseFirestore.instance
           .collection('items')
-          .where('item.name', isGreaterThanOrEqualTo: searchQuery)
-          .where('item.name', isLessThan: searchQuery + 'z')
+          .where('name', isGreaterThanOrEqualTo: searchQuery)
+          .where('name', isLessThan: searchQuery + 'z')
           .get();
 
       var data = [];
@@ -223,6 +224,18 @@ class AdminDataItem extends DataTableSource {
     ));
   }
 
+  deleteItem(String url, Item item) async {
+    final storageRef = FirebaseStorage.instance;
+    final itemRef = FirebaseFirestore.instance.collection("items");
+    try {
+      await storageRef.refFromURL(url).delete();
+      await itemRef.doc(item.id).delete();
+      Navigator.pop(context);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   DataRow? getRow(int index) {
     Item item = data[index];
@@ -270,7 +283,9 @@ class AdminDataItem extends DataTableSource {
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AdminEditItemScreen(),
+                    builder: (context) => AdminEditItemScreen(
+                      item: item,
+                    ),
                   ));
                 },
                 icon: Icon(
@@ -295,7 +310,7 @@ class AdminDataItem extends DataTableSource {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: "Plastik",
+                                    text: item.name,
                                     style: boldRobotoFont.copyWith(
                                       fontSize: 14.sp,
                                       color: darkGreen,
@@ -328,7 +343,12 @@ class AdminDataItem extends DataTableSource {
                                 style: ElevatedButton.styleFrom(
                                   primary: darkGreen,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  deleteItem(
+                                    item.photoUrl!,
+                                    item,
+                                  );
+                                },
                                 child: Text("Ya, saya yakin",
                                     style: mediumRobotoFont.copyWith(
                                       fontSize: 12.sp,

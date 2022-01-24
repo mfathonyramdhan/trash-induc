@@ -65,6 +65,24 @@ class _AdminDetailRewardScreenState extends State<AdminDetailRewardScreen> {
                 ),
               ),
               Text(
+                "Harga reward",
+                style: boldRobotoFont.copyWith(
+                  fontSize: 14.sp,
+                  color: darkGray,
+                ),
+              ),
+              TextFormField(
+                initialValue: widget.reward.cost.toString(),
+                readOnly: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                    8.r,
+                  )),
+                  isDense: true,
+                ),
+              ),
+              Text(
                 "Berakhir pada tanggal",
                 style: boldRobotoFont.copyWith(
                   fontSize: 14.sp,
@@ -93,29 +111,26 @@ class _AdminDetailRewardScreenState extends State<AdminDetailRewardScreen> {
                   color: darkGray,
                 ),
               ),
-              widget.reward.photoUrl == ""
+              widget.reward.photoUrl != ""
                   ? Center(
-                      child: Text("Tidak ada foto"),
+                      child: Container(
+                        height: 150.h,
+                        width: 60.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            15.r,
+                          ),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                              widget.reward.photoUrl!,
+                            ),
+                          ),
+                        ),
+                      ),
                     )
                   : Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            widget.reward.photoUrl!,
-                          ),
-                          Container(
-                            height: 100.h,
-                            width: 60.w,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    "https://dummyimage.com/600x400/000/fff.jpg"),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                      child: Text("Tidak ada foto"),
                     ),
             ],
           )

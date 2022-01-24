@@ -38,8 +38,8 @@ class _AdminIndexMissionScreenState extends State<AdminIndexMissionScreen> {
       var searchQuery = searchController.text.trim().toLowerCase();
       var missionName = await FirebaseFirestore.instance
           .collection('missions')
-          .where('mission.name', isGreaterThanOrEqualTo: searchQuery)
-          .where('mission.name', isLessThan: searchQuery + 'z')
+          .where('name', isGreaterThanOrEqualTo: searchQuery)
+          .where('name', isLessThan: searchQuery + 'z')
           .get();
 
       var data = [];
@@ -217,8 +217,20 @@ class AdminDataMission extends DataTableSource {
 
   detailPage(Mission mission) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AdminDetailMissionScreen(mission: mission),
+      builder: (context) => AdminDetailMissionScreen(
+        mission: mission,
+      ),
     ));
+  }
+
+  deleteMission(Mission mission) async {
+    final missionRef = FirebaseFirestore.instance.collection("missions");
+    try {
+      await missionRef.doc(mission.id).delete();
+      Navigator.of(context).pop();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -267,7 +279,9 @@ class AdminDataMission extends DataTableSource {
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AdminEditMissionScreen(),
+                    builder: (context) => AdminEditMissionScreen(
+                      mission: mission,
+                    ),
                   ));
                 },
                 icon: Icon(
@@ -292,7 +306,7 @@ class AdminDataMission extends DataTableSource {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: "Plastik",
+                                    text: mission.name,
                                     style: boldRobotoFont.copyWith(
                                       fontSize: 14.sp,
                                       color: darkGreen,
@@ -325,7 +339,9 @@ class AdminDataMission extends DataTableSource {
                                 style: ElevatedButton.styleFrom(
                                   primary: darkGreen,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  deleteMission(mission);
+                                },
                                 child: Text("Ya, saya yakin",
                                     style: mediumRobotoFont.copyWith(
                                       fontSize: 12.sp,

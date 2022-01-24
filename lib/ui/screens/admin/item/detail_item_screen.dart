@@ -68,27 +68,24 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
                   color: darkGray,
                 ),
               ),
-              widget.item.photoUrl != null
+              widget.item.photoUrl != ""
                   ? Center(
-                      child: Text("Tidak ada foto"),
+                      child: Container(
+                        height: 150.h,
+                        width: 60.w,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              10.r,
+                            ),
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                  widget.item.photoUrl!,
+                                ))),
+                      ),
                     )
                   : Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            widget.item.photoUrl.toString(),
-                          ),
-                          Container(
-                            height: 100.h,
-                            width: 60.w,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        "https://dummyimage.com/600x400/000/fff.jpg"))),
-                          )
-                        ],
-                      ),
+                      child: Text("Tidak ada foto"),
                     ),
               Row(
                 children: [
@@ -131,6 +128,60 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
                         ),
                         TextFormField(
                           initialValue: widget.item.buy.toString(),
+                          readOnly: true,
+                          decoration: InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                8.r,
+                              ))),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Exp point/kg",
+                          style: boldRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: darkGray,
+                          ),
+                        ),
+                        TextFormField(
+                          initialValue: widget.item.exp_point.toString(),
+                          readOnly: true,
+                          decoration: InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                8.r,
+                              ))),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Balance point/kg",
+                          style: boldRobotoFont.copyWith(
+                            fontSize: 14.sp,
+                            color: darkGray,
+                          ),
+                        ),
+                        TextFormField(
+                          initialValue: widget.item.balance_point.toString(),
                           readOnly: true,
                           decoration: InputDecoration(
                               isDense: true,
