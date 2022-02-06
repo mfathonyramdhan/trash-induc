@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,6 +55,132 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 20.h,
+                ),
+                selectedFile == null
+                    ? Center(
+                        child: SizedBox(
+                          height: 240.h,
+                          width: 100.w,
+                          child: InkWell(
+                            onTap: () {
+                              pickImage(
+                                ImageSource.gallery,
+                              );
+                            },
+                            child: DottedBorder(
+                              color: grayPure,
+                              strokeWidth: 5,
+                              dashPattern: [
+                                15,
+                                10,
+                              ],
+                              borderType: BorderType.RRect,
+                              radius: Radius.circular(
+                                15.r,
+                              ),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Tap untuk pilih foto",
+                                      style: TextStyle(),
+                                    ),
+                                    Container(
+                                      height: 200.h,
+                                      width: 70.w,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
+                                        ),
+                                      ),
+                                      child: Opacity(
+                                        opacity: 0.5,
+                                        child: Image(
+                                          fit: BoxFit.contain,
+                                          image: AssetImage(
+                                            "assets/image/photo-placeholder.png",
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Center(
+                        child: Stack(children: [
+                        CircleAvatar(
+                          radius: 100.r,
+                          backgroundColor: darkGreen,
+                          child: CircleAvatar(
+                            radius: 90.r,
+                            backgroundImage: Image.file(selectedFile!).image,
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: CircleAvatar(
+                              backgroundColor: lightGreen,
+                              child: IconButton(
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return Container(
+                                            height: 80.h,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(
+                                                      15.r,
+                                                    ),
+                                                    topRight: Radius.circular(
+                                                      15.r,
+                                                    ))),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                TextButton.icon(
+                                                    onPressed: () {
+                                                      pickImage(
+                                                        ImageSource.gallery,
+                                                      );
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.edit,
+                                                    ),
+                                                    label: Text("Ganti foto")),
+                                                TextButton.icon(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        selectedFile = null;
+                                                      });
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.delete,
+                                                    ),
+                                                    label: Text("Hapus foto"))
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: whitePure,
+                                  ))),
+                        )
+                      ])),
                 Text(
                   "Nama item",
                   style: boldRobotoFont.copyWith(
@@ -72,50 +198,6 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     )),
                     isDense: true,
                   ),
-                ),
-                Text(
-                  "Foto Item",
-                  style: boldRobotoFont.copyWith(
-                    fontSize: 14.sp,
-                    color: darkGray,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Flexible(
-                        child: TextFormField(
-                      readOnly: true,
-                      decoration: InputDecoration(
-                          isDense: true,
-                          hintText: selectedFile == null
-                              ? "No file selected"
-                              : basename(selectedFile!.path),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                            8.r,
-                          ))),
-                    )),
-                    ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                            primary: darkGreen,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                              8.r,
-                            )),
-                            fixedSize: Size(
-                              90.w,
-                              47.h,
-                            )),
-                        onPressed: () {
-                          pickImage(
-                            ImageSource.gallery,
-                          );
-                        },
-                        icon: Icon(
-                          Icons.upload_file,
-                        ),
-                        label: Text("Upload file"))
-                  ],
                 ),
                 Row(
                   children: [

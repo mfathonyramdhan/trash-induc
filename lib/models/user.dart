@@ -1,14 +1,14 @@
 class User {
-  final String? id;
-  final String? name;
-  final String? email;
-  final String? phone;
-  final String? address;
-  final double? exp;
-  final double? balance;
-  final String? photoUrl;
-  final String role;
-  final String membership;
+  String? id;
+  String? name;
+  String? email;
+  String? phone;
+  String? address;
+  double? exp;
+  double? balance;
+  String? photoUrl;
+  String role;
+  String membership;
 
   User({
     this.id,

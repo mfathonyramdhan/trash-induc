@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kiloin/utils/firebase_utils.dart';
@@ -153,6 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: rePasswordController,
                             hintText: "Re-Password",
                             keyboardType: TextInputType.text,
+                            textInputAction: TextInputAction.done,
                             borderRadius: 0,
                             validator: (value) {
                               if (value != passwordController.text) {

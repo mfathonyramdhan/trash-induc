@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
   TextEditingController expController = TextEditingController();
   TextEditingController balanceController = TextEditingController();
   File? selectedFile;
+  bool deletePhoto = false;
 
   @override
   void initState() {
@@ -72,6 +74,138 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                (deletePhoto == true ||
+                        widget.item.photoUrl == "" ||
+                        selectedFile == null)
+                    ? Center(
+                        child: SizedBox(
+                          height: 240.h,
+                          width: 100.w,
+                          child: InkWell(
+                            onTap: () {
+                              pickImage(
+                                ImageSource.gallery,
+                              );
+                            },
+                            child: DottedBorder(
+                              color: grayPure,
+                              strokeWidth: 5,
+                              dashPattern: [
+                                15,
+                                10,
+                              ],
+                              borderType: BorderType.RRect,
+                              radius: Radius.circular(
+                                15.r,
+                              ),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Tap untuk pilih foto",
+                                    ),
+                                    Container(
+                                      height: 200.h,
+                                      width: 70.w,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
+                                        ),
+                                      ),
+                                      child: Opacity(
+                                        opacity: 0.5,
+                                        child: Image(
+                                          fit: BoxFit.contain,
+                                          image: AssetImage(
+                                            "assets/image/photo-placeholder.png",
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Center(
+                        child: Stack(children: [
+                          CircleAvatar(
+                            radius: 100.r,
+                            backgroundColor: darkGreen,
+                            child: CircleAvatar(
+                              backgroundImage: selectedFile == null
+                                  ? Image.network(widget.item.photoUrl!).image
+                                  : Image.file(selectedFile!).image,
+                              radius: 90.r,
+                            ),
+                          ),
+                          Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: CircleAvatar(
+                                backgroundColor: darkGreen,
+                                child: IconButton(
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return Container(
+                                            height: 80.h,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(
+                                                      15.r,
+                                                    ),
+                                                    topRight: Radius.circular(
+                                                      15.r,
+                                                    ))),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                TextButton.icon(
+                                                    onPressed: () {
+                                                      pickImage(
+                                                        ImageSource.gallery,
+                                                      );
+                                                      deletePhoto = false;
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.edit,
+                                                    ),
+                                                    label: Text("Ganti foto")),
+                                                TextButton.icon(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        deletePhoto = true;
+                                                        selectedFile = null;
+                                                      });
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.delete,
+                                                    ),
+                                                    label: Text("Hapus foto"))
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: whitePure,
+                                  ),
+                                ),
+                              ))
+                        ]),
+                      ),
                 Text(
                   "Nama item",
                   style: boldRobotoFont.copyWith(
@@ -89,48 +223,6 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                     )),
                     isDense: true,
                   ),
-                ),
-                Text(
-                  "Foto Item",
-                  style: boldRobotoFont.copyWith(
-                    fontSize: 14.sp,
-                    color: darkGray,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Flexible(
-                        child: TextFormField(
-                      decoration: InputDecoration(
-                          isDense: true,
-                          hintText: "Foto item",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                            8.r,
-                          ))),
-                    )),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          primary: darkGreen,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                            8.r,
-                          )),
-                          fixedSize: Size(
-                            90.w,
-                            47.h,
-                          )),
-                      onPressed: () {
-                        pickImage(
-                          ImageSource.gallery,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.upload_file,
-                      ),
-                      label: Text("Upload file"),
-                    )
-                  ],
                 ),
                 Row(
                   children: [
@@ -285,26 +377,38 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
   }
 
   Future updateData(String destination, File? pickedFile) async {
+    String? url;
     String itemName = nameController.text;
     int itemBuy = int.parse(buyController.text);
     int itemSell = int.parse(sellController.text);
     int itemExp = int.parse(expController.text);
     int itemBalance = int.parse(balanceController.text);
-    String fileName = basename(pickedFile!.path);
-    final itemRef = FirebaseFirestore.instance.collection(destination);
-    final storageRef = FirebaseStorage.instance;
+    var itemRef = FirebaseFirestore.instance.collection(destination);
+    var storageRef = FirebaseStorage.instance;
+
     try {
-      await storageRef.refFromURL(widget.item.photoUrl!).delete();
-      await storageRef
-          .ref()
-          .child(destination)
-          .child(fileName)
-          .putFile(pickedFile);
-      String url = await storageRef
-          .ref()
-          .child(destination)
-          .child(fileName)
-          .getDownloadURL();
+      if (deletePhoto) {
+        try {
+          await storageRef.refFromURL(widget.item.photoUrl!).delete();
+          url = "";
+        } catch (e) {
+          print(e);
+        }
+      }
+
+      if (pickedFile != null) {
+        String fileName = basename(pickedFile.path);
+        try {
+          await storageRef.refFromURL(widget.item.photoUrl!).delete();
+          await storageRef.ref(destination).child(fileName).putFile(pickedFile);
+          url = await storageRef
+              .ref(destination)
+              .child(fileName)
+              .getDownloadURL();
+        } catch (e) {
+          print(e);
+        }
+      }
 
       await itemRef.doc(widget.item.id).update({
         "name": itemName,
@@ -314,6 +418,8 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
         "balance_point": itemBalance,
         "photoUrl": url,
       });
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 }

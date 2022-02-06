@@ -139,48 +139,6 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
                       isDense: true,
                     ),
                   ),
-                  Text(
-                    "Pilih foto",
-                    style: boldRobotoFont.copyWith(
-                      fontSize: 14.sp,
-                      color: darkGray,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Flexible(
-                          child: TextFormField(
-                        decoration: InputDecoration(
-                            isDense: true,
-                            hintText: "Foto reward",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                              8.r,
-                            ))),
-                      )),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                            primary: darkGreen,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                              8.r,
-                            )),
-                            fixedSize: Size(
-                              90.w,
-                              47.h,
-                            )),
-                        onPressed: () {
-                          pickImage(
-                            ImageSource.gallery,
-                          );
-                        },
-                        icon: Icon(
-                          Icons.upload_file,
-                        ),
-                        label: Text("Upload file"),
-                      )
-                    ],
-                  ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size.fromHeight(
@@ -228,7 +186,7 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
 
     final rewardRef = FirebaseFirestore.instance.collection(destination);
     final storageRef =
-        FirebaseStorage.instance.ref().child(destination).child(fileName);
+        FirebaseStorage.instance.ref(destination).child(fileName);
     await storageRef.putFile(pickedFile);
     String url = await storageRef.getDownloadURL();
     await rewardRef.doc(widget.reward.id).update({
@@ -236,6 +194,44 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
       "cost": rewardCost,
       "photoUrl": url,
       "expired_at": rewardExpired,
-    }).then((value) => print("done"));
+    });
+
+    // try {
+    //   if (widget.item.photoUrl == "") {
+    //     try {
+    //       await storageRef.ref(destination).child(fileName).putFile(pickedFile);
+    //       url = await storageRef
+    //           .ref(destination)
+    //           .child(fileName)
+    //           .getDownloadURL();
+    //     } catch (e) {
+    //       print(e);
+    //     }
+    //   }
+
+    //   if (widget.item.photoUrl != "") {
+    //     try {
+    //       await storageRef.refFromURL(widget.item.photoUrl!).delete();
+    //       await storageRef.ref(destination).child(fileName).putFile(pickedFile);
+    //       url = await storageRef
+    //           .ref(destination)
+    //           .child(fileName)
+    //           .getDownloadURL();
+    //     } catch (e) {
+    //       print(e);
+    //     }
+    //   }
+
+    //   await itemRef.doc(widget.item.id).update({
+    //     "name": itemName,
+    //     "sell": itemSell,
+    //     "buy": itemBuy,
+    //     "exp_point": itemExp,
+    //     "balance_point": itemBalance,
+    //     "photoUrl": url,
+    //   });
+    // } catch (e) {
+    //   print(e);
+    // }
   }
 }

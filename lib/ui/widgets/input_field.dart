@@ -10,6 +10,7 @@ class InputField extends StatelessWidget {
   final String? hintText;
   final Widget? prefixIcon;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final Function(String)? onChanged;
   final TextEditingController? controller;
   final FormFieldValidator? validator;
@@ -23,11 +24,13 @@ class InputField extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.validator,
+    this.textInputAction = TextInputAction.next,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textInputAction: textInputAction,
       obscureText: obscureText,
       controller: controller,
       keyboardType: keyboardType,

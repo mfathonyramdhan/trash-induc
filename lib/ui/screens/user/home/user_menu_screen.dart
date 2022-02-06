@@ -114,9 +114,11 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                             children: [
                               CircleAvatar(
                                 radius: 37,
-                                backgroundImage: AssetImage(
-                                  "assets/image/photo.png",
-                                ),
+                                backgroundImage: user.photoUrl == ""
+                                    ? AssetImage(
+                                        "assets/image/photo.png",
+                                      )
+                                    : Image.network(user.photoUrl!).image,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,16 +126,14 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                                   SizedBox(
                                     width: 150.w,
                                     child: Text(
-                                        (user.name == "-")
-                                            ? "User"
-                                            : user.name!,
+                                        (user.name == "") ? "User" : user.name!,
                                         overflow: TextOverflow.ellipsis,
                                         style: boldRobotoFont.copyWith(
                                           fontSize: 20.sp,
                                         )),
                                   ),
                                   Text(
-                                    (user.phone == "-")
+                                    (user.phone == "")
                                         ? "Nomor telp belum diisi"
                                         : user.phone!,
                                     style: regularRobotoFont.copyWith(
@@ -337,7 +337,10 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                   )),
               child: Center(
                 child: FutureBuilder(
-                  future: missionRef.where('isActive', isEqualTo: true).get(),
+                  future: missionRef
+                      .where('is_active', isEqualTo: true)
+                      .where("hidden", isEqualTo: false)
+                      .get(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       var documents = snapshot.data.docs;

@@ -43,6 +43,29 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                height: 20.h,
+              ),
+              widget.item.photoUrl != ""
+                  ? Center(
+                      child: CircleAvatar(
+                        backgroundColor: darkGreen,
+                        radius: 100.r,
+                        child: CircleAvatar(
+                          radius: 90.r,
+                          backgroundImage:
+                              Image.network(widget.item.photoUrl!).image,
+                        ),
+                      ),
+                    )
+                  : Center(
+                      child: SizedBox(
+                          height: 200.h,
+                          width: 60.w,
+                          child: Center(
+                            child: Text("Tidak ada foto"),
+                          )),
+                    ),
               Text(
                 "Nama item",
                 style: boldRobotoFont.copyWith(
@@ -61,32 +84,6 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
                   isDense: true,
                 ),
               ),
-              Text(
-                "Foto Item",
-                style: boldRobotoFont.copyWith(
-                  fontSize: 14.sp,
-                  color: darkGray,
-                ),
-              ),
-              widget.item.photoUrl != ""
-                  ? Center(
-                      child: Container(
-                        height: 150.h,
-                        width: 60.w,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              10.r,
-                            ),
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                  widget.item.photoUrl!,
-                                ))),
-                      ),
-                    )
-                  : Center(
-                      child: Text("Tidak ada foto"),
-                    ),
               Row(
                 children: [
                   Flexible(

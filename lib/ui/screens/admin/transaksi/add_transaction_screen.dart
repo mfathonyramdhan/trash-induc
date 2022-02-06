@@ -387,6 +387,7 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
               .doc(repository.userId);
           var user = await userRef.get();
           var userData = User.fromJson(user.data()!, id: user.id);
+
           var pegawaiRef = await FirebaseFirestore.instance
               .collection('users')
               .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -400,12 +401,14 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
 
           double totalExp = 0;
           double totalBalance = 0;
+          double totalSell = 0;
 
           var transaction =
               await FirebaseFirestore.instance.collection('transactions').add({
             'created_at': DateTime.now(),
             'user': userData.toJson(),
-            'petugas': pegawaiData.toJson()
+            'petugas': pegawaiData.toJson(),
+            'total': 0
           });
 
           for (var cart in repository.cartItems) {
@@ -418,6 +421,7 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
             });
             totalExp += cart.item.exp_point! * cart.qty;
             totalBalance += cart.item.balance_point! * cart.qty;
+            totalSell += cart.item.sell! * cart.qty;
           }
 
           if (repository.missions.isNotEmpty) {
@@ -457,6 +461,13 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
               totalExp += bonusData.exp!;
             }
           }
+
+          await FirebaseFirestore.instance
+              .collection("transactions")
+              .doc(transaction.id)
+              .update({
+            'total': totalSell,
+          });
 
           await userRef.update({
             'exp': totalExp + userData.exp!,

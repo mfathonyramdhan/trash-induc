@@ -1,9 +1,9 @@
 import 'package:kiloin/models/item.dart';
 
 class TransactionItem {
-  final String? transaction_id;
-  final Item? item;
-  final double? qty;
+  String? transaction_id;
+  Item? item;
+  double? qty;
 
   TransactionItem({
     this.transaction_id,

@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kiloin/models/user.dart';
 
 class Transaction {
-  final String? id;
-  final User? user;
-  final User? petugas;
+  String? id;
+  User? user;
+  User? petugas;
   // ignore: non_constant_identifier_names
-  final Timestamp? created_at;
+  Timestamp? created_at;
 
   Transaction({
     this.id,

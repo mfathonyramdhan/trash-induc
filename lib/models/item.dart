@@ -1,11 +1,11 @@
 class Item {
-  final String? id;
-  final String? name;
-  final int? sell;
-  final int? buy;
-  final int? balance_point;
-  final int? exp_point;
-  final String? photoUrl;
+  String? id;
+  String? name;
+  int? sell;
+  int? buy;
+  int? balance_point;
+  int? exp_point;
+  String? photoUrl;
 
   Item({
     this.id,

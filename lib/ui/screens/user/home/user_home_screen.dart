@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/models/item.dart';
 
 import '../../../../models/user.dart' as UserModel;
 import '../../../../shared/color.dart';
@@ -32,6 +34,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   var currentUserId = FirebaseAuth.instance.currentUser!.uid.toString();
 
   CollectionReference userRef = FirebaseFirestore.instance.collection("users");
+  var itemRef = FirebaseFirestore.instance.collection("items").get();
 
   @override
   void initState() {
@@ -217,35 +220,51 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
 
                   /// SECTION: GARBAGE PRICE
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        defaultMargin, 0, defaultMargin, 12.r),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Harga Sampah",
-                          style: regularRobotoFont.copyWith(
-                            fontSize: 16.sp,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 18.h,
-                        ),
-                        GarbageCard(
-                          title: "Harga Jual",
-                          textColor: yellowPure,
-                        ),
-                        SizedBox(
-                          height: 16.h,
-                        ),
-                        GarbageCard(
-                          title: "Harga Beli",
-                          textColor: blueSky,
-                        ),
-                      ],
-                    ),
-                  ),
+                  FutureBuilder<QuerySnapshot<Object?>>(
+                      future: itemRef,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<Item> items = [];
+                          for (var i in snapshot.data!.docs) {
+                            items.add(Item.fromJson(
+                                i.data() as Map<String, dynamic>));
+                          }
+                          return Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                defaultMargin, 0, defaultMargin, 12.r),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Harga Sampah",
+                                  style: regularRobotoFont.copyWith(
+                                    fontSize: 16.sp,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 18.h,
+                                ),
+                                GarbageCard(
+                                  title: "Harga Jual",
+                                  textColor: yellowPure,
+                                  items: items,
+                                ),
+                                SizedBox(
+                                  height: 16.h,
+                                ),
+                                GarbageCard(
+                                  title: "Harga Beli",
+                                  textColor: blueSky,
+                                  items: items,
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        return CircularProgressIndicator(
+                          color: lightGreen,
+                        );
+                      }),
                   SizedBox(
                     height: 92.h,
                   ),

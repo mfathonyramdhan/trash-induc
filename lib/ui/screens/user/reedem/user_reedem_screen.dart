@@ -145,11 +145,7 @@ class _UserReedemScreenState extends State<UserReedemScreen> {
                     ],
                   );
                 }
-                if (snapshot.hasError) {
-                  return Text(
-                    snapshot.error.toString(),
-                  );
-                }
+
                 return CircularProgressIndicator(
                   color: whitePure,
                 );

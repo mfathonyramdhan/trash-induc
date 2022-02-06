@@ -45,6 +45,26 @@ class _AdminDetailRewardScreenState extends State<AdminDetailRewardScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              widget.reward.photoUrl != ""
+                  ? Center(
+                      child: CircleAvatar(
+                        radius: 100.r,
+                        backgroundColor: darkGreen,
+                        child: CircleAvatar(
+                          radius: 90.r,
+                          backgroundImage:
+                              Image.network(widget.reward.photoUrl!).image,
+                        ),
+                      ),
+                    )
+                  : Center(
+                      child: SizedBox(
+                          height: 200.h,
+                          width: 60.w,
+                          child: Center(
+                            child: Text("Tidak ada foto"),
+                          )),
+                    ),
               Text(
                 "Nama reward",
                 style: boldRobotoFont.copyWith(
@@ -104,34 +124,6 @@ class _AdminDetailRewardScreenState extends State<AdminDetailRewardScreen> {
                   isDense: true,
                 ),
               ),
-              Text(
-                "Foto reward",
-                style: boldRobotoFont.copyWith(
-                  fontSize: 14.sp,
-                  color: darkGray,
-                ),
-              ),
-              widget.reward.photoUrl != ""
-                  ? Center(
-                      child: Container(
-                        height: 150.h,
-                        width: 60.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            15.r,
-                          ),
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              widget.reward.photoUrl!,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : Center(
-                      child: Text("Tidak ada foto"),
-                    ),
             ],
           )
         ],

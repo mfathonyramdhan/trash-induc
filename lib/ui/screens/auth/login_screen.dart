@@ -123,6 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: true,
                           controller: passwordController,
                           hintText: "Password",
+                          textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.text,
                           prefixIcon: Theme(
                             data: Theme.of(context).copyWith(
