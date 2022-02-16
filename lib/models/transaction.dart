@@ -7,6 +7,7 @@ class Transaction {
   User? petugas;
   // ignore: non_constant_identifier_names
   Timestamp? created_at;
+  double? total;
 
   Transaction({
     this.id,
@@ -14,6 +15,7 @@ class Transaction {
     this.petugas,
     // ignore: non_constant_identifier_names
     this.created_at,
+    this.total,
   });
 
   Transaction.fromJson(Map<String, dynamic> json, {String? id})
@@ -22,6 +24,7 @@ class Transaction {
           user: User.fromJson(json["user"]),
           petugas: User.fromJson(json['petugas']),
           created_at: json["created_at"]! as Timestamp,
+          total: json["total"]! as double,
         );
 
   Map<String, dynamic> toJson() {
@@ -29,6 +32,7 @@ class Transaction {
       "user": user,
       "petugas": petugas,
       "created_at": created_at,
+      "total": total,
     };
   }
 }

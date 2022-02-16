@@ -135,7 +135,7 @@ class _UserReedemScreenState extends State<UserReedemScreen> {
                                 height: 0.596.sh,
                                 child: TabBarView(
                                   children: [
-                                    UserRewardWalletScreen(),
+                                    UserRewardWalletScreen(user: user),
                                     UserReedemedScreen(),
                                   ],
                                 ),

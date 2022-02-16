@@ -150,7 +150,12 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
                             borderRadius: BorderRadius.circular(
                           8.r,
                         ))),
-                    onPressed: () {},
+                    onPressed: () {
+                      submitData(
+                        "rewards",
+                        selectedFile!,
+                      );
+                    },
                     child: Text(
                       "Update reward",
                       style: boldRobotoFont.copyWith(

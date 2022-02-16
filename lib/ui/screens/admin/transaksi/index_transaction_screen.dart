@@ -67,16 +67,14 @@ class _AdminIndexTransactionScreenState
       data.addAll(userName.docs);
       data.addAll(petugasEmail.docs);
       data.addAll(petugasName.docs);
-      transactions.addAll(data
-          .map((e) => Transaction.fromJson(e.data(), id: e.id))
-          .whereType<Transaction>()
-          .toList());
+      transactions.addAll(
+        data.map((e) => Transaction.fromJson(e.data(), id: e.id)).toList(),
+      );
     } else {
       var result =
           await FirebaseFirestore.instance.collection('transactions').get();
       transactions = result.docs
           .map((e) => Transaction.fromJson(e.data(), id: e.id))
-          .whereType<Transaction>()
           .toList();
     }
 

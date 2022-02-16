@@ -116,7 +116,9 @@ class _UserTransactionScreenState extends State<UserTransactionScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Rp. 15,000",
+                                "Rp " +
+                                    NumberFormat("###,###,###")
+                                        .format(transaction.total),
                                 style: regularRobotoFont.copyWith(
                                   fontSize: 14.sp,
                                   color: lightGreen,

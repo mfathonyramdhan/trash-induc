@@ -44,17 +44,14 @@ class _AdminIndexMissionScreenState extends State<AdminIndexMissionScreen> {
 
       var data = [];
       data.addAll(missionName.docs);
-      missions.addAll(data
-          .map((e) => Mission.fromJson(e.data(), id: e.id))
-          .whereType<Mission>()
-          .toList());
+      missions.addAll(
+        data.map((e) => Mission.fromJson(e.data(), id: e.id)).toList(),
+      );
     } else {
       var result =
           await FirebaseFirestore.instance.collection('missions').get();
-      missions = result.docs
-          .map((e) => Mission.fromJson(e.data(), id: e.id))
-          .whereType<Mission>()
-          .toList();
+      missions =
+          result.docs.map((e) => Mission.fromJson(e.data(), id: e.id)).toList();
     }
 
     return missions;

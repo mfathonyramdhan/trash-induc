@@ -65,12 +65,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
         centerTitle: true,
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<DocumentSnapshot<Object?>>(
         future: userRef.doc(currentUserId).get(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             UserModel.User user = UserModel.User.fromJson(
-                snapshot.data!.data() as Map<String, dynamic>);
+              snapshot.data!.data() as Map<String, dynamic>,
+              id: currentUserId,
+            );
             return Container(
               padding: EdgeInsets.only(
                 top: 22.h,
@@ -167,19 +169,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               SizedBox(
                                 height: 26.h,
                               ),
-                              RichText(
-                                  text: TextSpan(
-                                      text: "Rank #1",
-                                      style: boldRobotoFont.copyWith(
-                                        fontSize: 20.sp,
-                                      ),
-                                      children: [
-                                    TextSpan(
-                                        text: "of 100 member",
-                                        style: lightRobotoFont.copyWith(
-                                          fontSize: 16.sp,
-                                        ))
-                                  ]))
+                              FutureBuilder<QuerySnapshot<Object?>>(
+                                  future: userRef.get(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      int total = snapshot.data!.docs.length;
+                                      return RichText(
+                                          text: TextSpan(
+                                              text: "Rank #1",
+                                              style: boldRobotoFont.copyWith(
+                                                fontSize: 20.sp,
+                                              ),
+                                              children: [
+                                            TextSpan(
+                                                text: "of $total member",
+                                                style: lightRobotoFont.copyWith(
+                                                  fontSize: 16.sp,
+                                                ))
+                                          ]));
+                                    }
+                                    return CircularProgressIndicator(
+                                      color: whitePure,
+                                    );
+                                  })
                             ],
                           ),
                         ),
@@ -189,7 +201,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => UserEditProfileScreen(),
+                                builder: (_) => UserEditProfileScreen(
+                                  user: user,
+                                ),
                               ));
                             },
                             child: Container(
@@ -249,46 +263,47 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
                           return Expanded(
                             child: ListView.builder(
-                              itemBuilder: (context, index) => ListTile(
-                                leading: Text(
-                                  (index + 1).toString(),
-                                  style: boldRobotoFont.copyWith(
-                                    fontSize: 14.sp,
-                                    color: darkGreen,
+                              itemBuilder: (context, index) {
+                                UserModel.User user = users[index];
+                                return ListTile(
+                                  leading: Text(
+                                    (index + 1).toString(),
+                                    style: boldRobotoFont.copyWith(
+                                      fontSize: 14.sp,
+                                      color: darkGreen,
+                                    ),
                                   ),
-                                ),
-                                title: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 15.r,
-                                      backgroundImage:
-                                          users[index].photoUrl != ""
-                                              ? Image.network(
-                                                      users[index].photoUrl!)
-                                                  .image
-                                              : AssetImage(
-                                                  "assets/image/photo.png"),
-                                    ),
-                                    SizedBox(
-                                      width: 8.w,
-                                    ),
-                                    Text(
-                                      users[index].name!,
-                                      style: mediumRobotoFont.copyWith(
-                                        fontSize: 14.sp,
-                                        color: darkGreen,
+                                  title: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 15.r,
+                                        backgroundImage: user.photoUrl != ""
+                                            ? Image.network(user.photoUrl!)
+                                                .image
+                                            : AssetImage(
+                                                "assets/image/photo.png"),
                                       ),
-                                    )
-                                  ],
-                                ),
-                                trailing: Text(
-                                  users[index].balance.toString(),
-                                  style: regularRobotoFont.copyWith(
-                                    fontSize: 10.sp,
-                                    color: lightGreen,
+                                      SizedBox(
+                                        width: 8.w,
+                                      ),
+                                      Text(
+                                        user.name!,
+                                        style: mediumRobotoFont.copyWith(
+                                          fontSize: 14.sp,
+                                          color: darkGreen,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                ),
-                              ),
+                                  trailing: Text(
+                                    user.balance.toString(),
+                                    style: regularRobotoFont.copyWith(
+                                      fontSize: 10.sp,
+                                      color: lightGreen,
+                                    ),
+                                  ),
+                                );
+                              },
                               itemCount: users.length,
                             ),
                           );

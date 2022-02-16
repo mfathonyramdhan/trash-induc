@@ -4,11 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kiloin/models/reward.dart';
 
+import '../../../../models/user.dart';
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
 
 class UserRewardWalletScreen extends StatefulWidget {
-  const UserRewardWalletScreen({Key? key}) : super(key: key);
+  const UserRewardWalletScreen({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final User user;
 
   @override
   UserRewardWalletScreenState createState() => UserRewardWalletScreenState();
@@ -112,22 +118,66 @@ class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
                                         Align(
                                           alignment: Alignment.bottomRight,
                                           child: ElevatedButton(
-                                              style: ButtonStyle(
-                                                  side:
-                                                      MaterialStateProperty.all(
-                                                          BorderSide(
-                                                    color: Colors.blue,
+                                              style: ElevatedButton.styleFrom(
+                                                  elevation:
+                                                      (widget.user.balance! <
+                                                              reward.cost!)
+                                                          ? 0
+                                                          : 5,
+                                                  primary: whitePure,
+                                                  side: BorderSide(
+                                                    width: 1,
+                                                    color:
+                                                        (widget.user.balance! <
+                                                                reward.cost!)
+                                                            ? whitePure
+                                                            : blueSky,
                                                   )),
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          whitePure)),
-                                              onPressed: () {},
+                                              onPressed: (widget.user.balance! <
+                                                      reward.cost!)
+                                                  ? null
+                                                  : () => showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          content: SingleChildScrollView(
+                                                              child: Text("Anda akan menukarkan " +
+                                                                  reward.cost
+                                                                      .toString() +
+                                                                  " poin untuk hadiah " +
+                                                                  reward.name! +
+                                                                  ", yakin?")),
+                                                          title: Text(
+                                                              "Konfirmasi penukaran hadiah"),
+                                                          actions: [
+                                                            ElevatedButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child:
+                                                                  Text("Tidak"),
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed: () {},
+                                                              child:
+                                                                  Text("Iya"),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }),
                                               child: Text(
                                                 "Reedem " +
                                                     reward.cost.toString(),
                                                 style: boldRobotoFont.copyWith(
                                                   fontSize: 13.sp,
-                                                  color: Colors.blue,
+                                                  color: (widget.user.balance! <
+                                                          reward.cost!)
+                                                      ? blackPure.withOpacity(
+                                                          0.7,
+                                                        )
+                                                      : blueSky,
                                                 ),
                                               )),
                                         ),

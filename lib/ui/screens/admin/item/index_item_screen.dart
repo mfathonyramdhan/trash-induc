@@ -43,16 +43,13 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
 
       var data = [];
       data.addAll(itemName.docs);
-      items.addAll(data
-          .map((e) => Item.fromJson(e.data(), id: e.id))
-          .whereType<Item>()
-          .toList());
+      items.addAll(
+        data.map((e) => Item.fromJson(e.data(), id: e.id)).toList(),
+      );
     } else {
       var result = await FirebaseFirestore.instance.collection('items').get();
-      items = result.docs
-          .map((e) => Item.fromJson(e.data(), id: e.id))
-          .whereType<Item>()
-          .toList();
+      items =
+          result.docs.map((e) => Item.fromJson(e.data(), id: e.id)).toList();
     }
 
     return items;

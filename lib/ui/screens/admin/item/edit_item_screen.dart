@@ -1,9 +1,6 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -74,138 +71,86 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                (deletePhoto == true ||
-                        widget.item.photoUrl == "" ||
-                        selectedFile == null)
-                    ? Center(
-                        child: SizedBox(
-                          height: 240.h,
-                          width: 100.w,
-                          child: InkWell(
-                            onTap: () {
-                              pickImage(
-                                ImageSource.gallery,
-                              );
-                            },
-                            child: DottedBorder(
-                              color: grayPure,
-                              strokeWidth: 5,
-                              dashPattern: [
-                                15,
-                                10,
-                              ],
-                              borderType: BorderType.RRect,
-                              radius: Radius.circular(
-                                15.r,
-                              ),
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Tap untuk pilih foto",
+                Center(
+                    child: Stack(children: [
+                  CircleAvatar(
+                    radius: 100.r,
+                    backgroundColor: darkGreen,
+                    child: CircleAvatar(
+                      backgroundImage: widget.item.photoUrl == ""
+                          ? selectedFile == null
+                              ? Image.asset("assets/image/photo.png").image
+                              : Image.file(selectedFile!).image
+                          : Image.network(widget.item.photoUrl!).image,
+                      radius: 90.r,
+                    ),
+                  ),
+                  Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        backgroundColor: darkGreen,
+                        child: IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return Container(
+                                    height: 80.h,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(
+                                              15.r,
+                                            ),
+                                            topRight: Radius.circular(
+                                              15.r,
+                                            ))),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton.icon(
+                                            onPressed: () async {
+                                              await pickImage(
+                                                ImageSource.gallery,
+                                              ).then((value) => setState(() {
+                                                    deletePhoto = false;
+                                                  }));
+
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: Icon(
+                                              Icons.edit,
+                                            ),
+                                            label: Text("Ganti foto")),
+                                        TextButton.icon(
+                                            onPressed: () {
+                                              setState(() {
+                                                deletePhoto = true;
+                                                selectedFile = null;
+                                                if (widget.item.photoUrl !=
+                                                    "") {
+                                                  widget.item.photoUrl = "";
+                                                }
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: Icon(
+                                              Icons.delete,
+                                            ),
+                                            label: Text("Hapus foto"))
+                                      ],
                                     ),
-                                    Container(
-                                      height: 200.h,
-                                      width: 70.w,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          10.r,
-                                        ),
-                                      ),
-                                      child: Opacity(
-                                        opacity: 0.5,
-                                        child: Image(
-                                          fit: BoxFit.contain,
-                                          image: AssetImage(
-                                            "assets/image/photo-placeholder.png",
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  );
+                                });
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            color: whitePure,
                           ),
                         ),
-                      )
-                    : Center(
-                        child: Stack(children: [
-                          CircleAvatar(
-                            radius: 100.r,
-                            backgroundColor: darkGreen,
-                            child: CircleAvatar(
-                              backgroundImage: selectedFile == null
-                                  ? Image.network(widget.item.photoUrl!).image
-                                  : Image.file(selectedFile!).image,
-                              radius: 90.r,
-                            ),
-                          ),
-                          Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: CircleAvatar(
-                                backgroundColor: darkGreen,
-                                child: IconButton(
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (context) {
-                                          return Container(
-                                            height: 80.h,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft: Radius.circular(
-                                                      15.r,
-                                                    ),
-                                                    topRight: Radius.circular(
-                                                      15.r,
-                                                    ))),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                TextButton.icon(
-                                                    onPressed: () {
-                                                      pickImage(
-                                                        ImageSource.gallery,
-                                                      );
-                                                      deletePhoto = false;
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.edit,
-                                                    ),
-                                                    label: Text("Ganti foto")),
-                                                TextButton.icon(
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        deletePhoto = true;
-                                                        selectedFile = null;
-                                                      });
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.delete,
-                                                    ),
-                                                    label: Text("Hapus foto"))
-                                              ],
-                                            ),
-                                          );
-                                        });
-                                  },
-                                  icon: Icon(
-                                    Icons.edit,
-                                    color: whitePure,
-                                  ),
-                                ),
-                              ))
-                        ]),
-                      ),
+                      ))
+                ])),
                 Text(
                   "Nama item",
                   style: boldRobotoFont.copyWith(

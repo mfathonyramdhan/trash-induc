@@ -31,8 +31,6 @@ Map<String, Widget Function(BuildContext context)> appRoute = {
   UserChatScreen.routeName: (BuildContext context) => UserChatScreen(),
   UserProfileScreen.routeName: (BuildContext context) => UserProfileScreen(),
   UserReedemScreen.routeName: (BuildContext context) => UserReedemScreen(),
-  UserEditProfileScreen.routeName: (BuildContext context) =>
-      UserEditProfileScreen(),
 
   // ADMIN
   AdminDashboardScreen.routeName: (BuildContext context) =>
