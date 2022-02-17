@@ -7,6 +7,7 @@ class User {
   double? exp;
   double? balance;
   String? photoUrl;
+  String? postalCode;
   String role;
   String membership;
 
@@ -19,6 +20,7 @@ class User {
     this.exp,
     this.balance,
     this.photoUrl,
+    this.postalCode,
     this.role = "user",
     this.membership = "bronze",
   });
@@ -33,6 +35,7 @@ class User {
           exp: double.tryParse(json['exp'].toString()),
           balance: double.tryParse(json['balance'].toString()),
           photoUrl: json["photoUrl"]! as String,
+          postalCode: json["postalCode"]! as String,
           role: json["role"] as String? ?? "user",
           membership: json["membership"] as String? ?? "bronze",
         );
@@ -47,15 +50,9 @@ class User {
       "exp": exp,
       "balance": balance,
       "photoUrl": photoUrl,
+      "postalCode": postalCode,
       "role": role,
       "membership": membership
-    };
-  }
-
-  static converter() {
-    return {
-      'fromFirestore': (snapshot, _) => User.fromJson(snapshot.data()!),
-      'toFirestore': (user, _) => user.toJson()
     };
   }
 }

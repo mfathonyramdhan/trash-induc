@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cool_stepper/cool_stepper.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 
-import '../../../../shared/area.dart';
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
 import '../../../widgets/text_form_field.dart';
@@ -32,11 +30,8 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController postalController = TextEditingController();
-  List<GlobalKey<FormState>> formKey = [
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-  ];
 
+  GlobalKey<FormState> key = GlobalKey<FormState>();
   bool deletePhoto = false;
   File? selectedFile;
   bool isAccepted = false;
@@ -101,449 +96,202 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
               currentFocus.unfocus();
             }
           },
-          child: SizedBox(
-            child: CoolStepper(
-              onCompleted: () {
-                // submitData();
-              },
-              steps: [
-                CoolStep(
-                  title: "P",
-                  subtitle: "P",
-                  content: Form(
-                    key: formKey[0],
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 30.h,
+          child: Form(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 15,
+              ),
+              child: ListView(
+                children: [
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Center(
+                    child: Stack(children: [
+                      CircleAvatar(
+                        radius: 51.r,
+                        backgroundColor: lightGreen,
+                        child: CircleAvatar(
+                          backgroundImage: widget.user.photoUrl != ""
+                              ? Image.network(widget.user.photoUrl!).image
+                              : AssetImage("assets/image/photo.png"),
+                          radius: 45.r,
                         ),
-                        Stack(children: [
-                          CircleAvatar(
-                            radius: 51.r,
-                            backgroundColor: lightGreen,
-                            child: CircleAvatar(
-                              backgroundImage: widget.user.photoUrl != ""
-                                  ? Image.network(widget.user.photoUrl!).image
-                                  : AssetImage("assets/image/photo.png"),
-                              radius: 45.r,
-                            ),
-                          ),
-                          Positioned(
-                              right: 0,
-                              bottom: 0,
-                              child: CircleAvatar(
-                                backgroundColor: darkGreen,
-                                child: IconButton(
-                                    color: whitePure,
-                                    onPressed: () {
-                                      showModalBottomSheet(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(
-                                                    12.r,
-                                                  ),
-                                                  topRight: Radius.circular(
-                                                    12.r,
-                                                  ))),
-                                          elevation: 5,
-                                          context: context,
-                                          builder: (context) {
-                                            return Container(
-                                              height: 80.h,
-                                              child: Column(
+                      ),
+                      Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: CircleAvatar(
+                            backgroundColor: darkGreen,
+                            child: IconButton(
+                                color: whitePure,
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(
+                                                12.r,
+                                              ),
+                                              topRight: Radius.circular(
+                                                12.r,
+                                              ))),
+                                      elevation: 5,
+                                      context: context,
+                                      builder: (context) {
+                                        return Container(
+                                          height: 80.h,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(
+                                                "Set foto profil dari",
+                                                style:
+                                                    regularRobotoFont.copyWith(
+                                                  fontSize: 16.sp,
+                                                  color: blackPure,
+                                                ),
+                                              ),
+                                              Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceEvenly,
                                                 children: [
-                                                  Text(
-                                                    "Set foto profil dari",
-                                                    style: regularRobotoFont
-                                                        .copyWith(
-                                                      fontSize: 16.sp,
-                                                      color: blackPure,
+                                                  TextButton.icon(
+                                                      onPressed: () async {
+                                                        await pickImage(
+                                                          ImageSource.camera,
+                                                        );
+                                                      },
+                                                      icon: Icon(
+                                                        Icons.camera,
+                                                        color: lightGreen,
+                                                        size: 30,
+                                                      ),
+                                                      label: Text(
+                                                        "Kamera",
+                                                        style: regularRobotoFont
+                                                            .copyWith(
+                                                          fontSize: 14.sp,
+                                                          color: blackPure,
+                                                        ),
+                                                      )),
+                                                  TextButton.icon(
+                                                    onPressed: () async {
+                                                      await pickImage(
+                                                        ImageSource.gallery,
+                                                      );
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.photo,
+                                                      color: lightGreen,
+                                                      size: 30,
+                                                    ),
+                                                    label: Text(
+                                                      "Galeri",
+                                                      style: regularRobotoFont
+                                                          .copyWith(
+                                                        fontSize: 14.sp,
+                                                        color: blackPure,
+                                                      ),
                                                     ),
                                                   ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      TextButton.icon(
-                                                          onPressed: () async {
-                                                            await pickImage(
-                                                              ImageSource
-                                                                  .camera,
-                                                            );
-                                                          },
-                                                          icon: Icon(
-                                                            Icons.camera,
-                                                            color: lightGreen,
-                                                            size: 30,
-                                                          ),
-                                                          label: Text(
-                                                            "Kamera",
-                                                            style:
-                                                                regularRobotoFont
-                                                                    .copyWith(
-                                                              fontSize: 14.sp,
-                                                              color: blackPure,
-                                                            ),
-                                                          )),
-                                                      TextButton.icon(
-                                                        onPressed: () async {
-                                                          await pickImage(
-                                                            ImageSource.gallery,
-                                                          );
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.photo,
-                                                          color: lightGreen,
-                                                          size: 30,
-                                                        ),
-                                                        label: Text(
-                                                          "Galeri",
-                                                          style:
-                                                              regularRobotoFont
-                                                                  .copyWith(
-                                                            fontSize: 14.sp,
-                                                            color: blackPure,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
                                                 ],
-                                              ),
-                                            );
-                                          });
-                                    },
-                                    icon: Icon(
-                                      Icons.edit,
-                                    )),
-                              ))
-                        ]),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        CustomTextForm(
-                          initial: widget.user.id,
-                          label: "User ID",
-                          keyboardType: TextInputType.none,
-                          readOnly: true,
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        CustomTextForm(
-                          controller: nameController,
-                          label: "Nama Lengkap",
-                          keyboardType: TextInputType.name,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Nama tidak boleh kosong";
-                            }
-                            if (value.length < 2) {
-                              return "Nama harus lebih dari 1 karakter";
-                            }
-
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        CustomTextForm(
-                          label: "Nomor HP",
-                          keyboardType: TextInputType.number,
-                          controller: phoneController,
-                          validator: (value) {
-                            if (value!.isEmpty ||
-                                value == null ||
-                                value == "-") {
-                              return "Nomor HP tidak boleh kosong";
-                            }
-                            if (value.length > 13 || value.length < 8) {
-                              return "Nomor HP tidak valid";
-                            }
-                            return null;
-                          },
-                        )
-                      ],
-                    ),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                )),
+                          ))
+                    ]),
                   ),
-                  validation: () {
-                    if (!formKey[0].currentState!.validate()) {
-                      return "Isi semua form dengan benar";
-                    }
-                    return null;
-                  },
-                ),
-                CoolStep(
-                    title: "P",
-                    subtitle: "P",
-                    content: Form(
-                        key: formKey[1],
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 18.h,
-                            ),
-                            Text(
-                              "Lengkapi data domisili kamu",
-                              style: mediumRobotoFont.copyWith(
-                                fontSize: 18.sp,
-                                color: blackPure,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5.h,
-                            ),
-                            Text(
-                              "*Mohon lengkapi data diri",
-                              style: regularRobotoFont.copyWith(
-                                fontSize: 12.sp,
-                                fontStyle: FontStyle.italic,
-                                color: redDanger,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 7.h,
-                            ),
-                            Text(
-                              "Provinsi",
-                              style: regularRobotoFont.copyWith(
-                                fontSize: 14.sp,
-                                color: blackPure,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 6.h,
-                            ),
-                            DropdownButtonFormField(
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  // currentProvince = newValue!;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                              ),
-                              decoration: InputDecoration(
-                                  isDense: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        5.r,
-                                      ),
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: grayPure,
-                                      )),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        5.r,
-                                      ),
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: lightGreen,
-                                      ))),
-                              hint: Text(
-                                "Provinsi",
-                              ),
-                              items: provinces
-                                  .map((value) => DropdownMenuItem(
-                                        child: Text(value),
-                                        value: value,
-                                      ))
-                                  .toList(),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Text(
-                              "Kota/Kabupaten",
-                              style: regularRobotoFont.copyWith(
-                                fontSize: 14.sp,
-                                color: blackPure,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 6.h,
-                            ),
-                            DropdownButtonFormField(
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  // currentCity = newValue!;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                              ),
-                              decoration: InputDecoration(
-                                  isDense: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        5.r,
-                                      ),
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: grayPure,
-                                      )),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        5.r,
-                                      ),
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: lightGreen,
-                                      ))),
-                              hint: Text(
-                                "Kota/Kabupaten",
-                              ),
-                              items: city
-                                  .map((value) => DropdownMenuItem(
-                                        child: Text(value),
-                                        value: value,
-                                      ))
-                                  .toList(),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Text(
-                              "Kecamatan",
-                              style: regularRobotoFont.copyWith(
-                                fontSize: 14.sp,
-                                color: blackPure,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 6.h,
-                            ),
-                            DropdownButtonFormField(
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  // currentDistrict = newValue!;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                              ),
-                              decoration: InputDecoration(
-                                  isDense: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        5.r,
-                                      ),
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: grayPure,
-                                      )),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        5.r,
-                                      ),
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: lightGreen,
-                                      ))),
-                              hint: Text(
-                                "Kecamatan",
-                              ),
-                              items: district
-                                  .map((value) => DropdownMenuItem(
-                                        child: Text(value),
-                                        value: value,
-                                      ))
-                                  .toList(),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Text(
-                              "Desa",
-                              style: regularRobotoFont.copyWith(
-                                fontSize: 14.sp,
-                                color: blackPure,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 6.h,
-                            ),
-                            DropdownButtonFormField(
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  // currentVillage = newValue!;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                              ),
-                              decoration: InputDecoration(
-                                  isDense: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        5.r,
-                                      ),
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: grayPure,
-                                      )),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        5.r,
-                                      ),
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: lightGreen,
-                                      ))),
-                              hint: Text(
-                                "Desa",
-                              ),
-                              items: village
-                                  .map((value) => DropdownMenuItem(
-                                        child: Text(value),
-                                        value: value,
-                                      ))
-                                  .toList(),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            CustomTextForm(
-                              label: "Alamat lengkap",
-                              keyboardType: TextInputType.multiline,
-                              controller: addressController,
-                              validator: (value) {
-                                if (value!.isEmpty || value == null) {
-                                  return "Alamat tidak boleh kosong";
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            CustomTextForm(
-                              label: "Kode Pos",
-                              keyboardType: TextInputType.number,
-                              controller: postalController,
-                              validator: (value) {
-                                if (value!.isEmpty || value == null) {
-                                  return "Kode pos tidak boleh kosong";
-                                }
-                                return null;
-                              },
-                            )
-                          ],
-                        )),
-                    validation: () {
-                      if (!formKey[1].currentState!.validate()) {
-                        return "Isi semua form dengan benar";
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  CustomTextForm(
+                    initial: widget.user.id,
+                    label: "User ID",
+                    keyboardType: TextInputType.none,
+                    readOnly: true,
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  CustomTextForm(
+                    controller: nameController,
+                    label: "Nama Lengkap",
+                    keyboardType: TextInputType.name,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Nama tidak boleh kosong";
+                      }
+                      if (value.length < 2) {
+                        return "Nama harus lebih dari 1 karakter";
+                      }
+
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  CustomTextForm(
+                    label: "Nomor HP",
+                    keyboardType: TextInputType.number,
+                    controller: phoneController,
+                    validator: (value) {
+                      if (value!.isEmpty || value == null || value == "-") {
+                        return "Nomor HP tidak boleh kosong";
+                      }
+                      if (value.length > 13 || value.length < 8) {
+                        return "Nomor HP tidak valid";
                       }
                       return null;
-                    }),
-              ],
+                    },
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  CustomTextForm(
+                    label: "Alamat lengkap",
+                    keyboardType: TextInputType.multiline,
+                    controller: addressController,
+                    validator: (value) {
+                      if (value!.isEmpty || value == null) {
+                        return "Alamat tidak boleh kosong";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  CustomTextForm(
+                    label: "Kode Pos",
+                    keyboardType: TextInputType.number,
+                    controller: postalController,
+                    validator: (value) {
+                      if (value!.isEmpty || value == null) {
+                        return "Kode pos tidak boleh kosong";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // submitData(destination, pickedFile)
+                    },
+                    child: Text("Update profil"),
+                  )
+                ],
+              ),
             ),
           ),
         ));

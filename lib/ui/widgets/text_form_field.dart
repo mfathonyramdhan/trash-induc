@@ -40,8 +40,7 @@ class CustomTextForm extends StatelessWidget {
         TextFormField(
           initialValue: initial,
           minLines: 1,
-          maxLines: 2,
-          // initialValue: init,
+          maxLines: 4,
           style: TextStyle(
             fontSize: 16.sp,
           ),
