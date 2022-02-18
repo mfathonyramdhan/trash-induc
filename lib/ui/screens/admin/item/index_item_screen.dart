@@ -9,7 +9,7 @@ import 'package:kiloin/ui/screens/admin/item/add_item_screen.dart';
 import 'package:kiloin/ui/screens/admin/item/detail_item_screen.dart';
 import 'package:kiloin/ui/screens/admin/item/edit_item_screen.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
-import 'package:kiloin/ui/widgets/toast.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 
 class AdminIndexItemScreen extends StatefulWidget {
   const AdminIndexItemScreen({Key? key}) : super(key: key);
@@ -283,6 +283,7 @@ class AdminDataItem extends DataTableSource {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => AdminEditItemScreen(
                       item: item,
+                      copyOfUrl: item.photoUrl!,
                     ),
                   ));
                 },

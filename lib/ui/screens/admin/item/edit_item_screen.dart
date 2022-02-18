@@ -8,16 +8,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kiloin/models/item.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 import 'package:path/path.dart';
 
 class AdminEditItemScreen extends StatefulWidget {
-  const AdminEditItemScreen({
+  AdminEditItemScreen({
+    required this.copyOfUrl,
     required this.item,
     Key? key,
   }) : super(key: key);
   static String routeName = "/admin_edit_trash";
 
   final Item item;
+  String copyOfUrl;
 
   @override
   _AdminEditItemScreenState createState() => _AdminEditItemScreenState();
@@ -77,11 +80,11 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                     radius: 100.r,
                     backgroundColor: darkGreen,
                     child: CircleAvatar(
-                      backgroundImage: widget.item.photoUrl == ""
+                      backgroundImage: widget.copyOfUrl == ""
                           ? selectedFile == null
                               ? Image.asset("assets/image/photo.png").image
                               : Image.file(selectedFile!).image
-                          : Image.network(widget.item.photoUrl!).image,
+                          : Image.network(widget.copyOfUrl).image,
                       radius: 90.r,
                     ),
                   ),
@@ -124,17 +127,18 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                                             ),
                                             label: Text("Ganti foto")),
                                         TextButton.icon(
-                                            onPressed: () {
-                                              setState(() {
-                                                deletePhoto = true;
-                                                selectedFile = null;
-                                                if (widget.item.photoUrl !=
-                                                    "") {
-                                                  widget.item.photoUrl = "";
-                                                }
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
+                                            onPressed: (widget.copyOfUrl ==
+                                                        "" &&
+                                                    selectedFile == null)
+                                                ? null
+                                                : () {
+                                                    setState(() {
+                                                      deletePhoto = true;
+                                                      selectedFile = null;
+                                                      widget.copyOfUrl = "";
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
                                             icon: Icon(
                                               Icons.delete,
                                             ),
@@ -289,10 +293,10 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                           8.r,
                         ))),
                     onPressed: () {
-                      // updateData(
-                      //   "items",
-                      //   selectedFile,
-                      // );
+                      updateData(
+                        "items",
+                        selectedFile,
+                      );
                     },
                     child: Text(
                       "Update item",
@@ -343,15 +347,27 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
 
       if (pickedFile != null) {
         String fileName = basename(pickedFile.path);
-        try {
-          await storageRef.refFromURL(widget.item.photoUrl!).delete();
+
+        if (widget.item.photoUrl == "") {
           await storageRef.ref(destination).child(fileName).putFile(pickedFile);
           url = await storageRef
               .ref(destination)
               .child(fileName)
               .getDownloadURL();
-        } catch (e) {
-          print(e);
+        } else {
+          try {
+            await storageRef.refFromURL(widget.item.photoUrl!).delete();
+            await storageRef
+                .ref(destination)
+                .child(fileName)
+                .putFile(pickedFile);
+            url = await storageRef
+                .ref(destination)
+                .child(fileName)
+                .getDownloadURL();
+          } catch (e) {
+            print(e);
+          }
         }
       }
 

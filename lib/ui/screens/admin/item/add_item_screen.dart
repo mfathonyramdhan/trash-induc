@@ -25,7 +25,6 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
   TextEditingController expController = TextEditingController();
   TextEditingController balanceController = TextEditingController();
   File? selectedFile;
-  bool deletePhoto = false;
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +63,11 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     radius: 100.r,
                     backgroundColor: darkGreen,
                     child: CircleAvatar(
+                      backgroundColor:
+                          selectedFile == null ? grayPure : Colors.transparent,
                       backgroundImage: selectedFile == null
-                          ? Image.asset("assets/image/photo.png").image
+                          ? Image.asset("assets/image/placeholder-image.png")
+                              .image
                           : Image.file(selectedFile!).image,
                       radius: 90.r,
                     ),
@@ -98,9 +100,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                                             onPressed: () async {
                                               await pickImage(
                                                 ImageSource.gallery,
-                                              ).then((value) => setState(() {
-                                                    deletePhoto = false;
-                                                  }));
+                                              );
 
                                               Navigator.of(context).pop();
                                             },
@@ -111,7 +111,6 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                                         TextButton.icon(
                                             onPressed: () {
                                               setState(() {
-                                                deletePhoto = true;
                                                 selectedFile = null;
                                               });
                                               Navigator.of(context).pop();

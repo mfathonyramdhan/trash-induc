@@ -25,7 +25,6 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
   GlobalKey<FormState> key = GlobalKey<FormState>();
   DateTime? selectedDate;
   File? selectedFile;
-  bool deletePhoto = false;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +60,9 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                       radius: 100.r,
                       backgroundColor: darkGreen,
                       child: CircleAvatar(
+                        backgroundColor: selectedFile == null
+                            ? grayPure
+                            : Colors.transparent,
                         backgroundImage: selectedFile == null
                             ? Image.asset("assets/image/photo.png").image
                             : Image.file(selectedFile!).image,
@@ -95,9 +97,7 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                                               onPressed: () async {
                                                 await pickImage(
                                                   ImageSource.gallery,
-                                                ).then((value) => setState(() {
-                                                      deletePhoto = false;
-                                                    }));
+                                                );
 
                                                 Navigator.of(context).pop();
                                               },
@@ -108,7 +108,6 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                                           TextButton.icon(
                                               onPressed: () {
                                                 setState(() {
-                                                  deletePhoto = true;
                                                   selectedFile = null;
                                                 });
                                                 Navigator.of(context).pop();
