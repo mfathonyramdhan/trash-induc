@@ -35,6 +35,14 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
   }
 
   @override
+  void dispose() {
+    nameController.dispose();
+    expController.dispose();
+    balanceController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

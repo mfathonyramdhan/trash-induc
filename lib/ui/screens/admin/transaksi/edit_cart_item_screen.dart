@@ -36,6 +36,12 @@ class _EditCartItemFormScreenState extends State<EditCartItemFormScreen> {
   }
 
   @override
+  void dispose() {
+    weightController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

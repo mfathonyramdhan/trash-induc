@@ -253,6 +253,7 @@ class AdminDataReward extends DataTableSource {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => AdminEditRewardScreen(
                       reward: reward,
+                      copyOfUrl: reward.photoUrl!,
                     ),
                   ));
                 },

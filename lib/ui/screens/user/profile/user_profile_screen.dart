@@ -203,6 +203,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => UserEditProfileScreen(
                                   user: user,
+                                  copyOfUrl: user.photoUrl!,
                                 ),
                               ));
                             },

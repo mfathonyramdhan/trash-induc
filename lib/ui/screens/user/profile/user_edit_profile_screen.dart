@@ -14,12 +14,14 @@ import '../../../../models/user.dart' as UserModel;
 class UserEditProfileScreen extends StatefulWidget {
   static String routeName = "/edit_profile";
 
-  const UserEditProfileScreen({
+  UserEditProfileScreen({
     Key? key,
     required this.user,
+    required this.copyOfUrl,
   }) : super(key: key);
 
   final UserModel.User user;
+  String copyOfUrl;
 
   @override
   _UserEditProfileScreenState createState() => _UserEditProfileScreenState();
@@ -34,7 +36,6 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
   GlobalKey<FormState> key = GlobalKey<FormState>();
   bool deletePhoto = false;
   File? selectedFile;
-  bool isAccepted = false;
 
   @override
   void initState() {
@@ -42,7 +43,16 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
     nameController.text = widget.user.name!;
     phoneController.text = widget.user.phone!;
     addressController.text = widget.user.address!;
-    // postalController.text = widget.user
+    postalController.text = widget.user.postalCode!;
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    postalController.dispose();
+    super.dispose();
   }
 
   @override

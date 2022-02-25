@@ -39,6 +39,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool isFacebookPressed = false;
 
   @override
+  void dispose() {
+    emailController.dispose();
+    nameController.dispose();
+    passwordController.dispose();
+    rePasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(

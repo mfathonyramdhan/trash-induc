@@ -12,13 +12,15 @@ import 'package:kiloin/shared/font.dart';
 import 'package:path/path.dart';
 
 class AdminEditRewardScreen extends StatefulWidget {
-  const AdminEditRewardScreen({
+  AdminEditRewardScreen({
     Key? key,
     required this.reward,
+    required this.copyOfUrl,
   }) : super(key: key);
   static String routeName = "/admin_edit_reward";
 
   final Reward reward;
+  String copyOfUrl;
 
   @override
   _AdminEditRewardScreenState createState() => _AdminEditRewardScreenState();
@@ -31,6 +33,15 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
   GlobalKey<FormState> key = GlobalKey<FormState>();
   DateTime? selectedDate;
   File? selectedFile;
+  bool deletePhoto = false;
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    costController.dispose();
+    dateController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -183,60 +194,49 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
     }
   }
 
-  Future submitData(String destination, File pickedFile) async {
+  Future submitData(String destination, File? pickedFile) async {
+    String? url;
     String rewardName = nameController.text;
     int rewardCost = int.parse(costController.text);
     DateTime rewardExpired = selectedDate!;
-    String fileName = basename(pickedFile.path);
+    var rewardRef = FirebaseFirestore.instance.collection(destination);
+    var storageRef = FirebaseStorage.instance;
 
-    final rewardRef = FirebaseFirestore.instance.collection(destination);
-    final storageRef =
-        FirebaseStorage.instance.ref(destination).child(fileName);
-    await storageRef.putFile(pickedFile);
-    String url = await storageRef.getDownloadURL();
+    if (deletePhoto) {
+      try {
+        await storageRef.refFromURL(widget.reward.photoUrl!).delete();
+        url = "";
+      } catch (e) {
+        print(e);
+      }
+    }
+
+    if (pickedFile != null) {
+      String fileName = basename(pickedFile.path);
+
+      if (widget.reward.photoUrl == "") {
+        await storageRef.ref(destination).child(fileName).putFile(pickedFile);
+        url =
+            await storageRef.ref(destination).child(fileName).getDownloadURL();
+      } else {
+        try {
+          await storageRef.refFromURL(widget.reward.photoUrl!).delete();
+          await storageRef.ref(destination).child(fileName).putFile(pickedFile);
+          url = await storageRef
+              .ref(destination)
+              .child(fileName)
+              .getDownloadURL();
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+
     await rewardRef.doc(widget.reward.id).update({
       "name": rewardName,
       "cost": rewardCost,
       "photoUrl": url,
       "expired_at": rewardExpired,
     });
-
-    // try {
-    //   if (widget.item.photoUrl == "") {
-    //     try {
-    //       await storageRef.ref(destination).child(fileName).putFile(pickedFile);
-    //       url = await storageRef
-    //           .ref(destination)
-    //           .child(fileName)
-    //           .getDownloadURL();
-    //     } catch (e) {
-    //       print(e);
-    //     }
-    //   }
-
-    //   if (widget.item.photoUrl != "") {
-    //     try {
-    //       await storageRef.refFromURL(widget.item.photoUrl!).delete();
-    //       await storageRef.ref(destination).child(fileName).putFile(pickedFile);
-    //       url = await storageRef
-    //           .ref(destination)
-    //           .child(fileName)
-    //           .getDownloadURL();
-    //     } catch (e) {
-    //       print(e);
-    //     }
-    //   }
-
-    //   await itemRef.doc(widget.item.id).update({
-    //     "name": itemName,
-    //     "sell": itemSell,
-    //     "buy": itemBuy,
-    //     "exp_point": itemExp,
-    //     "balance_point": itemBalance,
-    //     "photoUrl": url,
-    //   });
-    // } catch (e) {
-    //   print(e);
-    // }
   }
 }

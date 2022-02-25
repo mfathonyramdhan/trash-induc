@@ -25,7 +25,6 @@ class AdminAddTransactionScreen extends StatefulWidget {
 
 class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
   GlobalKey<FormFieldState> key = GlobalKey<FormFieldState>();
-  TextEditingController weightController = TextEditingController();
 
   Future<List<User>>? fetchUsers;
   Future<Map<String, Mission>>? fetchMissions;

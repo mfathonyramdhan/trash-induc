@@ -31,6 +31,13 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isGooglePressed = false;
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: lightGreen,

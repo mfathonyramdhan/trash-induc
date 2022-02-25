@@ -47,6 +47,16 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
   }
 
   @override
+  void dispose() {
+    nameController.dispose();
+    sellController.dispose();
+    buyController.dispose();
+    expController.dispose();
+    balanceController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

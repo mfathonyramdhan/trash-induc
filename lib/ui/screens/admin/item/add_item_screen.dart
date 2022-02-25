@@ -25,6 +25,15 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
   TextEditingController expController = TextEditingController();
   TextEditingController balanceController = TextEditingController();
   File? selectedFile;
+  @override
+  void dispose() {
+    nameController.dispose();
+    sellController.dispose();
+    buyController.dispose();
+    expController.dispose();
+    balanceController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,12 +118,14 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                                             ),
                                             label: Text("Ganti foto")),
                                         TextButton.icon(
-                                            onPressed: () {
-                                              setState(() {
-                                                selectedFile = null;
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
+                                            onPressed: selectedFile == null
+                                                ? null
+                                                : () {
+                                                    setState(() {
+                                                      selectedFile = null;
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
                                             icon: Icon(
                                               Icons.delete,
                                             ),

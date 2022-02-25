@@ -27,6 +27,14 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
   File? selectedFile;
 
   @override
+  void dispose() {
+    nameController.dispose();
+    costController.dispose();
+    dateController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -106,12 +114,15 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                                               ),
                                               label: Text("Ganti foto")),
                                           TextButton.icon(
-                                              onPressed: () {
-                                                setState(() {
-                                                  selectedFile = null;
-                                                });
-                                                Navigator.of(context).pop();
-                                              },
+                                              onPressed: selectedFile == null
+                                                  ? null
+                                                  : () {
+                                                      setState(() {
+                                                        selectedFile = null;
+                                                      });
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
                                               icon: Icon(
                                                 Icons.delete,
                                               ),
