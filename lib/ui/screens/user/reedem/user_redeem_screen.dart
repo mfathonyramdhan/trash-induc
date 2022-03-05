@@ -5,23 +5,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
-import 'user_reedemed_screen.dart';
+import 'user_redeemed_screen.dart';
 import 'user_reward_wallet_screen.dart';
 import '../../../widgets/menu_screen_card.dart';
 import '../../../../models/user.dart' as UserModel;
 
-class UserReedemScreen extends StatefulWidget {
+class UserRedeemScreen extends StatefulWidget {
   static String routeName = "/reedem";
 
-  const UserReedemScreen({Key? key}) : super(key: key);
+  UserRedeemScreen({
+    Key? key,
+    required this.id,
+  }) : super(key: key);
+
+  String id;
 
   @override
-  _UserReedemScreenState createState() => _UserReedemScreenState();
+  _UserRedeemScreenState createState() => _UserRedeemScreenState();
 }
 
-class _UserReedemScreenState extends State<UserReedemScreen> {
-  var currentUserId = FirebaseAuth.instance.currentUser!.uid.toString();
-
+class _UserRedeemScreenState extends State<UserRedeemScreen> {
   CollectionReference userRef = FirebaseFirestore.instance.collection("users");
 
   @override
@@ -72,12 +75,14 @@ class _UserReedemScreenState extends State<UserReedemScreen> {
             Container(
           color: darkGreen,
           child: Center(
-            child: FutureBuilder(
-              future: userRef.doc(currentUserId).get(),
+            child: StreamBuilder(
+              stream: userRef.doc(widget.id).snapshots(),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (snapshot.hasData) {
                   UserModel.User user = UserModel.User.fromJson(
-                      snapshot.data!.data() as Map<String, dynamic>);
+                    snapshot.data!.data() as Map<String, dynamic>,
+                    id: widget.id,
+                  );
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     // mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -135,8 +140,13 @@ class _UserReedemScreenState extends State<UserReedemScreen> {
                                 height: 0.596.sh,
                                 child: TabBarView(
                                   children: [
-                                    UserRewardWalletScreen(user: user),
-                                    UserReedemedScreen(),
+                                    UserRewardWalletScreen(
+                                      user: user,
+                                      id: widget.id,
+                                    ),
+                                    UserReedemedScreen(
+                                      id: widget.id,
+                                    ),
                                   ],
                                 ),
                               )

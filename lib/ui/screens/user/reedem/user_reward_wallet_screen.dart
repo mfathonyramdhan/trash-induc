@@ -9,12 +9,14 @@ import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
 
 class UserRewardWalletScreen extends StatefulWidget {
-  const UserRewardWalletScreen({
+  UserRewardWalletScreen({
     Key? key,
     required this.user,
+    required this.id,
   }) : super(key: key);
 
-  final User user;
+  User user;
+  String id;
 
   @override
   UserRewardWalletScreenState createState() => UserRewardWalletScreenState();
@@ -24,10 +26,10 @@ class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
   Future<List<Reward>> fetchReward() async {
     var rewards = <Reward>[];
 
-    var _transactionData =
+    var rewardData =
         await FirebaseFirestore.instance.collection("rewards").get();
 
-    rewards = _transactionData.docs
+    rewards = rewardData.docs
         .map((e) => Reward.fromJson(e.data(), id: e.id))
         .toList();
     return rewards;
@@ -71,8 +73,8 @@ class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Container(
-                                    height: 105,
-                                    width: 95,
+                                    height: 80.h,
+                                    width: 80.w,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
                                         5.r,
@@ -160,7 +162,13 @@ class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
                                                                   Text("Tidak"),
                                                             ),
                                                             ElevatedButton(
-                                                              onPressed: () {},
+                                                              onPressed: () {
+                                                                proceedRedeem(
+                                                                  widget.user,
+                                                                  reward,
+                                                                  widget.id,
+                                                                );
+                                                              },
                                                               child:
                                                                   Text("Iya"),
                                                             ),
@@ -188,31 +196,32 @@ class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
                               ),
                             ),
                           ),
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Container(
-                              width: 35.w,
-                              height: 15.h,
-                              decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(
-                                        5.r,
-                                      ),
-                                      bottomLeft: Radius.circular(
-                                        5.r,
-                                      ))),
-                              child: Center(
-                                  child: Text(
-                                "New",
-                                style: boldRobotoFont.copyWith(
-                                  fontSize: 12.sp,
-                                  color: whitePure,
-                                ),
-                              )),
-                            ),
-                          )
+                          if (reward.created_at!.toDate() == DateTime.now())
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                width: 35.w,
+                                height: 15.h,
+                                decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(
+                                          5.r,
+                                        ),
+                                        bottomLeft: Radius.circular(
+                                          5.r,
+                                        ))),
+                                child: Center(
+                                    child: Text(
+                                  "New",
+                                  style: boldRobotoFont.copyWith(
+                                    fontSize: 12.sp,
+                                    color: whitePure,
+                                  ),
+                                )),
+                              ),
+                            )
                         ])),
                   ]);
                 });
@@ -226,5 +235,41 @@ class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
         },
       ),
     );
+  }
+
+  Future proceedRedeem(User user, Reward reward, String id) async {
+    FirebaseFirestore.instance
+        .runTransaction((transaction) async {
+          var dataPetugas = User(
+            role: "petugas",
+            membership: "",
+          );
+          var redeemRef =
+              FirebaseFirestore.instance.collection("user_redeemed_rewards");
+          var userRef = FirebaseFirestore.instance.collection("users").doc(id);
+          var userDataRef = await userRef.get();
+          var userData = User.fromJson(
+            userDataRef.data()!,
+            id: id,
+          );
+          var balance = user.balance! - reward.cost!;
+
+          await redeemRef.add({
+            "user": userData.toJson(),
+            "petugas": dataPetugas.toJson(),
+            "reward": reward.toJson(),
+            "status": "pending",
+            "created_at": DateTime.now(),
+            "updated_at": DateTime.now(),
+          });
+
+          await userRef.update({
+            "balance": balance,
+          });
+
+          return true;
+        })
+        .then((value) => value ? Navigator.of(context).pop() : print(value))
+        .catchError((error) => print(error + " ini error"));
   }
 }

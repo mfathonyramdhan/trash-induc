@@ -44,16 +44,12 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
 
       var data = [];
       data.addAll(rewardName.docs);
-      rewards.addAll(data
-          .map((e) => Reward.fromJson(e.data(), id: e.id))
-          .whereType<Reward>()
-          .toList());
+      rewards.addAll(
+          data.map((e) => Reward.fromJson(e.data(), id: e.id)).toList());
     } else {
       var result = await FirebaseFirestore.instance.collection('rewards').get();
-      rewards = result.docs
-          .map((e) => Reward.fromJson(e.data(), id: e.id))
-          .whereType<Reward>()
-          .toList();
+      rewards =
+          result.docs.map((e) => Reward.fromJson(e.data(), id: e.id)).toList();
     }
 
     return rewards;

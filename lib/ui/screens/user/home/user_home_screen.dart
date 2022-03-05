@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -72,7 +71,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               UserModel.User user = UserModel.User.fromJson(
-                  snapshot.data!.data() as Map<String, dynamic>);
+                snapshot.data!.data() as Map<String, dynamic>,
+                id: currentUserId,
+              );
               return ListView(
                 children: [
                   /// SECTION: HEADER PROFILE
@@ -98,7 +99,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             SizedBox(
                               height: 4.h,
                             ),
-                            (user.name == "-")
+                            (user.name == "")
                                 ? Text(
                                     "User",
                                     style: boldRobotoFont.copyWith(

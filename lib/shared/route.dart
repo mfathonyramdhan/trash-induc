@@ -7,7 +7,7 @@ import 'package:kiloin/ui/screens/user/home/user_main_screen.dart';
 import 'package:kiloin/ui/screens/user/home/user_menu_screen.dart';
 import 'package:kiloin/ui/screens/user/profile/user_edit_profile_screen.dart';
 import 'package:kiloin/ui/screens/user/profile/user_profile_screen.dart';
-import 'package:kiloin/ui/screens/user/reedem/user_reedem_screen.dart';
+import 'package:kiloin/ui/screens/user/reedem/user_redeem_screen.dart';
 import 'package:kiloin/ui/screens/user/transaction/user_transaction_screen.dart';
 
 import '../ui/screens/auth/login_screen.dart';
@@ -30,7 +30,6 @@ Map<String, Widget Function(BuildContext context)> appRoute = {
       UserTransactionScreen(),
   UserChatScreen.routeName: (BuildContext context) => UserChatScreen(),
   UserProfileScreen.routeName: (BuildContext context) => UserProfileScreen(),
-  UserReedemScreen.routeName: (BuildContext context) => UserReedemScreen(),
 
   // ADMIN
   AdminDashboardScreen.routeName: (BuildContext context) =>

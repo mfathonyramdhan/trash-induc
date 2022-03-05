@@ -7,6 +7,7 @@ import 'package:kiloin/ui/screens/admin/admin_dashboard.dart';
 import 'package:kiloin/ui/screens/admin/akun/index_account_screen.dart';
 import 'package:kiloin/ui/screens/admin/misi/index_mission_screen.dart';
 import 'package:kiloin/ui/screens/admin/rank/index_rank_screen.dart';
+import 'package:kiloin/ui/screens/admin/reedem_reward/index_redeem_reward_screen.dart';
 import 'package:kiloin/ui/screens/admin/reward/index_reward_screen.dart';
 import 'package:kiloin/ui/screens/admin/item/index_item_screen.dart';
 import 'package:kiloin/ui/screens/admin/transaksi/index_transaction_screen.dart';
@@ -55,6 +56,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         return AdminIndexRankScreen();
       case AdminNavigation.mission:
         return AdminIndexMissionScreen();
+      case AdminNavigation.redeem:
+        return AdminIndexRedeemRewardScreen();
       case AdminNavigation.logout:
         return LogoutScreen();
     }

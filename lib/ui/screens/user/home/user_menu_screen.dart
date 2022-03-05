@@ -11,7 +11,7 @@ import '../../../../shared/font.dart';
 import '../../../../utils/firebase_utils.dart';
 import '../../../widgets/menu_screen_card.dart';
 import '../../../widgets/menu_screen_list_tile.dart';
-import '../reedem/user_reedem_screen.dart';
+import '../reedem/user_redeem_screen.dart';
 import '../../wrapper.dart';
 
 class UserMenuScreen extends StatefulWidget {
@@ -98,12 +98,13 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
           ),
           children: [
             Center(
-              child: FutureBuilder(
-                future: userRef.doc(currentUserId).get(),
+              child: StreamBuilder(
+                stream: userRef.doc(currentUserId).snapshots(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     UserModel.User user = UserModel.User.fromJson(
                       snapshot.data!.data() as Map<String, dynamic>,
+                      id: currentUserId,
                     );
                     return Column(
                       children: [
@@ -262,7 +263,9 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                                       onTap: () {
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
-                                          builder: (_) => UserReedemScreen(),
+                                          builder: (_) => UserRedeemScreen(
+                                            id: currentUserId,
+                                          ),
                                         ));
                                       },
                                       child: Container(

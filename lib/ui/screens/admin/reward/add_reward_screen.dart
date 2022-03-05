@@ -272,6 +272,7 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
       "cost": rewardCost,
       "photoUrl": url,
       "expired_at": rewardExpired,
+      "created_at": DateTime.now(),
     });
   }
 }

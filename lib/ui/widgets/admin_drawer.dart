@@ -78,8 +78,14 @@ class _AdminDrawerState extends State<AdminDrawer> {
           ),
           buildTile(
             context,
-            item: AdminNavigation.rank,
+            item: AdminNavigation.redeem,
             color: veryLightGray,
+            title: "Reedem Reward",
+            image: Image.asset("assets/image/rewardIcon.png"),
+          ),
+          buildTile(
+            context,
+            item: AdminNavigation.rank,
             title: "Rank",
             image: Image.asset("assets/image/rankIcon.png"),
           ),
@@ -87,6 +93,7 @@ class _AdminDrawerState extends State<AdminDrawer> {
             context,
             item: AdminNavigation.mission,
             title: "Misi",
+            color: veryLightGray,
             image: Image.asset(
               "assets/image/missionIcon.png",
               height: 30,
@@ -94,7 +101,6 @@ class _AdminDrawerState extends State<AdminDrawer> {
           ),
           buildTile(context,
               item: AdminNavigation.logout,
-              color: veryLightGray,
               title: "Keluar",
               image: Image.asset(
                 "assets/image/exit.png",

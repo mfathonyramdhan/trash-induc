@@ -6,6 +6,7 @@ class Reward {
   int? cost;
   // ignore: non_constant_identifier_names
   Timestamp? expired_at;
+  Timestamp? created_at;
   String? photoUrl;
 
   Reward({
@@ -14,6 +15,7 @@ class Reward {
     this.cost,
     // ignore: non_constant_identifier_names
     this.expired_at,
+    this.created_at,
     this.photoUrl,
   });
 
@@ -23,6 +25,7 @@ class Reward {
           name: json["name"]! as String,
           cost: json["cost"]! as int,
           expired_at: json["expired_at"]! as Timestamp,
+          created_at: json["created_at"]! as Timestamp,
           photoUrl: json["photoUrl"]! as String,
         );
 
@@ -32,6 +35,7 @@ class Reward {
       "name": name,
       "cost": cost,
       "expired_at": expired_at,
+      "created_at": created_at,
       "photoUrl": photoUrl,
     };
   }

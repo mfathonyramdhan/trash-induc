@@ -21,11 +21,11 @@ class _AdminAddAccountScreenState extends State<AdminAddAccountScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     nameController.dispose();
     emailController.dispose();
     phoneController.dispose();
     passwordController.dispose();
+    super.dispose();
   }
 
   @override

@@ -12,15 +12,15 @@ class User {
   String membership;
 
   User({
-    this.id,
-    this.name,
-    this.email,
-    this.phone,
-    this.address,
-    this.exp,
-    this.balance,
-    this.photoUrl,
-    this.postalCode,
+    this.id = "",
+    this.name = "",
+    this.email = "",
+    this.phone = "",
+    this.address = "",
+    this.exp = 0,
+    this.balance = 0,
+    this.photoUrl = "",
+    this.postalCode = "",
     this.role = "user",
     this.membership = "bronze",
   });
@@ -36,8 +36,8 @@ class User {
           balance: double.tryParse(json['balance'].toString()),
           photoUrl: json["photoUrl"]! as String,
           postalCode: json["postalCode"]! as String,
-          role: json["role"] as String? ?? "user",
-          membership: json["membership"] as String? ?? "bronze",
+          role: json["role"]! as String,
+          membership: json["membership"]! as String,
         );
 
   Map<String, dynamic> toJson() {

@@ -10,6 +10,7 @@ import 'package:kiloin/ui/screens/admin/misi/add_mission_screen.dart';
 import 'package:kiloin/ui/screens/admin/misi/detail_mission_screen.dart';
 import 'package:kiloin/ui/screens/admin/misi/edit_mission_screen.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 
 class AdminIndexMissionScreen extends StatefulWidget {
   const AdminIndexMissionScreen({Key? key}) : super(key: key);
@@ -220,13 +221,22 @@ class AdminDataMission extends DataTableSource {
     ));
   }
 
-  deleteMission(Mission mission) async {
+  deleteMission(Mission mission, BuildContext context) async {
     final missionRef = FirebaseFirestore.instance.collection("missions");
     try {
       await missionRef.doc(mission.id).delete();
       Navigator.of(context).pop();
+      CustomSnackbar.buildSnackbar(
+        context,
+        "Sukses menghapus " + mission.name!,
+        1,
+      );
     } catch (e) {
-      print(e);
+      CustomSnackbar.buildSnackbar(
+        context,
+        "Gagal menghapus karena " + e.toString(),
+        0,
+      );
     }
   }
 
@@ -337,7 +347,10 @@ class AdminDataMission extends DataTableSource {
                                   primary: darkGreen,
                                 ),
                                 onPressed: () {
-                                  deleteMission(mission);
+                                  deleteMission(
+                                    mission,
+                                    context,
+                                  );
                                 },
                                 child: Text("Ya, saya yakin",
                                     style: mediumRobotoFont.copyWith(
