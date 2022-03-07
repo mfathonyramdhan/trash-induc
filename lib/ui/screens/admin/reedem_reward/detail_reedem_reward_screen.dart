@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kiloin/models/reedemed_reward.dart';
+import 'package:kiloin/ui/widgets/app_bar.dart';
 
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
@@ -24,24 +25,7 @@ class _AdminDetailRedeemRewardScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: darkGreen,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-            )),
-        title: Text(
-          "Detail redeem",
-          style: boldRobotoFont.copyWith(
-            fontSize: 18.sp,
-          ),
-        ),
-        titleSpacing: 0,
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: "Detail redeem"),
       body: ListView(
         children: [
           Column(

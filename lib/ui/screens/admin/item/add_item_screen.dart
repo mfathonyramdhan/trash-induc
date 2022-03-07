@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/widgets/app_bar.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 import 'package:path/path.dart';
 
 class AdminAddItemScreen extends StatefulWidget {
@@ -25,6 +27,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
   TextEditingController expController = TextEditingController();
   TextEditingController balanceController = TextEditingController();
   File? selectedFile;
+
   @override
   void dispose() {
     nameController.dispose();
@@ -38,24 +41,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: darkGreen,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-            )),
-        title: Text(
-          "Tambah Sampah",
-          style: boldRobotoFont.copyWith(
-            fontSize: 18.sp,
-          ),
-        ),
-        titleSpacing: 0,
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: "Tambahkan sampah"),
       body: ListView(
         children: [
           Form(
@@ -109,6 +95,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                                             onPressed: () async {
                                               await pickImage(
                                                 ImageSource.gallery,
+                                                context,
                                               );
 
                                               Navigator.of(context).pop();
@@ -280,7 +267,11 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                         8.r,
                       ))),
                   onPressed: () {
-                    submitData("items", selectedFile!);
+                    submitData(
+                      "items",
+                      selectedFile!,
+                      context,
+                    );
                   },
                   child: Text(
                     "Tambahkan item",
@@ -297,7 +288,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
     );
   }
 
-  Future pickImage(ImageSource source) async {
+  Future pickImage(ImageSource source, BuildContext context) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
@@ -310,25 +301,39 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
     }
   }
 
-  Future submitData(String destination, File pickedFile) async {
+  Future submitData(
+      String destination, File? pickedFile, BuildContext context) async {
+    String? url;
     String itemName = nameController.text;
     int itemBuy = int.parse(buyController.text);
     int itemSell = int.parse(sellController.text);
     int itemExp = int.parse(expController.text);
     int itemBalance = int.parse(balanceController.text);
-    String fileName = basename(pickedFile.path);
     final itemRef = FirebaseFirestore.instance.collection(destination);
-    final storageRef =
-        FirebaseStorage.instance.ref().child(destination).child(fileName);
-    await storageRef.putFile(pickedFile);
-    String url = await storageRef.getDownloadURL();
-    await itemRef.add({
-      "name": itemName,
-      "sell": itemSell,
-      "buy": itemBuy,
-      "exp_point": itemExp,
-      "balance_point": itemBalance,
-      "photoUrl": url,
-    });
+
+    try {
+      if (pickedFile != null) {
+        String fileName = basename(pickedFile.path);
+
+        final storageRef =
+            FirebaseStorage.instance.ref(destination).child(fileName);
+        await storageRef.putFile(pickedFile);
+        url = await storageRef.getDownloadURL();
+      }
+      await itemRef.add({
+        "name": itemName,
+        "sell": itemSell,
+        "buy": itemBuy,
+        "exp_point": itemExp,
+        "balance_point": itemBalance,
+        "photoUrl": url,
+      }).then((value) {
+        CustomSnackbar.buildSnackbar(context, "Berhasil menambahkan sampah", 1);
+        Navigator.of(context).pop();
+      });
+    } catch (e) {
+      CustomSnackbar.buildSnackbar(
+          context, "Gagal menambahkan sampah karena: $e", 0);
+    }
   }
 }

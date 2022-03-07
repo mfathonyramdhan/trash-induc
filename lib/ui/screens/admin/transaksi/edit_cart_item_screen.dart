@@ -5,6 +5,7 @@ import 'package:kiloin/models/cart_item.dart';
 import 'package:kiloin/models/item.dart';
 import 'package:kiloin/repository/transaction_repository.dart';
 import 'package:kiloin/shared/color.dart';
+import 'package:kiloin/ui/widgets/app_bar.dart';
 import 'package:provider/provider.dart';
 
 class EditCartItemFormScreen extends StatefulWidget {
@@ -44,9 +45,7 @@ class _EditCartItemFormScreenState extends State<EditCartItemFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Update a item"),
-      ),
+      appBar: CustomAppBar(title: "Update item"),
       body: SingleChildScrollView(
         child: Form(
           child: Column(

@@ -47,21 +47,6 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
 
-          /// VIEW: PAGE TAB VIEW
-          // PageView(
-          //   controller: pageController,
-          //   onPageChanged: (index) {
-          //     setState(() {
-          //       bottomNavBarIndex = index;
-          //     });
-          //   },
-          //   children: [
-          //     HomeScreen(),
-          //     ProfileScreen(),
-          //     TransactionScreen(),
-          //   ],
-          // ),
-
           UserHomeScreen(),
 
           /// WIDGET: BACK LAYER BOTTOM NAVBAR

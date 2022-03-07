@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/repository/mission_repository.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
 
 class AdminAddMissionScreen extends StatefulWidget {
@@ -173,7 +174,6 @@ class _AdminAddMissionScreenState extends State<AdminAddMissionScreen> {
                 ))),
             onPressed: () async {
               await submitData();
-              Navigator.of(context).pop();
             },
             child: Text(
               "Tambahkan misi",
@@ -208,9 +208,12 @@ class _AdminAddMissionScreenState extends State<AdminAddMissionScreen> {
         "balance": int.parse(balance),
         "is_active": is_active,
         "hidden": hidden
-      }).then((value) => Navigator.of(context).pop());
+      }).then((value) {
+        CustomSnackbar.buildSnackbar(context, "Berhasil menambahkan misi", 1);
+        Navigator.of(context).pop();
+      });
     } catch (e) {
-      print(e);
+      CustomSnackbar.buildSnackbar(context, "Gagal menambahkan misi: $e", 0);
     }
   }
 }

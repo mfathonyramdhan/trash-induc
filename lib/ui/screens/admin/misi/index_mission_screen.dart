@@ -222,19 +222,19 @@ class AdminDataMission extends DataTableSource {
   }
 
   deleteMission(Mission mission, BuildContext context) async {
-    final missionRef = FirebaseFirestore.instance.collection("missions");
+    var missionRef = FirebaseFirestore.instance.collection("missions");
     try {
       await missionRef.doc(mission.id).delete();
       Navigator.of(context).pop();
       CustomSnackbar.buildSnackbar(
         context,
-        "Sukses menghapus " + mission.name!,
+        "Berhasil menghapus misi: ${mission.name!}",
         1,
       );
     } catch (e) {
       CustomSnackbar.buildSnackbar(
         context,
-        "Gagal menghapus karena " + e.toString(),
+        "Gagal menghapus misi: $e",
         0,
       );
     }

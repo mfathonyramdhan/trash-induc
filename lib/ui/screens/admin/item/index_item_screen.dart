@@ -226,11 +226,15 @@ class AdminDataItem extends DataTableSource {
     final storageRef = FirebaseStorage.instance;
     final itemRef = FirebaseFirestore.instance.collection("items");
     try {
-      await storageRef.refFromURL(url).delete();
+      if (item.photoUrl != "") {
+        await storageRef.refFromURL(url).delete();
+      }
       await itemRef.doc(item.id).delete();
       Navigator.pop(context);
+      CustomSnackbar.buildSnackbar(
+          context, "Berhasil menghapus sampah: ${item.name}", 1);
     } catch (e) {
-      print(e);
+      CustomSnackbar.buildSnackbar(context, "Gagal menghapus sampah: $e", 0);
     }
   }
 

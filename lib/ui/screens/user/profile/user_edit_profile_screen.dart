@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kiloin/ui/widgets/snackbar.dart';
+import 'package:path/path.dart';
 
 import '../../../../shared/color.dart';
 import '../../../../shared/font.dart';
@@ -296,7 +298,11 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // submitData(destination, pickedFile)
+                      submitData(
+                        "users",
+                        selectedFile!,
+                        context,
+                      );
                     },
                     child: Text("Update profil"),
                   )
@@ -320,28 +326,60 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
     }
   }
 
-  Future submitData(String destination, File? pickedFile) async {
+  Future submitData(
+      String destination, File? pickedFile, BuildContext context) async {
+    String? url;
     String name = nameController.text;
     String phoneNumber = phoneController.text;
     String address = addressController.text;
-    // String postalCode = postalController.text;
-
-    var userRef =
-        FirebaseFirestore.instance.collection("users").doc(widget.user.id);
+    String postalCode = postalController.text;
+    var storageRef = FirebaseStorage.instance;
+    var userRef = FirebaseFirestore.instance.collection(destination);
 
     try {
-      if (pickedFile != null) {}
+      if (deletePhoto) {
+        try {
+          await storageRef.refFromURL(widget.user.photoUrl!).delete();
+          url = "";
+        } catch (e) {
+          print(e);
+        }
+      }
 
-      if (deletePhoto) {}
+      if (pickedFile != null) {
+        String fileName = basename(pickedFile.path);
+        if (widget.user.photoUrl == "") {
+          await storageRef.ref(destination).child(fileName).putFile(pickedFile);
+          url = await storageRef
+              .ref(destination)
+              .child(fileName)
+              .getDownloadURL();
+        } else {
+          try {
+            await storageRef.refFromURL(widget.user.photoUrl!).delete();
+            await storageRef
+                .ref(destination)
+                .child(fileName)
+                .putFile(pickedFile);
+            url = await storageRef
+                .ref(destination)
+                .child(fileName)
+                .getDownloadURL();
+          } catch (e) {
+            print(e);
+          }
+        }
+      }
 
-      await userRef.update({
+      await userRef.doc(widget.user.id).update({
         "name": name,
         "phoneNumber": phoneNumber,
         "address": address,
-        // "postalCode" : postalCode
+        "postalCode": postalCode,
+        "photoUrl": url
       });
     } catch (e) {
-      print(e);
+      CustomSnackbar.buildSnackbar(context, "Gagal mengupdate profil", 0);
     }
   }
 }

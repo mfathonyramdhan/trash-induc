@@ -20,26 +20,21 @@ class UserReedemedScreen extends StatefulWidget {
 }
 
 class _UserReedemedScreenState extends State<UserReedemedScreen> {
-  Future<List<RedeemedReward>> fetchReedemedReward() async {
-    var redeemedRewards = <RedeemedReward>[];
-
-    var redeemData = await FirebaseFirestore.instance
-        .collection("user_redeemed_rewards")
+  Future<List<RedeemedReward>> _fetchRedeemedRewards() async {
+    var redeemedRewards = await FirebaseFirestore.instance
+        .collection('user_redeemed_rewards')
         .where("user.id", isEqualTo: widget.id)
         .get();
-
-    redeemedRewards = redeemData.docs
-        .map((e) => RedeemedReward.fromJson(e.data(), id: e.id))
+    return redeemedRewards.docs
+        .map((i) => RedeemedReward.fromJson(i.data(), id: i.id))
         .toList();
-
-    return redeemedRewards;
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: FutureBuilder<List<RedeemedReward>>(
-          future: fetchReedemedReward(),
+          future: _fetchRedeemedRewards(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(

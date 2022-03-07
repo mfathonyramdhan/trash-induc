@@ -23,23 +23,18 @@ class UserRewardWalletScreen extends StatefulWidget {
 }
 
 class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
-  Future<List<Reward>> fetchReward() async {
-    var rewards = <Reward>[];
-
-    var rewardData =
-        await FirebaseFirestore.instance.collection("rewards").get();
-
-    rewards = rewardData.docs
-        .map((e) => Reward.fromJson(e.data(), id: e.id))
+  Future<List<Reward>> _fetchRewards() async {
+    var rewards = await FirebaseFirestore.instance.collection('rewards').get();
+    return rewards.docs
+        .map((i) => Reward.fromJson(i.data(), id: i.id))
         .toList();
-    return rewards;
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: FutureBuilder<List<Reward>>(
-        future: fetchReward(),
+        future: _fetchRewards(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

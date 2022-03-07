@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kiloin/ui/screens/wrapper.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 import 'package:kiloin/ui/widgets/social_button.dart';
 
+import '../../../utils/firebase_exception_util.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/loading_bar.dart';
@@ -179,19 +181,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 20.h,
                         ),
 
-                        /// WIDGET: FORGOT PASSWORD LINK
-                        // GestureDetector(
-                        //   onTap: () {},
-                        //   child: Text(
-                        //     "Forgot Password ?",
-                        //     style: boldCalibriFont.copyWith(
-                        //       fontSize: 14.sp,
-                        //     ),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 24.h,
-                        // ),
                         Text(
                           "OR\n LOGIN WITH",
                           textAlign: TextAlign.center,
@@ -218,7 +207,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 isGooglePressed = true;
                               });
                               googlePressed();
-                              // onGooglePressed(context);
                             },
                           ),
                         SizedBox(
@@ -274,7 +262,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void signInPressed() async {
+  Future signInPressed() async {
     if (formKey.currentState!.validate()) {
       setState(() {
         isLogining = true;
@@ -282,14 +270,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     String email = emailController.text;
     String password = passwordController.text;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text(
-        "Trying to logging you in...",
-      ),
-      duration: Duration(
-        milliseconds: 500,
-      ),
-    ));
+    CustomSnackbar.buildSnackbar(
+      context,
+      "Sedang login..",
+      1,
+    );
     try {
       await auth.signInWithEmailAndPassword(
         email: email,
@@ -299,81 +284,50 @@ class _LoginScreenState extends State<LoginScreen> {
         Wrapper.routeName,
       );
     } on FirebaseAuthException catch (e) {
-      String errorMessage = e.message ?? "Terjadi kesalahan";
-      final snackBar = SnackBar(
-        content: Text(
-          errorMessage,
-        ),
-        backgroundColor: redDanger,
+      CustomSnackbar.buildSnackbar(
+        context,
+        "Terjadi kesalahan: ${generateAuthMessage(e.code)}",
+        0,
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        snackBar,
-      );
-      setState(() {
-        isLogining = false;
-      });
     }
   }
 
   void googlePressed() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+      if (googleUser == null) {
+        setState(() {
+          isLogining = false;
+        });
+        CustomSnackbar.buildSnackbar(
+          context,
+          "Login dibatalkan",
+          0,
+        );
+        return;
+      }
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser.authentication;
 
-    await FirebaseAuth.instance.signInWithCredential(
-      credential,
-    );
-    Navigator.of(context).pushReplacementNamed(
-      Wrapper.routeName,
-    );
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
+      Navigator.of(context).pushReplacementNamed(
+        Wrapper.routeName,
+      );
+    } on PlatformException catch (e) {
+      CustomSnackbar.buildSnackbar(
+        context,
+        "Terjadi kesalahan: ${e.message}",
+        0,
+      );
+    }
   }
-
-  /// Method will be execute when submit (sign in) button is pressed
-  // Future<void> onSubmitPressed(
-  //   BuildContext context, {
-  //   required String email,
-  //   required String password,
-  // }) async {
-  //   // Check to ensure email and password isn't empty
-  //   if (!(email.trim() != "" && password.trim() != "")) {
-  //     setState(() {
-  //       isLogining = false;
-  //     });
-
-  //     showValidationBar(
-  //       context,
-  //       message: "Semua Field Harus Diisi",
-  //     );
-  //   } else {
-  //     // Execute auth login service method
-  //     ResponseHandler result = await AuthService.signIn(
-  //       emailController.text,
-  //       passwordController.text,
-  //     );
-
-  //     // Check to ensure user result is null
-  //     if (result.user == null) {
-  //       setState(() {
-  //         isLogining = false;
-  //       });
-
-  //       showValidationBar(
-  //         context,
-  //         message: generateAuthMessage(result.message),
-  //       );
-  //     } else {
-  //       // Navigate to wrapper screen
-  //       Navigator.pushReplacementNamed(
-  //         context,
-  //         Wrapper.routeName,
-  //       );
-  //     }
-  //   }
-  // }
 }

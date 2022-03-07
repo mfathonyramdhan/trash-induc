@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 import 'package:kiloin/utils/firebase_utils.dart';
 import 'package:kiloin/ui/screens/wrapper.dart';
 
+import '../../../utils/firebase_exception_util.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/loading_bar.dart';
@@ -280,14 +284,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String email = emailController.text;
     String name = nameController.text;
     String password = passwordController.text;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text(
-        "Make a new account...",
-      ),
-      duration: Duration(
-        milliseconds: 250,
-      ),
-    ));
+    CustomSnackbar.buildSnackbar(
+      context,
+      "Sedang membuat akun..",
+      1,
+    );
     try {
       // implement firestore logic
       await FirebaseUtils.setupUser(email, password, name);
@@ -295,16 +296,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Wrapper.routeName,
       );
     } on FirebaseAuthException catch (e) {
-      String errorMessage = e.message ?? "Terjadi kesalahan";
-      final snackBar = SnackBar(
-        content: Text(
-          errorMessage,
-        ),
-        backgroundColor: redDanger,
+      CustomSnackbar.buildSnackbar(
+        context,
+        "Terjadi kesalahan: ${generateAuthMessage(e.code)}",
+        0,
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        snackBar,
-      );
+
       setState(() {
         isLogining = false;
       });
@@ -323,117 +320,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     await FirebaseAuth.instance.signInWithCredential(credential);
-    FirebaseUtils.setupUserForGoogle();
+    await FirebaseUtils.setupUserForGoogle();
     Navigator.of(context).pushReplacementNamed(
       Wrapper.routeName,
     );
   }
-
-  /// Method will be execute when submit (sign up) button is pressed
-  // Future<void> onSubmitPressed(
-  //   BuildContext context, {
-  //   String email = "",
-  //   String phone = "",
-  //   String password = "",
-  //   String rePassword = "",
-  // }) async {
-  //   // Check to ensure email and password isn't empty
-  //   if (!(email.trim() != "" && password.trim() != "")) {
-  //     setState(() {
-  //       isLogining = false;
-  //     });
-
-  //     showValidationBar(
-  //       context,
-  //       message: "Semua Field Harus Diisi",
-  //     );
-  //   }
-  //   // Check to ensure password and re-password isn't same
-  //   else if (!(password == rePassword)) {
-  //     setState(() {
-  //       isLogining = false;
-  //     });
-
-  //     showValidationBar(
-  //       context,
-  //       message: "Konfirmasi Password Harus Sama",
-  //     );
-  //   } else {
-  //     // Execute auth register service method
-  //     ResponseHandler result = await AuthService.signUp(
-  //       emailController.text,
-  //       passwordController.text,
-  //     );
-
-  //     // Check to ensure user result is null
-  //     if (result.user == null) {
-  //       setState(() {
-  //         isLogining = false;
-  //       });
-
-  //       showValidationBar(
-  //         context,
-  //         message: generateAuthMessage(result.message),
-  //       );
-  //     } else {
-  //       // Navigate to wrapper screen
-  //       Navigator.pushReplacementNamed(
-  //         context,
-  //         Wrapper.routeName,
-  //       );
-  //     }
-  //   }
-  // }
-
-  /// Method will be execute when google button is pressed
-  // Future<void> onGooglePressed(BuildContext context) async {
-  //   // Execute auth google service method
-  //   ResponseHandler result = await SocialServices.signInGoogle();
-
-  //   // Check to ensure success property is true
-  //   if (result.success == true) {
-  //     // Navigate to wrapper screen
-  //     Navigator.pushReplacementNamed(
-  //       context,
-  //       Wrapper.routeName,
-  //     );
-  //   }
-  //   // Stop loading bar and show validation
-  //   else {
-  //     setState(() {
-  //       isGooglePressed = false;
-  //     });
-
-  //     showValidationBar(
-  //       context,
-  //       message: result.message ?? "",
-  //     );
-  //   }
-  // }
-
-  /// Method will be execute when facebook button is pressed
-  // Future<void> onFacebookPressed(BuildContext context) async {
-  //   // Execute auth facebook service method
-  //   ResponseHandler result = await SocialServices.loginFacebook();
-
-  //   // Check to ensure success property is true
-  //   if (result.success == true) {
-  //     // Navigate to wrapper screen
-  //     Navigator.pushReplacementNamed(
-  //       context,
-  //       Wrapper.routeName,
-  //     );
-  //   }
-  //   // Stop loading bar and show validation
-  //   else {
-  //     setState(() {
-  //       isFacebookPressed = false;
-  //     });
-
-  //     showValidationBar(
-  //       context,
-  //       message: generateAuthMessage(result.message),
-  //     );
-  //   }
-  // }
 }

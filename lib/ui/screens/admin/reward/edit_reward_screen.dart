@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:kiloin/models/reward.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/widgets/app_bar.dart';
 import 'package:path/path.dart';
 
 class AdminEditRewardScreen extends StatefulWidget {
@@ -57,24 +58,7 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: darkGreen,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-            )),
-        title: Text(
-          "Update reward",
-          style: boldRobotoFont.copyWith(
-            fontSize: 18.sp,
-          ),
-        ),
-        titleSpacing: 0,
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: "Update reward"),
       body: ListView(
         children: [
           Form(

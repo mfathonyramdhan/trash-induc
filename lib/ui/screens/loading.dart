@@ -16,21 +16,16 @@ class LogoutScreen extends StatefulWidget {
 }
 
 class _LogoutScreenState extends State<LogoutScreen> {
-  Future<dynamic>? signOut;
-
-  Future<dynamic> signOutInit() async {
-    await FirebaseUtils.signOut();
-    return;
+  Future signOutInit() async {
+    await FirebaseUtils.signOut().then(
+        (value) => Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            )));
   }
 
   @override
   void initState() {
     signOutInit();
-    Timer(
-        Duration(seconds: 2),
-        () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => LoginScreen(),
-            )));
     super.initState();
   }
 

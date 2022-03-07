@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/models/item.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/widgets/app_bar.dart';
 
 class AdminDetailItemScreen extends StatefulWidget {
   const AdminDetailItemScreen({
@@ -20,24 +21,7 @@ class _AdminDetailItemScreenState extends State<AdminDetailItemScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: darkGreen,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-            )),
-        title: Text(
-          "Detail Item",
-          style: boldRobotoFont.copyWith(
-            fontSize: 18.sp,
-          ),
-        ),
-        titleSpacing: 0,
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: "Detail Item"),
       body: ListView(
         children: [
           Column(

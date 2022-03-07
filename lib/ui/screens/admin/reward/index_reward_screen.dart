@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +12,7 @@ import 'package:kiloin/ui/screens/admin/reward/add_reward_screen.dart';
 import 'package:kiloin/ui/screens/admin/reward/detail_reward_screen.dart';
 import 'package:kiloin/ui/screens/admin/reward/edit_reward_screen.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 
 class AdminIndexRewardScreen extends StatefulWidget {
   const AdminIndexRewardScreen({Key? key}) : super(key: key);
@@ -212,6 +214,22 @@ class AdminDataReward extends DataTableSource {
     ));
   }
 
+  deleteReward(String url, Reward reward) async {
+    final storageRef = FirebaseStorage.instance;
+    final rewardRef = FirebaseFirestore.instance.collection("rewards");
+    try {
+      if (reward.photoUrl != "") {
+        await storageRef.refFromURL(url).delete();
+      }
+      await rewardRef.doc(reward.id).delete();
+      Navigator.pop(context);
+      CustomSnackbar.buildSnackbar(
+          context, "Berhasil menghapus reward: ${reward.name}", 1);
+    } catch (e) {
+      CustomSnackbar.buildSnackbar(context, "Gagal menghapus reward: $e", 0);
+    }
+  }
+
   @override
   DataRow? getRow(int index) {
     Reward reward = data[index];
@@ -308,7 +326,12 @@ class AdminDataReward extends DataTableSource {
                                 style: ElevatedButton.styleFrom(
                                   primary: darkGreen,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  deleteReward(
+                                    reward.photoUrl!,
+                                    reward,
+                                  );
+                                },
                                 child: Text("Ya, saya yakin",
                                     style: mediumRobotoFont.copyWith(
                                       fontSize: 12.sp,

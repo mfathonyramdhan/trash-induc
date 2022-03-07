@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/widgets/app_bar.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 import 'package:path/path.dart';
 
 class AdminAddRewardScreen extends StatefulWidget {
@@ -37,24 +39,7 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: darkGreen,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-            )),
-        title: Text(
-          "Tambah reward",
-          style: boldRobotoFont.copyWith(
-            fontSize: 18.sp,
-          ),
-        ),
-        titleSpacing: 0,
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: "Tambah reward"),
       body: ListView(
         children: [
           Form(
@@ -227,6 +212,7 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                       submitData(
                         "rewards",
                         selectedFile!,
+                        context,
                       );
                     },
                     child: Text(
@@ -256,23 +242,34 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
     }
   }
 
-  Future submitData(String destination, File pickedFile) async {
+  Future submitData(
+      String destination, File? pickedFile, BuildContext context) async {
+    String? url;
     String rewardName = nameController.text;
     int rewardCost = int.parse(costController.text);
     DateTime rewardExpired = selectedDate!;
-    String fileName = basename(pickedFile.path);
-
     final rewardRef = FirebaseFirestore.instance.collection(destination);
-    final storageRef =
-        FirebaseStorage.instance.ref().child(destination).child(fileName);
-    await storageRef.putFile(pickedFile);
-    String url = await storageRef.getDownloadURL();
-    await rewardRef.add({
-      "name": rewardName,
-      "cost": rewardCost,
-      "photoUrl": url,
-      "expired_at": rewardExpired,
-      "created_at": DateTime.now(),
-    });
+
+    try {
+      if (pickedFile != null) {
+        String fileName = basename(pickedFile.path);
+        final storageRef =
+            FirebaseStorage.instance.ref().child(destination).child(fileName);
+        await storageRef.putFile(pickedFile);
+        url = await storageRef.getDownloadURL();
+      }
+      await rewardRef.add({
+        "name": rewardName,
+        "cost": rewardCost,
+        "photoUrl": url,
+        "expired_at": rewardExpired,
+        "created_at": DateTime.now(),
+      }).then((value) {
+        CustomSnackbar.buildSnackbar(context, "Berhasil menambah reward", 1);
+        Navigator.of(context).pop();
+      });
+    } catch (e) {
+      CustomSnackbar.buildSnackbar(context, "Gagal menambah reward: $e", 0);
+    }
   }
 }

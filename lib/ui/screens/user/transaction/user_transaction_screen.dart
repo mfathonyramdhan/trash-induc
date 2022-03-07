@@ -24,18 +24,14 @@ class UserTransactionScreen extends StatefulWidget {
 class _UserTransactionScreenState extends State<UserTransactionScreen> {
   var userId = FirebaseAuth.instance.currentUser!.uid;
 
-  Future<List<Transaction>> fetchTransaction() async {
-    var transactions = <Transaction>[];
-
-    var _transactionData = await FirebaseFirestore.instance
-        .collection("transactions")
+  Future<List<Transaction>> _fetchTransactions() async {
+    var rewards = await FirebaseFirestore.instance
+        .collection('transactions')
         .where("user.id", isEqualTo: userId)
         .get();
-
-    transactions = _transactionData.docs
-        .map((e) => Transaction.fromJson(e.data(), id: e.id))
+    return rewards.docs
+        .map((i) => Transaction.fromJson(i.data(), id: i.id))
         .toList();
-    return transactions;
   }
 
   @override
@@ -82,7 +78,7 @@ class _UserTransactionScreenState extends State<UserTransactionScreen> {
         centerTitle: true,
       ),
       body: FutureBuilder<List<Transaction>>(
-          future: fetchTransaction(),
+          future: _fetchTransactions(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isEmpty) {

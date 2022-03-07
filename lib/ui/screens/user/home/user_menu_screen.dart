@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kiloin/ui/screens/auth/login_screen.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
 import '../../../../models/user.dart' as UserModel;
@@ -397,11 +398,12 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
             ),
             InkWell(
               onTap: () async {
-                await FirebaseUtils.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  Wrapper.routeName,
-                  (route) => false,
-                );
+                await FirebaseUtils.signOut()
+                    .then((value) => Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (_) => LoginScreen(),
+                        ),
+                        (route) => false));
               },
               child: CustomMenuScreenListTile(
                 imageLeading: "assets/image/exit.png",

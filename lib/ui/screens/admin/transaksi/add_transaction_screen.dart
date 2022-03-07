@@ -33,7 +33,6 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
     var users = await FirebaseFirestore.instance
         .collection('users')
         .where('role', isEqualTo: 'user')
-        .limit(10)
         .get();
     return users.docs.map((e) => User.fromJson(e.data())).toList();
   }
@@ -46,8 +45,8 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
         .get();
     var completedMissionIds = completedMissionsByUser.docs
         .map((e) => e.exists ? e.data()['mission_id'] : null)
-        .whereType<String>()
         .toList();
+
     QuerySnapshot<Map<String, dynamic>> missions;
     if (completedMissionIds.isNotEmpty) {
       missions = await FirebaseFirestore.instance
@@ -86,8 +85,8 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
                 context,
                 listen: false,
               );
-              repository.removeAllItem();
               Navigator.of(context).pop();
+              repository.removeAllItem();
             },
             icon: Icon(
               Icons.arrow_back_ios_new_sharp,
@@ -188,7 +187,6 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
                             var users = await FirebaseFirestore.instance
                                 .collection('users')
                                 .where('role', isEqualTo: 'user')
-                                .limit(10)
                                 .get();
                             return users.docs
                                 .map((e) => User.fromJson(e.data(), id: e.id))
@@ -202,7 +200,6 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
                               // .startAt([filter]).endAt([filter + '\uf8ff'])
                               .where('email', isGreaterThanOrEqualTo: filter)
                               .where('email', isLessThan: filter + 'z')
-                              .limit(50)
                               .get();
                           // var getUsersByName = await FirebaseFirestore.instance
                           //     .collection('users')

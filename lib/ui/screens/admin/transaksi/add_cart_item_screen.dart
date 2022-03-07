@@ -6,6 +6,7 @@ import 'package:kiloin/models/item.dart';
 import 'package:kiloin/repository/transaction_repository.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/widgets/app_bar.dart';
 import 'package:provider/provider.dart';
 
 class CartItemFormScreen extends StatefulWidget {
@@ -42,24 +43,7 @@ class _CartItemFormScreenState extends State<CartItemFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: darkGreen,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-            )),
-        title: Text(
-          "Tambah item",
-          style: boldRobotoFont.copyWith(
-            fontSize: 18.sp,
-          ),
-        ),
-        titleSpacing: 0,
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: "Tambah item"),
       body: SingleChildScrollView(
         child: Form(
           child: Column(

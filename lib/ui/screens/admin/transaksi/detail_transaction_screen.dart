@@ -9,6 +9,7 @@ import 'package:kiloin/models/transaction.dart';
 import 'package:kiloin/models/transaction_item.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
+import 'package:kiloin/ui/widgets/app_bar.dart';
 
 class DetailTransactionScreen extends StatefulWidget {
   const DetailTransactionScreen({
@@ -39,26 +40,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        automaticallyImplyLeading: false,
-        backgroundColor: darkGreen,
-        centerTitle: true,
-        titleSpacing: 0,
-        title: Text(
-          "Detail transaksi",
-          style: boldRobotoFont.copyWith(
-            fontSize: 18.sp,
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(title: "Detail transaksi"),
       body: FutureBuilder<DocumentSnapshot>(
           future: _futureTransaction,
           builder: (context, snapshot) {

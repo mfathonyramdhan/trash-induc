@@ -7,6 +7,8 @@ import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:provider/provider.dart';
 
+import '../../../widgets/snackbar.dart';
+
 class AdminEditMissionScreen extends StatefulWidget {
   const AdminEditMissionScreen({
     Key? key,
@@ -49,7 +51,12 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
         backgroundColor: darkGreen,
         leading: IconButton(
             onPressed: () {
+              final repository = Provider.of<MissionRepository>(
+                context,
+                listen: false,
+              );
               Navigator.of(context).pop();
+              repository.clearAll();
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -156,7 +163,9 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
                     borderRadius: BorderRadius.circular(
                   8.r,
                 ))),
-            onPressed: () {},
+            onPressed: () {
+              updateData();
+            },
             child: Text(
               "Update misi",
               style: boldRobotoFont.copyWith(
@@ -190,10 +199,12 @@ class _AdminEditMissionScreenState extends State<AdminEditMissionScreen> {
         "balance": int.parse(balance),
         "is_active": is_active,
         "hidden": hidden
+      }).then((value) {
+        CustomSnackbar.buildSnackbar(context, "Berhasil mengubah misi", 1);
+        Navigator.of(context).pop();
       });
-      Navigator.of(context).pop();
     } catch (e) {
-      print(e);
+      CustomSnackbar.buildSnackbar(context, "Gagal mengubah misi: $e", 0);
     }
   }
 }

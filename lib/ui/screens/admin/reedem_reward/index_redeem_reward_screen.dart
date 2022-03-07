@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kiloin/models/reedemed_reward.dart';
 import 'package:kiloin/ui/screens/admin/reedem_reward/detail_reedem_reward_screen.dart';
-import 'package:kiloin/ui/screens/admin/reedem_reward/edit_redeem_reward.dart';
 import 'package:kiloin/ui/widgets/snackbar.dart';
 
 import '../../../../models/user.dart' as UserModel;
