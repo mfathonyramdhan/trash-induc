@@ -65,8 +65,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
         centerTitle: true,
       ),
-      body: FutureBuilder<DocumentSnapshot<Object?>>(
-        future: userRef.doc(currentUserId).get(),
+      body: StreamBuilder(
+        stream: userRef.doc(currentUserId).snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             UserModel.User user = UserModel.User.fromJson(
@@ -119,31 +119,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      (user.name == "")
-                                          ? SizedBox(
-                                              width: 160.w,
-                                              child: Text(
-                                                "User",
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: boldRobotoFont.copyWith(
-                                                  fontSize: 18.sp,
-                                                ),
-                                              ),
-                                            )
-                                          : SizedBox(
-                                              width: 160.w,
-                                              child: Text(
-                                                user.name!,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: boldRobotoFont.copyWith(
-                                                  fontSize: 18.sp,
-                                                ),
-                                              ),
-                                            ),
+                                      SizedBox(
+                                        width: 160.w,
+                                        child: Text(
+                                          user.name == "" ? "User" : user.name!,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: boldRobotoFont.copyWith(
+                                            fontSize: 18.sp,
+                                          ),
+                                        ),
+                                      ),
                                       Text(
-                                        user.email!,
+                                        user.email == "" ? "-" : user.email!,
                                         style: lightRobotoFont.copyWith(
                                           fontSize: 10.sp,
                                         ),
@@ -154,10 +142,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             Icons.location_pin,
                                             color: whitePure,
                                           ),
-                                          Text(
-                                            "Jember, Sumbersari",
-                                            style: mediumRobotoFont.copyWith(
-                                              fontSize: 12.sp,
+                                          SizedBox(
+                                            width: 120.w,
+                                            child: Text(
+                                              user.address == ""
+                                                  ? "-"
+                                                  : user.address!,
+                                              style: mediumRobotoFont.copyWith(
+                                                fontSize: 12.sp,
+                                              ),
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           )
                                         ],

@@ -124,9 +124,11 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                         radius: 51.r,
                         backgroundColor: lightGreen,
                         child: CircleAvatar(
-                          backgroundImage: widget.user.photoUrl != ""
-                              ? Image.network(widget.user.photoUrl!).image
-                              : AssetImage("assets/image/photo.png"),
+                          backgroundImage: widget.copyOfUrl == ""
+                              ? selectedFile == null
+                                  ? Image.asset("assets/image/photo.png").image
+                                  : Image.file(selectedFile!).image
+                              : Image.network(widget.copyOfUrl).image,
                           radius: 45.r,
                         ),
                       ),
@@ -151,65 +153,55 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                                       context: context,
                                       builder: (context) {
                                         return Container(
-                                          height: 80.h,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(
-                                                "Set foto profil dari",
-                                                style:
-                                                    regularRobotoFont.copyWith(
-                                                  fontSize: 16.sp,
-                                                  color: blackPure,
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  TextButton.icon(
-                                                      onPressed: () async {
-                                                        await pickImage(
-                                                          ImageSource.camera,
-                                                        );
-                                                      },
-                                                      icon: Icon(
-                                                        Icons.camera,
-                                                        color: lightGreen,
-                                                        size: 30,
-                                                      ),
-                                                      label: Text(
-                                                        "Kamera",
-                                                        style: regularRobotoFont
-                                                            .copyWith(
-                                                          fontSize: 14.sp,
-                                                          color: blackPure,
-                                                        ),
-                                                      )),
-                                                  TextButton.icon(
-                                                    onPressed: () async {
-                                                      await pickImage(
-                                                        ImageSource.gallery,
-                                                      );
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.photo,
-                                                      color: lightGreen,
-                                                      size: 30,
-                                                    ),
-                                                    label: Text(
-                                                      "Galeri",
-                                                      style: regularRobotoFont
-                                                          .copyWith(
-                                                        fontSize: 14.sp,
-                                                        color: blackPure,
-                                                      ),
-                                                    ),
+                                          height: 40.h,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(
+                                                    15.r,
                                                   ),
-                                                ],
-                                              )
+                                                  topRight: Radius.circular(
+                                                    15.r,
+                                                  ))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              TextButton.icon(
+                                                  onPressed: () async {
+                                                    await pickImage(
+                                                      ImageSource.gallery,
+                                                    ).then(
+                                                        (value) => setState(() {
+                                                              deletePhoto =
+                                                                  false;
+                                                            }));
+
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.edit,
+                                                  ),
+                                                  label: Text("Ganti foto")),
+                                              TextButton.icon(
+                                                  onPressed: (widget
+                                                                  .copyOfUrl ==
+                                                              "" &&
+                                                          selectedFile == null)
+                                                      ? null
+                                                      : () {
+                                                          setState(() {
+                                                            deletePhoto = true;
+                                                            selectedFile = null;
+                                                            widget.copyOfUrl =
+                                                                "";
+                                                          });
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                  icon: Icon(
+                                                    Icons.delete,
+                                                  ),
+                                                  label: Text("Hapus foto"))
                                             ],
                                           ),
                                         );
@@ -377,9 +369,12 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
         "address": address,
         "postalCode": postalCode,
         "photoUrl": url
+      }).then((value) {
+        CustomSnackbar.buildSnackbar(context, "Berhasil mengupdate profil", 1);
+        Navigator.of(context).pop();
       });
     } catch (e) {
-      CustomSnackbar.buildSnackbar(context, "Gagal mengupdate profil", 0);
+      CustomSnackbar.buildSnackbar(context, "Gagal mengupdate profil: $e", 0);
     }
   }
 }
