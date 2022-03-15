@@ -13,7 +13,6 @@ import '../../../../utils/firebase_utils.dart';
 import '../../../widgets/menu_screen_card.dart';
 import '../../../widgets/menu_screen_list_tile.dart';
 import '../reedem/user_redeem_screen.dart';
-import '../../wrapper.dart';
 
 class UserMenuScreen extends StatefulWidget {
   static String routeName = "/menu_screen";

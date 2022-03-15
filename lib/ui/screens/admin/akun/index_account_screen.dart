@@ -85,16 +85,6 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
         ),
         titleSpacing: 0,
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AdminAddAccountScreen(),
-              ));
-            },
-            icon: Image.asset("assets/image/buttonCreate.png"),
-          )
-        ],
       ),
       body: ListView(children: [
         FutureBuilder<List<User>>(
@@ -179,9 +169,9 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
                   DataColumn(
                     label: Text("Role"),
                   ),
-                  DataColumn(
-                    label: Text("Aksi"),
-                  ),
+                  // DataColumn(
+                  //   label: Text("Aksi"),
+                  // ),
                 ],
                 source: AdminDataAccount(
                   context: context,
@@ -250,89 +240,89 @@ class AdminDataAccount extends DataTableSource {
         Text(user.role),
         onTap: () => detailPage(user),
       ),
-      DataCell(
-        Row(
-          children: [
-            IconButton(
-                splashRadius: 15,
-                constraints: BoxConstraints(),
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AdminEditAccountScreen(),
-                  ));
-                },
-                icon: Icon(
-                  Icons.edit,
-                  color: darkGreen,
-                )),
-            IconButton(
-                splashRadius: 15,
-                constraints: BoxConstraints(),
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: RichText(
-                            text: TextSpan(
-                                text: "Anda yakin ingin menghapus ",
-                                style: regularRobotoFont.copyWith(
-                                  fontSize: 14.sp,
-                                  color: darkGreen,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: "Plastik",
-                                    style: boldRobotoFont.copyWith(
-                                      fontSize: 14.sp,
-                                      color: darkGreen,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                      text: "?",
-                                      style: regularRobotoFont.copyWith(
-                                        fontSize: 14.sp,
-                                        color: darkGreen,
-                                      ))
-                                ]),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: whitePure,
-                                    side: BorderSide(
-                                      color: darkGreen,
-                                    )),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("Batal",
-                                    style: mediumRobotoFont.copyWith(
-                                      fontSize: 12.sp,
-                                      color: darkGreen,
-                                    ))),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: darkGreen,
-                                ),
-                                onPressed: () {},
-                                child: Text("Ya, saya yakin",
-                                    style: mediumRobotoFont.copyWith(
-                                      fontSize: 12.sp,
-                                    )))
-                          ],
-                        );
-                      });
-                },
-                icon: Icon(
-                  Icons.delete,
-                  color: redDanger,
-                ))
-          ],
-        ),
-      ),
+      // DataCell(
+      //   Row(
+      //     children: [
+      //       IconButton(
+      //           splashRadius: 15,
+      //           constraints: BoxConstraints(),
+      //           padding: EdgeInsets.zero,
+      //           onPressed: () {
+      //             Navigator.of(context).push(MaterialPageRoute(
+      //               builder: (context) => AdminEditAccountScreen(),
+      //             ));
+      //           },
+      //           icon: Icon(
+      //             Icons.edit,
+      //             color: darkGreen,
+      //           )),
+      //       IconButton(
+      //           splashRadius: 15,
+      //           constraints: BoxConstraints(),
+      //           padding: EdgeInsets.zero,
+      //           onPressed: () {
+      //             showDialog(
+      //                 context: context,
+      //                 builder: (context) {
+      //                   return AlertDialog(
+      //                     content: RichText(
+      //                       text: TextSpan(
+      //                           text: "Anda yakin ingin menghapus ",
+      //                           style: regularRobotoFont.copyWith(
+      //                             fontSize: 14.sp,
+      //                             color: darkGreen,
+      //                           ),
+      //                           children: [
+      //                             TextSpan(
+      //                               text: "Plastik",
+      //                               style: boldRobotoFont.copyWith(
+      //                                 fontSize: 14.sp,
+      //                                 color: darkGreen,
+      //                               ),
+      //                             ),
+      //                             TextSpan(
+      //                                 text: "?",
+      //                                 style: regularRobotoFont.copyWith(
+      //                                   fontSize: 14.sp,
+      //                                   color: darkGreen,
+      //                                 ))
+      //                           ]),
+      //                     ),
+      //                     actions: [
+      //                       ElevatedButton(
+      //                           style: ElevatedButton.styleFrom(
+      //                               primary: whitePure,
+      //                               side: BorderSide(
+      //                                 color: darkGreen,
+      //                               )),
+      //                           onPressed: () {
+      //                             Navigator.of(context).pop();
+      //                           },
+      //                           child: Text("Batal",
+      //                               style: mediumRobotoFont.copyWith(
+      //                                 fontSize: 12.sp,
+      //                                 color: darkGreen,
+      //                               ))),
+      //                       ElevatedButton(
+      //                           style: ElevatedButton.styleFrom(
+      //                             primary: darkGreen,
+      //                           ),
+      //                           onPressed: () {},
+      //                           child: Text("Ya, saya yakin",
+      //                               style: mediumRobotoFont.copyWith(
+      //                                 fontSize: 12.sp,
+      //                               )))
+      //                     ],
+      //                   );
+      //                 });
+      //           },
+      //           icon: Icon(
+      //             Icons.delete,
+      //             color: redDanger,
+      //           ))
+      //     ],
+      //   ),
+      // ),
     ]);
   }
 

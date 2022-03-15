@@ -13,3 +13,5 @@ const Color redDanger = Color(0xFFBD2924);
 const Color darkGray = Color(0xFF5A5A5A);
 const Color veryLightGreen = Color(0xFFB2D783);
 const Color veryLightGray = Color(0xFFE8E8E8);
+const Color yellow = Color(0xffDCC600);
+const Color lightYellow = Color(0xffFFF6A1);
