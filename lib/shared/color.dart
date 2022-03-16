@@ -15,3 +15,5 @@ const Color veryLightGreen = Color(0xFFB2D783);
 const Color veryLightGray = Color(0xFFE8E8E8);
 const Color yellow = Color(0xffDCC600);
 const Color lightYellow = Color(0xffFFF6A1);
+const Color blue = Color(0xff8FD7FF);
+const Color lightBlue = Color(0xffD3EFFF);

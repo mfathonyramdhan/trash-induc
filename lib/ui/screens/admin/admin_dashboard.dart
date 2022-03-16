@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/extension/date_time_extension.dart';
+import 'package:kiloin/models/item.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 import 'package:kiloin/ui/widgets/app_bar.dart';
+import 'package:kiloin/ui/widgets/price_card.dart';
 
 import '../../../shared/font.dart';
 
@@ -18,6 +21,48 @@ class AdminDashboardScreen extends StatefulWidget {
 }
 
 class AdminDashboardScreenState extends State<AdminDashboardScreen> {
+  Future<List<Item>> fetchItem() async {
+    var items = await FirebaseFirestore.instance.collection("items").get();
+    return items.docs.map((e) => Item.fromJson(e.data(), id: e.id)).toList();
+  }
+
+  String getSideTitles(double value) {
+    switch (value.toInt()) {
+      case 1:
+        return '0';
+      case 2:
+        return '25';
+      case 3:
+        return '50';
+      case 4:
+        return '75';
+      case 5:
+        return '100';
+    }
+    return '';
+  }
+
+  String getTitles(double value) {
+    switch (value.toInt()) {
+      case 0:
+        return 'Sen';
+      case 1:
+        return 'Sel';
+      case 2:
+        return 'Rab';
+      case 3:
+        return 'Kam';
+      case 4:
+        return 'Jum';
+      case 5:
+        return 'Sab';
+      case 6:
+        return 'Min';
+      default:
+        return '';
+    }
+  }
+
   DateTime getDateTime() => DateTime.now();
 
   @override
@@ -37,7 +82,28 @@ class AdminDashboardScreenState extends State<AdminDashboardScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         drawer: AdminDrawer(),
-        appBar: CustomAppBar(title: "Dashboard"),
+        appBar: AppBar(
+          backgroundColor: darkGreen,
+          leading: Builder(
+            builder: (context) {
+              return IconButton(
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+                icon: Image.asset(
+                  "assets/image/buttonSidebar.png",
+                ),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              );
+            },
+          ),
+          title: Text(
+            "Dashboard",
+            style: boldRobotoFont.copyWith(
+              fontSize: 18.sp,
+            ),
+          ),
+          titleSpacing: 0,
+          centerTitle: true,
+        ),
         body: ListView(
             padding: EdgeInsets.symmetric(
               vertical: 10,
@@ -56,7 +122,35 @@ class AdminDashboardScreenState extends State<AdminDashboardScreen> {
               SizedBox(
                 width: 1.sw,
                 height: 0.4.sh,
-                child: BarChart(BarChartData()),
+                child: BarChart(BarChartData(
+                    minY: 0,
+                    maxY: 100,
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: SideTitles(
+                        showTitles: true,
+                        getTitles: (value) => getTitles(value),
+                        getTextStyles: (context, value) =>
+                            mediumRobotoFont.copyWith(
+                          color: whitePure,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                      leftTitles: SideTitles(
+                        showTitles: true,
+                        margin: 5.r,
+                        interval: 25,
+                        reservedSize: 25,
+                        getTextStyles: (context, value) =>
+                            regularRobotoFont.copyWith(
+                          color: whitePure,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ))),
               ),
               SizedBox(
                 height: 10.h,
@@ -80,113 +174,38 @@ class AdminDashboardScreenState extends State<AdminDashboardScreen> {
               SizedBox(
                 height: 10.h,
               ),
-              Row(
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        height: 0.25.sh,
-                        width: 0.45.sw,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            10.r,
-                          ),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            stops: [
-                              0,
-                              0.7,
-                              1,
-                            ],
-                            colors: [
-                              yellow,
-                              lightYellow,
-                              yellow,
-                            ],
-                          ),
+              FutureBuilder<List<Item>>(
+                future: fetchItem(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        PriceCard(
+                          title: "Jual",
+                          color: [
+                            yellow,
+                            lightYellow,
+                          ],
+                          data: snapshot.data!,
                         ),
-                        child: Opacity(
-                          opacity: 0.3,
-                          child: Image.asset(
-                            "assets/image/bg_jual_sampah.png",
-                          ),
+                        PriceCard(
+                          title: "Beli",
+                          color: [
+                            blue,
+                            lightBlue,
+                          ],
+                          data: snapshot.data!,
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Harga\nJual",
-                            textAlign: TextAlign.center,
-                            style: boldRobotoFont.copyWith(
-                              fontSize: 11.sp,
-                              color: Color(0xff92840F),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10.w,
-                          ),
-                          SizedBox(
-                              height: 0.2.sh,
-                              width: 0.3.sw,
-                              child: ListView.builder(
-                                itemCount: 4,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(
-                                      right: 5.w,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "Jenis sampah $index",
-                                          style: mediumRobotoFont.copyWith(
-                                            color: Color(0xff92840F),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 5.h,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            right: 7.w,
-                                          ),
-                                          child: Text(
-                                            "Rp",
-                                            style: regularRobotoFont.copyWith(
-                                              color: blackPure,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          "600$index",
-                                          style: boldRobotoFont.copyWith(
-                                            color: blackPure,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 7.w,
-                                          ),
-                                          child: Text(
-                                            "kg",
-                                            style: regularRobotoFont.copyWith(
-                                              color: blackPure,
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ))
-                        ],
-                      )
-                    ],
-                  )
-                ],
+                      ],
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: whitePure,
+                    ),
+                  );
+                },
               )
             ]),
       ),

@@ -23,24 +23,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: ^3.1.8
+  cloud_firestore: ^3.1.10
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.3.6
-  firebase_core: ^1.12.0
+  firebase_auth: ^3.3.11
+  firebase_core: ^1.13.1
   fl_chart: ^0.41.0
   flutter_native_splash: ^2.0.2
-  google_sign_in: ^5.2.3
+  google_sign_in: ^5.2.4
   roundcheckbox: ^2.0.4+1
   email_validator: ^2.0.1
-  firebase_storage: ^10.2.7
+  firebase_storage: ^10.2.9
   provider: ^6.0.2
   intl: ^0.17.0
   path: ^1.8.0
-  multi_select_flutter: ^4.0.0
+  multi_select_flutter: ^4.1.2
   dropdown_search: ^2.0.1
   path_provider: ^2.0.8
-  image_picker: ^0.8.4+8
-  flutter_screenutil: ^5.2.0
+  image_picker: ^0.8.4+11
+  flutter_screenutil: ^5.3.1
 
 dev_dependencies:
   flutter_test:

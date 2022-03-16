@@ -37,7 +37,11 @@ class PriceCard extends StatelessWidget {
                 0.7,
                 1,
               ],
-              colors: color,
+              colors: [
+                color[0],
+                color[1],
+                color[0],
+              ],
             ),
           ),
           child: Opacity(
@@ -54,7 +58,7 @@ class PriceCard extends StatelessWidget {
               textAlign: TextAlign.center,
               style: boldRobotoFont.copyWith(
                 fontSize: 11.sp,
-                color: Color(0xff92840F),
+                color: title == "Jual" ? Color(0xff92840F) : Color(0xff00A3FF),
               ),
             ),
             SizedBox(
@@ -70,14 +74,16 @@ class PriceCard extends StatelessWidget {
                     var listData = data[index];
                     return Padding(
                       padding: EdgeInsets.only(
-                        right: 5.w,
+                        right: 10.w,
                       ),
                       child: Column(
                         children: [
                           Text(
                             listData.name!,
                             style: mediumRobotoFont.copyWith(
-                              color: Color(0xff92840F),
+                              color: title == "Jual"
+                                  ? Color(0xff92840F)
+                                  : Color(0xff00A3FF),
                             ),
                           ),
                           SizedBox(
