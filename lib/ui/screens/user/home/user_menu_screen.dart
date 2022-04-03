@@ -144,14 +144,18 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                                   SizedBox(
                                     height: 10.h,
                                   ),
-                                  Text(
-                                    "*profil perlu dilengkapi",
-                                    style: regularRobotoFont.copyWith(
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.red,
-                                      fontSize: 10.sp,
-                                    ),
-                                  )
+                                  if (user.address == "" ||
+                                      user.phone == "" ||
+                                      user.postalCode == "" ||
+                                      user.photoUrl == "")
+                                    Text(
+                                      "*profil perlu dilengkapi",
+                                      style: regularRobotoFont.copyWith(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.red,
+                                        fontSize: 10.sp,
+                                      ),
+                                    )
                                 ],
                               ),
                               if (user.membership == "bronze")

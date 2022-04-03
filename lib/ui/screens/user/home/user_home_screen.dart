@@ -246,7 +246,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                   height: 18.h,
                                 ),
                                 GarbageCard(
-                                  title: "Harga Jual",
+                                  title: "Jual",
                                   textColor: yellowPure,
                                   items: items,
                                 ),
@@ -254,7 +254,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                   height: 16.h,
                                 ),
                                 GarbageCard(
-                                  title: "Harga Beli",
+                                  title: "Beli",
                                   textColor: blueSky,
                                   items: items,
                                 ),
@@ -267,7 +267,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         );
                       }),
                   SizedBox(
-                    height: 92.h,
+                    height: 80.h,
                   ),
                 ],
               );

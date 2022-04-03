@@ -19,9 +19,9 @@ class Reward {
     this.photoUrl,
   });
 
-  Reward.fromJson(Map<String, dynamic> json, {String? id})
+  Reward.fromJson(Map<String, dynamic> json)
       : this(
-          id: id,
+          id: json["id"] as String,
           name: json["name"]! as String,
           cost: json["cost"]! as int,
           expired_at: json["expired_at"]! as Timestamp,

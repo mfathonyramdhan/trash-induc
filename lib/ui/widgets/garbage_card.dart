@@ -29,26 +29,17 @@ class GarbageCard extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                top: 18.r,
+                top: 18.h,
               ),
-              child: Image(
-                height: 65.r,
-                fit: BoxFit.cover,
-                image: AssetImage("assets/image/bg_jual_sampah.png"),
-              ),
-            ),
-            Container(
-              width: 1.sw,
-              height: 83.r,
-              decoration: BoxDecoration(
-                color: whitePure.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(10.r),
+              child: Opacity(
+                opacity: 0.5,
+                child: Image.asset("assets/image/bg_jual_sampah.png"),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                vertical: 10.r,
-                horizontal: 18.r,
+                vertical: 10.h,
+                horizontal: 18.w,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,8 +48,8 @@ class GarbageCard extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        width: 10.r,
-                        height: 10.r,
+                        width: 10.w,
+                        height: 10.h,
                         decoration: BoxDecoration(
                           color: whitePure,
                           borderRadius: BorderRadius.circular(20),
@@ -72,7 +63,7 @@ class GarbageCard extends StatelessWidget {
                         width: 4.w,
                       ),
                       Text(
-                        title,
+                        "Harga $title",
                         style: mediumRobotoFont.copyWith(
                           color: textColor,
                           fontSize: 12.sp,
@@ -80,69 +71,76 @@ class GarbageCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (title == "Harga Jual") ...[
-                    generatePriceCard(items[0].name!, items[0].sell.toString()),
-                    generatePriceCard(items[1].name!, items[1].sell.toString()),
-                    generatePriceCard(items[2].name!, items[2].sell.toString()),
-                  ] else ...[
-                    generatePriceCard(items[0].name!, items[0].buy.toString()),
-                    generatePriceCard(items[1].name!, items[1].buy.toString()),
-                    generatePriceCard(items[2].name!, items[2].buy.toString()),
-                  ]
+                  SizedBox(
+                    height: 0.1.sh,
+                    width: 0.5.sw,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        Item item = items[index];
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            right: 15,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                item.name!,
+                                style: boldRobotoFont.copyWith(
+                                  color: textColor,
+                                  fontSize: 13.sp,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  right: 18.r,
+                                ),
+                                child: Text(
+                                  "Rp",
+                                  textAlign: TextAlign.start,
+                                  style: regularRobotoFont.copyWith(
+                                    color: blackPure,
+                                    fontSize: 12.sp,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                title == "Jual"
+                                    ? item.sell.toString()
+                                    : item.buy.toString(),
+                                style: boldRobotoFont.copyWith(
+                                  color: blackPure,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 18.r,
+                                ),
+                                child: Text(
+                                  "Kg",
+                                  textAlign: TextAlign.start,
+                                  style: regularRobotoFont.copyWith(
+                                    color: blackPure,
+                                    fontSize: 12.sp,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
           ],
         ));
-  }
-
-  Widget generatePriceCard(String type, String price) {
-    return Column(
-      children: [
-        Text(
-          type,
-          style: boldRobotoFont.copyWith(
-            color: textColor,
-            fontSize: 13.sp,
-          ),
-        ),
-        SizedBox(
-          height: 6,
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-            right: 18.r,
-          ),
-          child: Text(
-            "Rp",
-            textAlign: TextAlign.start,
-            style: regularRobotoFont.copyWith(
-              color: blackPure,
-              fontSize: 12.sp,
-            ),
-          ),
-        ),
-        Text(
-          price,
-          style: boldRobotoFont.copyWith(
-            color: blackPure,
-            fontSize: 14.sp,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-            left: 18.r,
-          ),
-          child: Text(
-            "Kg",
-            textAlign: TextAlign.start,
-            style: regularRobotoFont.copyWith(
-              color: blackPure,
-              fontSize: 12.sp,
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

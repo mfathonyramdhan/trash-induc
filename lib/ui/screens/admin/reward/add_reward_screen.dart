@@ -254,7 +254,7 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
       if (pickedFile != null) {
         String fileName = basename(pickedFile.path);
         final storageRef =
-            FirebaseStorage.instance.ref().child(destination).child(fileName);
+            FirebaseStorage.instance.ref(destination).child(fileName);
         await storageRef.putFile(pickedFile);
         url = await storageRef.getDownloadURL();
       }
@@ -264,9 +264,13 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
         "photoUrl": url,
         "expired_at": rewardExpired,
         "created_at": DateTime.now(),
-      }).then((value) {
-        CustomSnackbar.buildSnackbar(context, "Berhasil menambah reward", 1);
-        Navigator.of(context).pop();
+      }).then((value) async {
+        await value.update({
+          "id": value.id,
+        }).then((value) {
+          CustomSnackbar.buildSnackbar(context, "Berhasil menambah reward", 1);
+          Navigator.of(context).pop();
+        });
       });
     } catch (e) {
       CustomSnackbar.buildSnackbar(context, "Gagal menambah reward: $e", 0);
