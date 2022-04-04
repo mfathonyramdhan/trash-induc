@@ -4,9 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/models/user.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
-import 'package:kiloin/ui/screens/admin/akun/add_account_screen.dart';
 import 'package:kiloin/ui/screens/admin/akun/detail_account_screen.dart';
-import 'package:kiloin/ui/screens/admin/akun/edit_account_screen.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
 
 class AdminIndexAccountScreen extends StatefulWidget {
@@ -33,7 +31,7 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
     var users = <User>[];
 
     if (searchController.text.trim() != '') {
-      var searchQuery = searchController.text.trim().toLowerCase();
+      var searchQuery = searchController.text.trim();
       var userName = await FirebaseFirestore.instance
           .collection('users')
           .where('name', isGreaterThanOrEqualTo: searchQuery)
@@ -58,6 +56,12 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
   void initState() {
     super.initState();
     _futureUsers = _filterUsers();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -97,9 +101,12 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
                   children: [
                     Flexible(
                       child: TextField(
+                        controller: searchController,
                         style: TextStyle(fontSize: 14.sp),
                         onChanged: (String? value) {
-                          _futureUsers = _filterUsers();
+                          setState(() {
+                            _futureUsers = _filterUsers();
+                          });
                         },
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(10),
@@ -240,89 +247,6 @@ class AdminDataAccount extends DataTableSource {
         Text(user.role),
         onTap: () => detailPage(user),
       ),
-      // DataCell(
-      //   Row(
-      //     children: [
-      //       IconButton(
-      //           splashRadius: 15,
-      //           constraints: BoxConstraints(),
-      //           padding: EdgeInsets.zero,
-      //           onPressed: () {
-      //             Navigator.of(context).push(MaterialPageRoute(
-      //               builder: (context) => AdminEditAccountScreen(),
-      //             ));
-      //           },
-      //           icon: Icon(
-      //             Icons.edit,
-      //             color: darkGreen,
-      //           )),
-      //       IconButton(
-      //           splashRadius: 15,
-      //           constraints: BoxConstraints(),
-      //           padding: EdgeInsets.zero,
-      //           onPressed: () {
-      //             showDialog(
-      //                 context: context,
-      //                 builder: (context) {
-      //                   return AlertDialog(
-      //                     content: RichText(
-      //                       text: TextSpan(
-      //                           text: "Anda yakin ingin menghapus ",
-      //                           style: regularRobotoFont.copyWith(
-      //                             fontSize: 14.sp,
-      //                             color: darkGreen,
-      //                           ),
-      //                           children: [
-      //                             TextSpan(
-      //                               text: "Plastik",
-      //                               style: boldRobotoFont.copyWith(
-      //                                 fontSize: 14.sp,
-      //                                 color: darkGreen,
-      //                               ),
-      //                             ),
-      //                             TextSpan(
-      //                                 text: "?",
-      //                                 style: regularRobotoFont.copyWith(
-      //                                   fontSize: 14.sp,
-      //                                   color: darkGreen,
-      //                                 ))
-      //                           ]),
-      //                     ),
-      //                     actions: [
-      //                       ElevatedButton(
-      //                           style: ElevatedButton.styleFrom(
-      //                               primary: whitePure,
-      //                               side: BorderSide(
-      //                                 color: darkGreen,
-      //                               )),
-      //                           onPressed: () {
-      //                             Navigator.of(context).pop();
-      //                           },
-      //                           child: Text("Batal",
-      //                               style: mediumRobotoFont.copyWith(
-      //                                 fontSize: 12.sp,
-      //                                 color: darkGreen,
-      //                               ))),
-      //                       ElevatedButton(
-      //                           style: ElevatedButton.styleFrom(
-      //                             primary: darkGreen,
-      //                           ),
-      //                           onPressed: () {},
-      //                           child: Text("Ya, saya yakin",
-      //                               style: mediumRobotoFont.copyWith(
-      //                                 fontSize: 12.sp,
-      //                               )))
-      //                     ],
-      //                   );
-      //                 });
-      //           },
-      //           icon: Icon(
-      //             Icons.delete,
-      //             color: redDanger,
-      //           ))
-      //     ],
-      //   ),
-      // ),
     ]);
   }
 

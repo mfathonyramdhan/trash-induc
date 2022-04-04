@@ -34,7 +34,7 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
     var items = <Item>[];
 
     if (searchController.text.trim() != '') {
-      var searchQuery = searchController.text.trim().toLowerCase();
+      var searchQuery = searchController.text.trim();
       var itemName = await FirebaseFirestore.instance
           .collection('items')
           .where('name', isGreaterThanOrEqualTo: searchQuery)
@@ -59,6 +59,12 @@ class _AdminIndexItemScreenState extends State<AdminIndexItemScreen> {
   void initState() {
     super.initState();
     _futureItems = _filterItems();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override

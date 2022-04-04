@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,11 +34,12 @@ class _AdminIndexMissionScreenState extends State<AdminIndexMissionScreen> {
     var missions = <Mission>[];
 
     if (searchController.text.trim() != '') {
-      var searchQuery = searchController.text.trim().toLowerCase();
+      var searchQuery = searchController.text.trim();
       var missionName = await FirebaseFirestore.instance
           .collection('missions')
           .where('name', isGreaterThanOrEqualTo: searchQuery)
           .where('name', isLessThan: searchQuery + 'z')
+          .where('name', isNotEqualTo: 'Bonus memilah sampah')
           .get();
 
       var data = [];
@@ -49,8 +48,10 @@ class _AdminIndexMissionScreenState extends State<AdminIndexMissionScreen> {
         data.map((e) => Mission.fromJson(e.data(), id: e.id)).toList(),
       );
     } else {
-      var result =
-          await FirebaseFirestore.instance.collection('missions').get();
+      var result = await FirebaseFirestore.instance
+          .collection('missions')
+          .where('name', isNotEqualTo: 'Bonus memilah sampah')
+          .get();
       missions =
           result.docs.map((e) => Mission.fromJson(e.data(), id: e.id)).toList();
     }
@@ -62,6 +63,12 @@ class _AdminIndexMissionScreenState extends State<AdminIndexMissionScreen> {
   void initState() {
     super.initState();
     _futureMissions = _filterMissions();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override

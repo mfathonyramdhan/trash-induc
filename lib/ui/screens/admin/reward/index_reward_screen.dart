@@ -62,6 +62,12 @@ class _AdminIndexRewardScreenState extends State<AdminIndexRewardScreen> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: AdminDrawer(),
