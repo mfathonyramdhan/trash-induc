@@ -99,19 +99,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                             SizedBox(
                               height: 4.h,
                             ),
-                            (user.name == "")
-                                ? Text(
-                                    "User",
-                                    style: boldRobotoFont.copyWith(
-                                      fontSize: 20.sp,
-                                    ),
-                                  )
-                                : Text(
-                                    user.name!,
-                                    style: boldRobotoFont.copyWith(
-                                      fontSize: 20.sp,
-                                    ),
-                                  )
+                            Text(
+                              user.name == "" ? "user" : user.name!,
+                              style: boldRobotoFont.copyWith(
+                                fontSize: 20.sp,
+                              ),
+                            )
                           ],
                         ),
                         GestureDetector(

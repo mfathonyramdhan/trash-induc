@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -107,21 +108,15 @@ class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          height: 80.h,
-                                          width: 80.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              5.r,
-                                            ),
-                                            image: DecorationImage(
-                                                image: NetworkImage(reward
-                                                            .photoUrl !=
-                                                        ""
-                                                    ? reward.photoUrl!
-                                                    : "https://dummyimage.com/600x400/000/fff")),
-                                          ),
-                                        ),
+                                        SizedBox(
+                                            height: 80.h,
+                                            width: 80.w,
+                                            child: reward.photoUrl == ""
+                                                ? Image.asset(
+                                                    "assets/image/placeholder-image.png")
+                                                : CachedNetworkImage(
+                                                    imageUrl: reward.photoUrl!,
+                                                  )),
                                         SizedBox(
                                           width: 14.w,
                                         ),

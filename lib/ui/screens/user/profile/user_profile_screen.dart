@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   var currentUserId = FirebaseAuth.instance.currentUser!.uid.toString();
 
   CollectionReference userRef = FirebaseFirestore.instance.collection("users");
+
+  Future<List<UserModel.User>> fetchUser() async {
+    var result = await userRef.where("role", isEqualTo: "user").get();
+
+    return result.docs
+        .map((e) =>
+            UserModel.User.fromJson(e.data() as Map<String, dynamic>, id: e.id))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,199 +75,207 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
         centerTitle: true,
       ),
-      body: StreamBuilder(
+      body: StreamBuilder<DocumentSnapshot<Object?>>(
         stream: userRef.doc(currentUserId).snapshots(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
+        builder: (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Object?>> userSnapshot) {
+          if (userSnapshot.hasData) {
             UserModel.User user = UserModel.User.fromJson(
-              snapshot.data!.data() as Map<String, dynamic>,
+              userSnapshot.data!.data() as Map<String, dynamic>,
               id: currentUserId,
             );
-            return Container(
-              padding: EdgeInsets.only(
-                top: 22.h,
-                left: 22.h,
-                right: 22.h,
-              ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 179.h,
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 164.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              20.r,
-                            ),
-                            color: darkGreen,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 25.w,
-                                  ),
-                                  CircleAvatar(
-                                    radius: 40,
-                                    backgroundColor: lightGreen,
-                                    child: CircleAvatar(
-                                      backgroundImage: user.photoUrl != ""
-                                          ? Image.network(user.photoUrl!).image
-                                          : AssetImage(
-                                              "assets/image/photo.png"),
-                                      radius: 37,
+            return FutureBuilder<List<UserModel.User>>(
+                future: fetchUser(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<UserModel.User>> snapshot) {
+                  if (snapshot.hasData) {
+                    snapshot.data!.sort(
+                      (b, a) => a.balance!.compareTo(b.balance!),
+                    );
+
+                    var users = snapshot.data;
+
+                    return Container(
+                      padding: EdgeInsets.only(
+                        top: 22.h,
+                        left: 22.h,
+                        right: 22.h,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 179.h,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: 164.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                      20.r,
                                     ),
+                                    color: darkGreen,
                                   ),
-                                  SizedBox(
-                                    width: 26.w,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      SizedBox(
-                                        width: 160.w,
-                                        child: Text(
-                                          user.name == "" ? "User" : user.name!,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: boldRobotoFont.copyWith(
-                                            fontSize: 18.sp,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        user.email == "" ? "-" : user.email!,
-                                        style: lightRobotoFont.copyWith(
-                                          fontSize: 10.sp,
-                                        ),
-                                      ),
                                       Row(
                                         children: [
-                                          Icon(
-                                            Icons.location_pin,
-                                            color: whitePure,
+                                          SizedBox(
+                                            width: 25.w,
+                                          ),
+                                          CircleAvatar(
+                                            radius: 40,
+                                            backgroundColor: lightGreen,
+                                            child: CircleAvatar(
+                                              backgroundImage: user.photoUrl ==
+                                                      ""
+                                                  ? Image.asset(
+                                                          "assets/image/photo.png")
+                                                      .image
+                                                  : Image(
+                                                      image:
+                                                          CachedNetworkImageProvider(
+                                                      user.photoUrl!,
+                                                    )).image,
+                                              radius: 37,
+                                            ),
                                           ),
                                           SizedBox(
-                                            width: 120.w,
-                                            child: Text(
-                                              user.address == ""
-                                                  ? "-"
-                                                  : user.address!,
-                                              style: mediumRobotoFont.copyWith(
-                                                fontSize: 12.sp,
+                                            width: 26.w,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 160.w,
+                                                child: Text(
+                                                  user.name == ""
+                                                      ? "User"
+                                                      : user.name!,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style:
+                                                      boldRobotoFont.copyWith(
+                                                    fontSize: 18.sp,
+                                                  ),
+                                                ),
                                               ),
-                                              maxLines: 3,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                              Text(
+                                                user.email == ""
+                                                    ? "-"
+                                                    : user.email!,
+                                                style: lightRobotoFont.copyWith(
+                                                  fontSize: 10.sp,
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.location_pin,
+                                                    color: whitePure,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 120.w,
+                                                    child: Text(
+                                                      user.address == ""
+                                                          ? "-"
+                                                          : user.address!,
+                                                      style: mediumRobotoFont
+                                                          .copyWith(
+                                                        fontSize: 12.sp,
+                                                      ),
+                                                      maxLines: 3,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            ],
                                           )
                                         ],
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 26.h,
-                              ),
-                              FutureBuilder<QuerySnapshot<Object?>>(
-                                  future: userRef.get(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      int total = snapshot.data!.docs.length;
-                                      return RichText(
+                                      ),
+                                      SizedBox(
+                                        height: 26.h,
+                                      ),
+                                      RichText(
                                           text: TextSpan(
-                                              text: "Rank #1",
+                                              text:
+                                                  "Rank #${users!.indexWhere((element) => element.id == currentUserId) + 1} ",
                                               style: boldRobotoFont.copyWith(
                                                 fontSize: 20.sp,
                                               ),
                                               children: [
                                             TextSpan(
-                                                text: "of $total member",
+                                                text:
+                                                    "of ${users.length} member",
                                                 style: lightRobotoFont.copyWith(
                                                   fontSize: 16.sp,
                                                 ))
-                                          ]));
-                                    }
-                                    return CircularProgressIndicator(
-                                      color: whitePure,
-                                    );
-                                  })
-                            ],
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 10,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => UserEditProfileScreen(
-                                  user: user,
-                                  copyOfUrl: user.photoUrl!,
-                                ),
-                              ));
-                            },
-                            child: Container(
-                              width: 100.w,
-                              height: 30.h,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    20.r,
+                                          ]))
+                                    ],
                                   ),
-                                  color: whitePure,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        offset: Offset(
-                                          2,
-                                          3,
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 10,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (_) => UserEditProfileScreen(
+                                          user: user,
+                                          copyOfUrl: user.photoUrl!,
                                         ),
-                                        blurRadius: 2,
-                                        color: Colors.black.withOpacity(
-                                          0.5,
-                                        ))
-                                  ]),
-                              child: Center(
-                                child: Text(
-                                  "Edit Profil",
-                                  style: boldRobotoFont.copyWith(
-                                    fontSize: 14.sp,
-                                    color: darkGreen,
+                                      ));
+                                    },
+                                    child: Container(
+                                      width: 100.w,
+                                      height: 30.h,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            20.r,
+                                          ),
+                                          color: whitePure,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                offset: Offset(
+                                                  2,
+                                                  3,
+                                                ),
+                                                blurRadius: 2,
+                                                color: Colors.black.withOpacity(
+                                                  0.5,
+                                                ))
+                                          ]),
+                                      child: Center(
+                                        child: Text(
+                                          "Edit Profil",
+                                          style: boldRobotoFont.copyWith(
+                                            fontSize: 14.sp,
+                                            color: darkGreen,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Ranking",
+                              style: boldRobotoFont.copyWith(
+                                fontSize: 18.sp,
+                                color: darkGreen,
                               ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Ranking",
-                      style: boldRobotoFont.copyWith(
-                        fontSize: 18.sp,
-                        color: darkGreen,
-                      ),
-                    ),
-                  ),
-                  FutureBuilder<QuerySnapshot<Object?>>(
-                      future:
-                          userRef.orderBy("balance", descending: true).get(),
-                      builder: (BuildContext context, snapshot) {
-                        if (snapshot.hasData) {
-                          List<UserModel.User> users = [];
-                          for (var i in snapshot.data!.docs) {
-                            users.add(UserModel.User.fromJson(
-                                i.data() as Map<String, dynamic>));
-                          }
-
-                          return Expanded(
+                          Expanded(
                             child: ListView.builder(
                               itemBuilder: (context, index) {
                                 UserModel.User user = users[index];
@@ -273,11 +291,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     children: [
                                       CircleAvatar(
                                         radius: 15.r,
-                                        backgroundImage: user.photoUrl != ""
-                                            ? Image.network(user.photoUrl!)
+                                        backgroundImage: user.photoUrl == ""
+                                            ? Image.asset(
+                                                    "assets/image/photo.png")
                                                 .image
-                                            : AssetImage(
-                                                "assets/image/photo.png"),
+                                            : Image(
+                                                image:
+                                                    CachedNetworkImageProvider(
+                                                user.photoUrl!,
+                                              )).image,
                                       ),
                                       SizedBox(
                                         width: 8.w,
@@ -302,17 +324,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               },
                               itemCount: users.length,
                             ),
-                          );
-                        }
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: darkGreen,
-                          ),
-                        );
-                      })
-                ],
-              ),
-            );
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                  return CircularProgressIndicator();
+                });
           }
 
           return Center(

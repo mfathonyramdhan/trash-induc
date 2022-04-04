@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -115,11 +116,13 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                             children: [
                               CircleAvatar(
                                 radius: 37,
-                                backgroundImage: user.photoUrl == ""
-                                    ? AssetImage(
-                                        "assets/image/photo.png",
-                                      )
-                                    : Image.network(user.photoUrl!).image,
+                                foregroundImage: user.photoUrl == ""
+                                    ? Image.asset("assets/image/photo.png")
+                                        .image
+                                    : Image(
+                                        image: CachedNetworkImageProvider(
+                                            user.photoUrl!),
+                                      ).image,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,9 +322,6 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                       ],
                     );
                   }
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
                   return CircularProgressIndicator(
                     color: darkGreen,
                   );
@@ -343,22 +343,25 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                     10.r,
                   )),
               child: Center(
-                child: FutureBuilder(
+                child: FutureBuilder<QuerySnapshot<Object?>>(
                   future: missionRef
                       .where('is_active', isEqualTo: true)
                       .where("hidden", isEqualTo: false)
                       .get(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
                     if (snapshot.hasData) {
-                      var documents = snapshot.data.docs;
+                      var documents = snapshot.data!.docs;
 
                       return ListView.builder(
-                        itemCount: snapshot.data.docs.length,
+                        itemCount: snapshot.data!.docs.length,
                         itemBuilder: (BuildContext context, int index) {
                           var data = documents[index];
                           if (data.exists) {
                             return buildMission(
-                                Mission.fromJson(data.data()), data.id);
+                                Mission.fromJson(
+                                    data.data() as Map<String, dynamic>),
+                                data.id);
                           }
                           return SizedBox();
                         },

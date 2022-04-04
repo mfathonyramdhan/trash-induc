@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,21 +21,23 @@ class UserReedemedScreen extends StatefulWidget {
 }
 
 class _UserReedemedScreenState extends State<UserReedemedScreen> {
-  Future<List<RedeemedReward>> _fetchRedeemedRewards() async {
-    var redeemedRewards = await FirebaseFirestore.instance
+  Stream<List<RedeemedReward>> _fetchRedeemedRewards() {
+    var redeemedRewards = FirebaseFirestore.instance
         .collection('user_redeemed_rewards')
         .where("user.id", isEqualTo: widget.id)
-        .get();
-    return redeemedRewards.docs
-        .map((i) => RedeemedReward.fromJson(i.data(), id: i.id))
-        .toList();
+        .snapshots();
+    return redeemedRewards.map(
+      (event) => event.docs
+          .map((e) => RedeemedReward.fromJson(e.data(), id: e.id))
+          .toList(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: FutureBuilder<List<RedeemedReward>>(
-          future: _fetchRedeemedRewards(),
+      child: StreamBuilder<List<RedeemedReward>>(
+          stream: _fetchRedeemedRewards(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
@@ -63,17 +66,16 @@ class _UserReedemedScreenState extends State<UserReedemedScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     height: 80.h,
                                     width: 80.w,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: NetworkImage(redeemedReward
-                                              .reward!.photoUrl!)),
-                                      borderRadius: BorderRadius.circular(
-                                        5.r,
-                                      ),
-                                    ),
+                                    child: redeemedReward.reward!.photoUrl == ""
+                                        ? Image.asset(
+                                            "assets/image/placeholder-image.png")
+                                        : CachedNetworkImage(
+                                            imageUrl: redeemedReward
+                                                .reward!.photoUrl!,
+                                          ),
                                   ),
                                   SizedBox(
                                     width: 14.w,
@@ -95,9 +97,7 @@ class _UserReedemedScreenState extends State<UserReedemedScreen> {
                                             DateFormat.yMd()
                                                 .format(new DateTime
                                                         .fromMicrosecondsSinceEpoch(
-                                                    redeemedReward
-                                                        .reward!
-                                                        .created_at!
+                                                    redeemedReward.created_at!
                                                         .microsecondsSinceEpoch))
                                                 .toString(),
                                         style: regularRobotoFont.copyWith(
@@ -107,9 +107,6 @@ class _UserReedemedScreenState extends State<UserReedemedScreen> {
                                       )
                                     ],
                                   ),
-                                  // SizedBox(
-                                  //   width: 13.w,
-                                  // ),
                                   Align(
                                     alignment: Alignment.bottomRight,
                                     child: ElevatedButton(
