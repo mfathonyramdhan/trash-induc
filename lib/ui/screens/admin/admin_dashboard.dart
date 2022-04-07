@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kiloin/extension/date_time_extension.dart';
 import 'package:kiloin/models/item.dart';
+import 'package:kiloin/models/transaction.dart' as Transaction;
+import 'package:kiloin/models/transaction_item.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/ui/widgets/admin_drawer.dart';
-import 'package:kiloin/ui/widgets/app_bar.dart';
 import 'package:kiloin/ui/widgets/price_card.dart';
 
 import '../../../shared/font.dart';
@@ -24,6 +24,26 @@ class AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Future<List<Item>> fetchItem() async {
     var items = await FirebaseFirestore.instance.collection("items").get();
     return items.docs.map((e) => Item.fromJson(e.data(), id: e.id)).toList();
+  }
+
+  Future<List<Transaction.Transaction>> fetchTransaction() async {
+    var transactionRef =
+        await FirebaseFirestore.instance.collection('transactions').get();
+
+    return transactionRef.docs
+        .map((e) => Transaction.Transaction.fromJson(e.data(), id: e.id))
+        .toList();
+  }
+
+  Future<List<TransactionItem>> fetchTransactionItems(List<String?> id) async {
+    var transactionItemRef = await FirebaseFirestore.instance
+        .collection('transaction_items')
+        .where('transaction_id', whereIn: id)
+        .get();
+
+    return transactionItemRef.docs
+        .map((e) => TransactionItem.fromJson(e.data()))
+        .toList();
   }
 
   String getSideTitles(double value) {
@@ -119,39 +139,61 @@ class AdminDashboardScreenState extends State<AdminDashboardScreen> {
               SizedBox(
                 height: 10.h,
               ),
-              SizedBox(
-                width: 1.sw,
-                height: 0.4.sh,
-                child: BarChart(BarChartData(
-                    minY: 0,
-                    maxY: 100,
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      bottomTitles: SideTitles(
-                        showTitles: true,
-                        getTitles: (value) => getTitles(value),
-                        getTextStyles: (context, value) =>
-                            mediumRobotoFont.copyWith(
-                          color: whitePure,
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                      leftTitles: SideTitles(
-                        showTitles: true,
-                        margin: 5.r,
-                        interval: 25,
-                        reservedSize: 25,
-                        getTextStyles: (context, value) =>
-                            regularRobotoFont.copyWith(
-                          color: whitePure,
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                    ))),
-              ),
+              FutureBuilder<List<Transaction.Transaction>>(
+                  future: fetchTransaction(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Transaction.Transaction>>
+                          transactionSnapshot) {
+                    if (transactionSnapshot.hasData) {
+                      List<String?> transactionId =
+                          transactionSnapshot.data!.map((e) => e.id).toList();
+                      return FutureBuilder<List<TransactionItem>>(
+                        future: fetchTransactionItems(transactionId),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<TransactionItem>> itemSnapshot) {
+                          if (itemSnapshot.hasData) {
+                            // for (var i in itemSnapshot.data!) {
+                            //   print(i.item!.name);
+                            // }
+                          }
+                          return SizedBox(
+                            width: 1.sw,
+                            height: 0.4.sh,
+                            child: BarChart(BarChartData(
+                                minY: 0,
+                                maxY: 100,
+                                borderData: FlBorderData(
+                                  show: false,
+                                ),
+                                titlesData: FlTitlesData(
+                                  show: true,
+                                  bottomTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitles: (value) => getTitles(value),
+                                    getTextStyles: (context, value) =>
+                                        mediumRobotoFont.copyWith(
+                                      color: whitePure,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                  leftTitles: SideTitles(
+                                    showTitles: true,
+                                    margin: 5.r,
+                                    interval: 25,
+                                    reservedSize: 25,
+                                    getTextStyles: (context, value) =>
+                                        regularRobotoFont.copyWith(
+                                      color: whitePure,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ))),
+                          );
+                        },
+                      );
+                    }
+                    return CircularProgressIndicator();
+                  }),
               SizedBox(
                 height: 10.h,
               ),

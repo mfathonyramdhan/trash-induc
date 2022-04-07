@@ -10,6 +10,7 @@ import 'package:kiloin/models/reward.dart';
 import 'package:kiloin/shared/color.dart';
 import 'package:kiloin/shared/font.dart';
 import 'package:kiloin/ui/widgets/app_bar.dart';
+import 'package:kiloin/ui/widgets/snackbar.dart';
 import 'package:path/path.dart';
 
 class AdminEditRewardScreen extends StatefulWidget {
@@ -47,6 +48,7 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
   @override
   void initState() {
     super.initState();
+    selectedDate = widget.reward.expired_at!.toDate();
     nameController.text = widget.reward.name!;
     costController.text = widget.reward.cost.toString();
     dateController.text =
@@ -58,7 +60,7 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Update reward"),
+      appBar: CustomAppBar(title: "Edit reward"),
       body: ListView(
         children: [
           Form(
@@ -66,6 +68,92 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(
+                      child: Stack(children: [
+                    CircleAvatar(
+                      radius: 100.r,
+                      backgroundColor: darkGreen,
+                      child: CircleAvatar(
+                        backgroundColor:
+                            widget.copyOfUrl == '' ? grayPure : darkGreen,
+                        backgroundImage: widget.copyOfUrl == ""
+                            ? selectedFile == null
+                                ? Image.asset(
+                                        "assets/image/placeholder-image.png")
+                                    .image
+                                : Image.file(selectedFile!).image
+                            : Image.network(widget.copyOfUrl).image,
+                        radius: 90.r,
+                      ),
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: CircleAvatar(
+                          backgroundColor: darkGreen,
+                          child: IconButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      height: 80.h,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(
+                                                15.r,
+                                              ),
+                                              topRight: Radius.circular(
+                                                15.r,
+                                              ))),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          TextButton.icon(
+                                              onPressed: () async {
+                                                await pickImage(
+                                                  ImageSource.gallery,
+                                                ).then((value) => setState(() {
+                                                      deletePhoto = false;
+                                                    }));
+
+                                                Navigator.of(context).pop();
+                                              },
+                                              icon: Icon(
+                                                Icons.edit,
+                                              ),
+                                              label: Text("Ganti foto")),
+                                          TextButton.icon(
+                                              onPressed: (widget.copyOfUrl ==
+                                                          "" &&
+                                                      selectedFile == null)
+                                                  ? null
+                                                  : () {
+                                                      setState(() {
+                                                        deletePhoto = true;
+                                                        selectedFile = null;
+                                                        widget.copyOfUrl = "";
+                                                      });
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                              icon: Icon(
+                                                Icons.delete,
+                                              ),
+                                              label: Text("Hapus foto"))
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
+                            icon: Icon(
+                              Icons.edit,
+                              color: whitePure,
+                            ),
+                          ),
+                        ))
+                  ])),
                   Text(
                     "Nama reward",
                     style: boldRobotoFont.copyWith(
@@ -92,7 +180,7 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
-                    controller: nameController,
+                    controller: costController,
                     decoration: InputDecoration(
                       hintText: "Contoh: 2000",
                       border: OutlineInputBorder(
@@ -120,6 +208,7 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
                               lastDate: DateTime(2050))
                           .then((value) {
                         setState(() {
+                          selectedDate = value;
                           dateController.text = DateFormat("dd/MM/yyyy").format(
                             value!,
                           );
@@ -148,7 +237,8 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
                     onPressed: () {
                       submitData(
                         "rewards",
-                        selectedFile!,
+                        selectedFile,
+                        context,
                       );
                     },
                     child: Text(
@@ -178,49 +268,62 @@ class _AdminEditRewardScreenState extends State<AdminEditRewardScreen> {
     }
   }
 
-  Future submitData(String destination, File? pickedFile) async {
-    String? url;
+  Future submitData(
+      String destination, File? pickedFile, BuildContext context) async {
+    String url = widget.reward.photoUrl!;
     String rewardName = nameController.text;
     int rewardCost = int.parse(costController.text);
     DateTime rewardExpired = selectedDate!;
     var rewardRef = FirebaseFirestore.instance.collection(destination);
     var storageRef = FirebaseStorage.instance;
 
-    if (deletePhoto) {
-      try {
-        await storageRef.refFromURL(widget.reward.photoUrl!).delete();
-        url = "";
-      } catch (e) {
-        print(e);
-      }
-    }
-
-    if (pickedFile != null) {
-      String fileName = basename(pickedFile.path);
-
-      if (widget.reward.photoUrl == "") {
-        await storageRef.ref(destination).child(fileName).putFile(pickedFile);
-        url =
-            await storageRef.ref(destination).child(fileName).getDownloadURL();
-      } else {
+    try {
+      if (deletePhoto) {
         try {
           await storageRef.refFromURL(widget.reward.photoUrl!).delete();
+          url = "";
+        } catch (e) {
+          print(e);
+        }
+      }
+
+      if (pickedFile != null) {
+        String fileName = basename(pickedFile.path);
+
+        if (widget.reward.photoUrl == "") {
           await storageRef.ref(destination).child(fileName).putFile(pickedFile);
           url = await storageRef
               .ref(destination)
               .child(fileName)
               .getDownloadURL();
-        } catch (e) {
-          print(e);
+        } else {
+          try {
+            await storageRef.refFromURL(widget.reward.photoUrl!).delete();
+            await storageRef
+                .ref(destination)
+                .child(fileName)
+                .putFile(pickedFile);
+            url = await storageRef
+                .ref(destination)
+                .child(fileName)
+                .getDownloadURL();
+          } catch (e) {
+            print(e);
+          }
         }
       }
-    }
 
-    await rewardRef.doc(widget.reward.id).update({
-      "name": rewardName,
-      "cost": rewardCost,
-      "photoUrl": url,
-      "expired_at": rewardExpired,
-    });
+      await rewardRef.doc(widget.reward.id).update({
+        "name": rewardName,
+        "cost": rewardCost,
+        "photoUrl": url,
+        "expired_at": rewardExpired,
+      }).then((value) {
+        CustomSnackbar.buildSnackbar(context, "Berhasil mengedit reward", 1);
+        Navigator.of(context).pop();
+      });
+    } catch (e) {
+      CustomSnackbar.buildSnackbar(context, "Gagal mengedit reward: $e", 0);
+    }
   }
 }

@@ -137,6 +137,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                   ),
                 ),
                 TextFormField(
+                  textInputAction: TextInputAction.next,
                   controller: nameController,
                   decoration: InputDecoration(
                     hintText: "Contoh: Kertas",
@@ -162,6 +163,8 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
                             controller: sellController,
                             decoration: InputDecoration(
                                 isDense: true,
@@ -187,6 +190,8 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
                             controller: buyController,
                             decoration: InputDecoration(
                                 isDense: true,
@@ -216,6 +221,8 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
                             controller: expController,
                             decoration: InputDecoration(
                                 isDense: true,
@@ -241,6 +248,8 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.done,
                             controller: balanceController,
                             decoration: InputDecoration(
                                 isDense: true,
@@ -269,7 +278,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                   onPressed: () {
                     submitData(
                       "items",
-                      selectedFile!,
+                      selectedFile,
                       context,
                     );
                   },
@@ -303,7 +312,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
 
   Future submitData(
       String destination, File? pickedFile, BuildContext context) async {
-    String? url;
+    String url = '';
     String itemName = nameController.text;
     int itemBuy = int.parse(buyController.text);
     int itemSell = int.parse(sellController.text);

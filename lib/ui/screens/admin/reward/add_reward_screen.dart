@@ -57,7 +57,8 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                             ? grayPure
                             : Colors.transparent,
                         backgroundImage: selectedFile == null
-                            ? Image.asset("assets/image/photo.png").image
+                            ? Image.asset("assets/image/placeholder-image.png")
+                                .image
                             : Image.file(selectedFile!).image,
                         radius: 90.r,
                       ),
@@ -211,7 +212,7 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
                     onPressed: () {
                       submitData(
                         "rewards",
-                        selectedFile!,
+                        selectedFile,
                         context,
                       );
                     },
@@ -244,7 +245,7 @@ class _AdminAddRewardScreenState extends State<AdminAddRewardScreen> {
 
   Future submitData(
       String destination, File? pickedFile, BuildContext context) async {
-    String? url;
+    String url = '';
     String rewardName = nameController.text;
     int rewardCost = int.parse(costController.text);
     DateTime rewardExpired = selectedDate!;

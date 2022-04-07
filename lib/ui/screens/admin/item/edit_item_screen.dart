@@ -76,7 +76,9 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                     child: CircleAvatar(
                       backgroundImage: widget.copyOfUrl == ""
                           ? selectedFile == null
-                              ? Image.asset("assets/image/photo.png").image
+                              ? Image.asset(
+                                      "assets/image/placeholder-image.png")
+                                  .image
                               : Image.file(selectedFile!).image
                           : Image.network(widget.copyOfUrl).image,
                       radius: 90.r,
@@ -157,6 +159,7 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                   ),
                 ),
                 TextFormField(
+                  textInputAction: TextInputAction.next,
                   controller: nameController,
                   decoration: InputDecoration(
                     hintText: "Contoh: Kertas",
@@ -182,6 +185,7 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            textInputAction: TextInputAction.next,
                             controller: sellController,
                             decoration: InputDecoration(
                                 isDense: true,
@@ -207,6 +211,7 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            textInputAction: TextInputAction.next,
                             controller: buyController,
                             decoration: InputDecoration(
                                 isDense: true,
@@ -236,6 +241,7 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            textInputAction: TextInputAction.next,
                             controller: expController,
                             decoration: InputDecoration(
                                 isDense: true,
@@ -261,6 +267,7 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                             ),
                           ),
                           TextFormField(
+                            textInputAction: TextInputAction.next,
                             controller: balanceController,
                             decoration: InputDecoration(
                                 isDense: true,
@@ -292,7 +299,6 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
                         selectedFile,
                         context,
                       );
-                      Navigator.of(context).pop();
                     },
                     child: Text(
                       "Update item",
@@ -323,7 +329,7 @@ class _AdminEditItemScreenState extends State<AdminEditItemScreen> {
 
   Future updateData(
       String destination, File? pickedFile, BuildContext context) async {
-    String? url;
+    String url = widget.item.photoUrl!;
     String itemName = nameController.text;
     int itemBuy = int.parse(buyController.text);
     int itemSell = int.parse(sellController.text);
