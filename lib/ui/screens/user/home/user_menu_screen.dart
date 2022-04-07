@@ -105,7 +105,6 @@ class _UserMenuScreenState extends State<UserMenuScreen> {
                   if (snapshot.hasData) {
                     UserModel.User user = UserModel.User.fromJson(
                       snapshot.data!.data() as Map<String, dynamic>,
-                      id: currentUserId,
                     );
                     return Column(
                       children: [

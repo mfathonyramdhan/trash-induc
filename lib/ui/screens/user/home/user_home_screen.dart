@@ -72,7 +72,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             if (snapshot.hasData) {
               UserModel.User user = UserModel.User.fromJson(
                 snapshot.data!.data() as Map<String, dynamic>,
-                id: currentUserId,
               );
               return ListView(
                 children: [

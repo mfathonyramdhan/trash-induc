@@ -22,6 +22,7 @@ class FirebaseUtils {
         FirebaseFirestore.instance.collection("users").doc(userCred.user!.uid);
 
     await userRef.set({
+      "id": userCred.user!.uid,
       "name": name,
       "email": email,
       "phone": "",

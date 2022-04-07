@@ -189,7 +189,7 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
                                 .where('role', isEqualTo: 'user')
                                 .get();
                             return users.docs
-                                .map((e) => User.fromJson(e.data(), id: e.id))
+                                .map((e) => User.fromJson(e.data()))
                                 .toList();
                           }
 
@@ -215,7 +215,7 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
                           // users.addAll(getUsersByName.docs);
 
                           return users
-                              .map((e) => User.fromJson(e.data(), id: e.id))
+                              .map((e) => User.fromJson(e.data()))
                               .toList();
                         },
                         label: "Cari user",
@@ -382,14 +382,13 @@ class _AdminAddTransactionScreenState extends State<AdminAddTransactionScreen> {
               .collection('users')
               .doc(repository.userId);
           var user = await userRef.get();
-          var userData = User.fromJson(user.data()!, id: user.id);
+          var userData = User.fromJson(user.data()!);
 
           var pegawaiRef = await FirebaseFirestore.instance
               .collection('users')
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .get();
-          var pegawaiData =
-              User.fromJson(pegawaiRef.data()!, id: pegawaiRef.id);
+          var pegawaiData = User.fromJson(pegawaiRef.data()!);
 
           if (!user.exists) {
             throw Exception('User tidak ditemukan');

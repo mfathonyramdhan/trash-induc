@@ -27,8 +27,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     var result = await userRef.where("role", isEqualTo: "user").get();
 
     return result.docs
-        .map((e) =>
-            UserModel.User.fromJson(e.data() as Map<String, dynamic>, id: e.id))
+        .map((e) => UserModel.User.fromJson(e.data() as Map<String, dynamic>))
         .toList();
   }
 
@@ -82,7 +81,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           if (userSnapshot.hasData) {
             UserModel.User user = UserModel.User.fromJson(
               userSnapshot.data!.data() as Map<String, dynamic>,
-              id: currentUserId,
             );
             return FutureBuilder<List<UserModel.User>>(
                 future: fetchUser(),

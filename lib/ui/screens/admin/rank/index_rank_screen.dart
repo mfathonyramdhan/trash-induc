@@ -41,15 +41,14 @@ class _AdminIndexRankScreenState extends State<AdminIndexRankScreen> {
       var data = [];
       data.addAll(userName.docs);
       users.addAll(
-        data.map((e) => User.fromJson(e.data(), id: e.id)).toList(),
+        data.map((e) => User.fromJson(e.data())).toList(),
       );
     } else {
       var result = await FirebaseFirestore.instance
           .collection('users')
           .orderBy('balance', descending: true)
           .get();
-      users =
-          result.docs.map((e) => User.fromJson(e.data(), id: e.id)).toList();
+      users = result.docs.map((e) => User.fromJson(e.data())).toList();
     }
 
     return users;

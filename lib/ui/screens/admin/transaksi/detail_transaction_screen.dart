@@ -25,16 +25,24 @@ class DetailTransactionScreen extends StatefulWidget {
 }
 
 class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
-  Future<DocumentSnapshot>? _futureTransaction;
-
-  @override
-  void initState() {
-    _futureTransaction = FirebaseFirestore.instance
+  Future<DocumentSnapshot> _futureTransaction() async {
+    return await FirebaseFirestore.instance
         .collection('transactions')
-        .doc(widget.transaction.id)
+        .doc(widget.transaction.id!)
+        .get();
+  }
+
+  Future<List<TransactionItem>> _futureTransactionItems(String id) async {
+    var data = await FirebaseFirestore.instance
+        .collection('transaction_items')
+        .where('transaction_id', isEqualTo: id)
         .get();
 
-    super.initState();
+    return data.docs
+        .map((e) => TransactionItem.fromJson(
+              e.data(),
+            ))
+        .toList();
   }
 
   @override
@@ -42,7 +50,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: "Detail transaksi"),
       body: FutureBuilder<DocumentSnapshot>(
-          future: _futureTransaction,
+          future: _futureTransaction(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data!.exists) {
               Transaction transaction = Transaction.fromJson(
@@ -76,7 +84,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                     height: 10.h,
                   ),
                   Text(
-                    "ID: " + transaction.id.toString(),
+                    "ID: " + transaction.id!,
                     style: regularRobotoFont.copyWith(
                       fontSize: 18.sp,
                       color: blackPure,
@@ -102,7 +110,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                         ),
                       ),
                       Text(
-                        transaction.user!.name.toString(),
+                        transaction.user!.name!,
                         style: mediumRobotoFont.copyWith(
                           fontSize: 14.sp,
                           color: blackPure,
@@ -120,7 +128,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                         ),
                       ),
                       Text(
-                        transaction.user!.email.toString(),
+                        transaction.user!.id!,
                         style: mediumRobotoFont.copyWith(
                           fontSize: 14.sp,
                           color: blackPure,
@@ -138,7 +146,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                         ),
                       ),
                       Text(
-                        transaction.petugas!.name.toString(),
+                        transaction.petugas!.name!,
                         style: mediumRobotoFont.copyWith(
                           fontSize: 14.sp,
                           color: blackPure,
@@ -156,7 +164,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                         ),
                       ),
                       Text(
-                        transaction.petugas!.email.toString(),
+                        transaction.petugas!.id!,
                         style: mediumRobotoFont.copyWith(
                           fontSize: 14.sp,
                           color: blackPure,
@@ -167,40 +175,39 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                   Divider(
                     color: blackPure,
                   ),
-                  FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      future: FirebaseFirestore.instance
-                          .collection('transaction_items')
-                          .where('transaction_id', isEqualTo: transaction.id)
-                          .get(),
-                      builder: (context, snapshot) {
+                  FutureBuilder<List<TransactionItem>>(
+                      future: _futureTransactionItems(transaction.id!),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<TransactionItem>> snapshot) {
                         if (snapshot.hasData) {
-                          var transactionItems = snapshot.data!.docs
-                              .map((i) => TransactionItem.fromJson(i.data()))
-                              .toList();
+                          List<TransactionItem> transactionItems =
+                              snapshot.data!;
 
                           return Column(
                             children: [
                               SizedBox(
-                                height: 160.h,
+                                height: (90 * transactionItems.length).h,
                                 child: ListView.builder(
-                                    itemCount: transactionItems.length,
-                                    itemBuilder: (context, index) => ListTile(
-                                          leading: Text(
-                                            transactionItems[index]
-                                                    .qty
-                                                    .toString() +
-                                                " x ",
-                                          ),
-                                          title: Text(
-                                            transactionItems[index].item!.name!,
-                                          ),
-                                          trailing: Text(
-                                            transactionItems[index]
-                                                .item!
-                                                .sell
-                                                .toString(),
-                                          ),
-                                        )),
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: snapshot.data!.length,
+                                    itemBuilder: (context, index) {
+                                      TransactionItem transactionItem =
+                                          snapshot.data![index];
+
+                                      return ListTile(
+                                        leading: Text(
+                                          transactionItem.qty.toString() +
+                                              " x ",
+                                        ),
+                                        title: Text(
+                                          transactionItem.item!.name!,
+                                        ),
+                                        trailing: Text(
+                                          transactionItem.item!.sell.toString(),
+                                        ),
+                                      );
+                                    }),
                               ),
                               Row(
                                 children: [

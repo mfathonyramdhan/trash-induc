@@ -299,7 +299,6 @@ class UserRewardWalletScreenState extends State<UserRewardWalletScreen> {
       var userDataRef = await userRef.get();
       var userData = User.fromJson(
         userDataRef.data()!,
-        id: id,
       );
       var balance = user.balance! - reward.cost!;
 

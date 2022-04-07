@@ -232,7 +232,6 @@ class AdminDataItem extends DataTableSource {
           .get();
       var petugasData = UserModel.User.fromJson(
         petugasRef.data()!,
-        id: petugasId,
       );
 
       await redeemRef.update({

@@ -25,9 +25,9 @@ class User {
     this.membership = "bronze",
   });
 
-  User.fromJson(Map<String, dynamic> json, {String? id})
+  User.fromJson(Map<String, dynamic> json)
       : this(
-          id: id,
+          id: json["id"]! as String,
           name: json["name"]! as String,
           email: json["email"]! as String,
           phone: json["phone"]! as String,

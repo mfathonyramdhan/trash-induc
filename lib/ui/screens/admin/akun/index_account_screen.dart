@@ -41,12 +41,11 @@ class _AdminIndexAccountScreenState extends State<AdminIndexAccountScreen> {
       var data = [];
       data.addAll(userName.docs);
       users.addAll(
-        data.map((e) => User.fromJson(e.data(), id: e.id)).toList(),
+        data.map((e) => User.fromJson(e.data())).toList(),
       );
     } else {
       var result = await FirebaseFirestore.instance.collection('users').get();
-      users =
-          result.docs.map((e) => User.fromJson(e.data(), id: e.id)).toList();
+      users = result.docs.map((e) => User.fromJson(e.data())).toList();
     }
 
     return users;

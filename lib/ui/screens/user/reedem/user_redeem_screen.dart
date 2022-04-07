@@ -81,7 +81,6 @@ class _UserRedeemScreenState extends State<UserRedeemScreen> {
                 if (snapshot.hasData) {
                   UserModel.User user = UserModel.User.fromJson(
                     snapshot.data!.data() as Map<String, dynamic>,
-                    id: widget.id,
                   );
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,

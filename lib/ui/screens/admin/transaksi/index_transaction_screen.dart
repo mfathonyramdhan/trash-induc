@@ -37,7 +37,7 @@ class _AdminIndexTransactionScreenState
     var transactions = <Transaction>[];
 
     if (searchController.text.trim() != '') {
-      var searchQuery = searchController.text.trim().toLowerCase();
+      var searchQuery = searchController.text.trim();
       var userEmail = await FirebaseFirestore.instance
           .collection('transactions')
           .where('user.email', isGreaterThanOrEqualTo: searchQuery)
